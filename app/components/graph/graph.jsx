@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import dummyElements from './elements';
+import { loadGraphElements, saveGraphElements } from '../../services/graph-service';
+import extractNodeDataFromGraphData from '../../utils/graph-utils';
 
 export default class Graph extends Component {
   constructor() {
@@ -15,21 +17,26 @@ export default class Graph extends Component {
       this.setState({
         elements: dummyElements,
       });
-      this.cy.resize();
-      this.cy.fit();
+    };
+
+    saveData = () => {
+      saveGraphElements(extractNodeDataFromGraphData(this.cy.json()));
     };
 
     render() {
       const { elements } = this.state;
       return (
-        <CytoscapeComponent
-          className="graph"
-          elements={elements}
-          style={{ background: 'black' }}
-          cy={(cy) => {
-            this.cy = cy;
-          }}
-        />
+        <>
+          <button onClick={this.saveData}>SaveData</button>
+          <CytoscapeComponent
+            className="graph"
+            elements={elements}
+            style={{ background: 'black' }}
+            cy={(cy) => {
+              this.cy = cy;
+            }}
+          />
+        </>
       );
     }
 }
