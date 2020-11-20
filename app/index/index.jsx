@@ -8,7 +8,7 @@ import {
 import 'fontsource-roboto';
 import './index.css';
 import Navbar from '../components/navbar';
-import Welcome from '../pages/welcome';
+import Welcome from '../pages/Welcome';
 import Create from '../pages/create';
 
 const App = () => (

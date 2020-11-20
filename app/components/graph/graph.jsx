@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
-import dummyElements from './elements';
 import { loadGraphElements, saveGraphElements } from '../../services/graph-service';
-import extractNodeDataFromGraphData from '../../utils/graph-utils';
+import extractDiagramDataFromGraphData from '../../utils/graph-utils';
 
 export default class Graph extends Component {
   constructor() {
@@ -14,13 +13,16 @@ export default class Graph extends Component {
   }
 
     componentDidMount = () => {
-      this.setState({
-        elements: dummyElements,
+      loadGraphElements('5fb7fceabf6a047001b14ae4').then((data) => {
+        const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
+        this.setState({
+          elements: cytoscapeData,
+        });
       });
     };
 
     saveData = () => {
-      saveGraphElements(extractNodeDataFromGraphData(this.cy.json()));
+      saveGraphElements(extractDiagramDataFromGraphData(this.cy.json()));
     };
 
     render() {
@@ -31,7 +33,7 @@ export default class Graph extends Component {
           <CytoscapeComponent
             className="graph"
             elements={elements}
-            style={{ background: 'black' }}
+            // style={{ background: 'black' }}
             cy={(cy) => {
               this.cy = cy;
             }}

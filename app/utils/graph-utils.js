@@ -1,4 +1,5 @@
-export default function extractDiagramDataFromGraphData(graphData) {
+// Prepares data to be sent to the API
+const extractDiagramDataFromGraphData = (graphData) => {
   const edges = [];
   const nodes = [];
   if (!graphData) return {};
@@ -16,5 +17,7 @@ export default function extractDiagramDataFromGraphData(graphData) {
       }));
     }
   }
-  return { edges, nodes };
-}
+  return { edges: edges[0], nodes: nodes[0] };
+};
+
+export default extractDiagramDataFromGraphData;

@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+require('regenerator-runtime/runtime');
 
 module.exports = {
   entry: './app/index/index.jsx',

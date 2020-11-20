@@ -1,22 +1,34 @@
 const elements = [
   {
+
     data: {
       id: '1',
-      label: 'Node: 1',
+      label: 'label 1',
     },
-    position: { x: 300, y: 400 },
+    position: {
+      x: 200,
+      y: 300,
+    },
   },
   {
     data: {
       id: '2',
-      label: 'Node: 2',
+      label: 'label 2',
     },
-    position: { x: 45, y: 300 },
+    position: {
+      x: 0,
+      y: 0,
+    },
   },
   {
     data: {
-      source: 1,
-      target: 2,
+      id: '12313123',
+      source: '1',
+      target: '2',
+    },
+    position: {
+      x: 0,
+      y: 0,
     },
   },
 ];
