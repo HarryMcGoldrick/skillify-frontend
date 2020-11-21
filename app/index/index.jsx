@@ -10,6 +10,7 @@ import './index.css';
 import Navbar from '../components/navbar';
 import Welcome from '../pages/Welcome';
 import Create from '../pages/create';
+import Login from '../pages/login';
 
 const App = () => (
   <>
@@ -17,6 +18,7 @@ const App = () => (
     <Switch>
       <Route exact path="/" component={Welcome} />
       <Route exact path="/create" component={Create} />
+      <Route exact path="/login" component={Login} />
     </Switch>
   </>
 );
