@@ -38,7 +38,7 @@ export default function Welcome() {
               View
             </Button>
           </Link>
-          <Link to="/create">
+          <Link to="/create/123">
             <Button
               variant="contained"
               color="secondary"
