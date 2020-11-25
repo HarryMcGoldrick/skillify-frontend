@@ -135,7 +135,7 @@ export default class Graph extends Component {
         </Grid>
 
         <Grid item xs={9}>
-          <button type="button" onClick={this.updateData}>Save</button>
+          <button type="button" onClick={this.saveData}>Save</button>
           <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
           <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
           <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>

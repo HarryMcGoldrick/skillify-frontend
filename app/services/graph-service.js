@@ -39,3 +39,14 @@ export const updateGraphElements = async (id, elements) => {
   }).then((res) => res.json());
   return response;
 };
+
+export const getGraphIds = async () => {
+  const response = fetch('http://localhost:3000/graph/ids', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json());
+  return response;
+};

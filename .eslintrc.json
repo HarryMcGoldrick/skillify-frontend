@@ -20,7 +20,9 @@
     "parser": "babel-eslint",
     "rules": {
         "no-invalid-this": 0,
-        "babel/no-invalid-this": 1
+        "babel/no-invalid-this": 1,
+        "linebreak-style": 0,
+        "react/jsx-props-no-spreading": 0
     }
 
 }
