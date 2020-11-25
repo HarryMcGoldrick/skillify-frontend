@@ -5,6 +5,14 @@ const style = [
       content: 'data(label)',
     },
   },
+  {
+    selector: 'edge',
+    style: {
+      width: 3,
+      'curve-style': 'bezier',
+      'target-arrow-shape': 'triangle', // there are far more options for this property here: http://js.cytoscape.org/#style/edge-arrow
+    },
+  },
 
   {
     selector: '.eh-handle',

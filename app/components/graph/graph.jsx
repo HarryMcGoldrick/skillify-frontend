@@ -7,6 +7,7 @@ import { Button, Grid, TextField } from '@material-ui/core';
 import { loadGraphElements, saveGraphElements } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-utils';
 import edgeHandleStyle from './styles';
+import { tools } from '../../enums/tools';
 
 export default class Graph extends Component {
   constructor() {
@@ -18,7 +19,7 @@ export default class Graph extends Component {
   }
 
   componentDidMount = () => {
-    loadGraphElements('5fb7fceabf6a047001b14ae4').then((data) => {
+    loadGraphElements('5fbe641ed212a2138476dcec').then((data) => {
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
       this.setState({
         elements: cytoscapeData,
@@ -37,24 +38,7 @@ export default class Graph extends Component {
     const edgehandler = this.cy.edgehandles();
     edgehandler.disableDrawMode();
 
-    this.cy.on('tap', (event) => {
-      if (event.target === this.cy) {
-        const { x, y } = event.position;
-        this.cy.add({
-          group: 'nodes',
-          position: { x, y },
-          data: { label: 'test' },
-        });
-      }
-    });
-    this.cy.on('click', 'node', (event) => {
-      // Prevent edgehandle from triggering this event
-      if (event.target.classes()[0] === 'eh-handle') {
-        return;
-      }
-      const currentNode = event.target.data();
-      this.setState({ selectedNode: { ...currentNode } });
-    });
+    // this.selectNodeTool();
   }
 
   updateSelectedNode = () => {
@@ -66,6 +50,62 @@ export default class Graph extends Component {
     }
   }
 
+  removeListeners = () => {
+    this.cy.removeListener('tap');
+    this.cy.removeListener('click');
+  }
+
+  selectNodeTool = () => {
+    this.cy.on('click', 'node', (event) => {
+      // Prevent edgehandle from being selected
+      if (event.target.classes()[0] === 'eh-handle') {
+        return;
+      }
+      const currentNode = event.target.data();
+      this.setState({ selectedNode: { ...currentNode } });
+    });
+  }
+
+  addNodeTool = () => {
+    this.cy.on('tap', (event) => {
+      if (event.target === this.cy) {
+        const { x, y } = event.position;
+        this.cy.add({
+          group: 'nodes',
+          position: { x, y },
+          data: { label: 'test' },
+        });
+      }
+    });
+  }
+
+  deleteNodeAndEdgeTool = () => {
+    this.cy.on('tap', (event) => {
+      if (event.target !== this.cy) {
+        this.cy.remove(event.target);
+      }
+    });
+  }
+
+  switchTool = (tool) => {
+    // Remove previous tools
+    this.removeListeners();
+
+    switch (tool) {
+      case tools.SELECT:
+        this.selectNodeTool();
+        break;
+      case tools.ADD:
+        this.addNodeTool();
+        break;
+      case tools.DELETE:
+        this.deleteNodeAndEdgeTool();
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
     const { elements, selectedNode } = this.state;
     const { label, id } = selectedNode;
@@ -74,8 +114,8 @@ export default class Graph extends Component {
       <Grid container style={{ minHeight: '100vh' }}>
         <Grid item xs={3}>
           <h1>
-            Node Data:
-            {id}
+            Node:
+            {` ${label || ''}`}
           </h1>
           <form onSubmit={(event) => {
             event.preventDefault();
@@ -88,7 +128,11 @@ export default class Graph extends Component {
         </Grid>
 
         <Grid item xs={9}>
-          <button type="button" onClick={this.saveData}>SaveData</button>
+          <button type="button" onClick={this.saveData}>Save</button>
+          <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
+          <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
+          <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
+
           <CytoscapeComponent
             className="graph"
             elements={elements}
