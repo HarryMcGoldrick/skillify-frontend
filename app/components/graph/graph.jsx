@@ -4,7 +4,8 @@ import './graph.css';
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import { Button, Grid, TextField } from '@material-ui/core';
-import { loadGraphElements, saveGraphElements } from '../../services/graph-service';
+import PropTypes from 'prop-types';
+import { loadGraphElements, saveGraphElements, updateGraphElements } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-utils';
 import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
@@ -19,7 +20,8 @@ export default class Graph extends Component {
   }
 
   componentDidMount = () => {
-    loadGraphElements('5fbe641ed212a2138476dcec').then((data) => {
+    const { id } = this.props;
+    loadGraphElements(id).then((data) => {
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
       this.setState({
         elements: cytoscapeData,
@@ -32,13 +34,18 @@ export default class Graph extends Component {
     saveGraphElements(extractDiagramDataFromGraphData(this.cy.json()));
   };
 
+  updateData = () => {
+    const { id } = this.props;
+    updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
+  }
+
   enableEditing = () => {
     cytoscape.use(edgehandles);
     this.cy.style(edgeHandleStyle);
     const edgehandler = this.cy.edgehandles();
     edgehandler.disableDrawMode();
 
-    // this.selectNodeTool();
+    this.selectNodeTool();
   }
 
   updateSelectedNode = () => {
@@ -128,7 +135,7 @@ export default class Graph extends Component {
         </Grid>
 
         <Grid item xs={9}>
-          <button type="button" onClick={this.saveData}>Save</button>
+          <button type="button" onClick={this.updateData}>Save</button>
           <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
           <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
           <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
@@ -145,3 +152,7 @@ export default class Graph extends Component {
     );
   }
 }
+
+Graph.propTypes = {
+  id: PropTypes.string.isRequired,
+};

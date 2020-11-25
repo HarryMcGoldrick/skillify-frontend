@@ -17,7 +17,7 @@ const App = () => (
     <Navbar />
     <Switch>
       <Route exact path="/" component={Welcome} />
-      <Route path="/create/:id" component={Create} />
+      <Route path="/create/:id" render={({ match }) => (<Create id={match.params.id} />)} />
       <Route exact path="/login" component={Login} />
     </Switch>
   </>

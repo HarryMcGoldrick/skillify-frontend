@@ -24,3 +24,18 @@ export const loadGraphElements = async (id) => {
   }).then((res) => res.json());
   return response;
 };
+
+export const updateGraphElements = async (id, elements) => {
+  const response = fetch(`http://localhost:3000/graph/${id}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      nodes: elements.nodes,
+      edges: elements.edges,
+    }),
+  }).then((res) => res.json());
+  return response;
+};
