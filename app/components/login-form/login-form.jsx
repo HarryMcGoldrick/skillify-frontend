@@ -5,9 +5,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
-
-  container: {
-  },
   paper: {
     padding: theme.spacing(2),
   },

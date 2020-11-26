@@ -1,14 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Graph from '../../components/graph/graph';
+import GraphCreateForm from '../../components/graph-create-form';
 
-export default function Create(props) {
-  const { id } = props;
+const Create = () => {
+  const test = 123;
   return (
-    <Graph id={id} />
+    <GraphCreateForm />
   );
-}
-
-Create.propTypes = {
-  id: PropTypes.string.isRequired,
 };
+
+export default Create;

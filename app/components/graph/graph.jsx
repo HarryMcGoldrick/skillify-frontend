@@ -21,6 +21,7 @@ export default class Graph extends Component {
 
   componentDidMount = () => {
     const { id } = this.props;
+
     loadGraphElements(id).then((data) => {
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
       this.setState({
@@ -31,21 +32,24 @@ export default class Graph extends Component {
   };
 
   saveData = () => {
+    console.log(this.cy.json());
     saveGraphElements(extractDiagramDataFromGraphData(this.cy.json()));
   };
 
   updateData = () => {
     const { id } = this.props;
+    console.log(this.cy.json());
+
     updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
   }
 
   enableEditing = () => {
-    cytoscape.use(edgehandles);
-    this.cy.style(edgeHandleStyle);
-    const edgehandler = this.cy.edgehandles();
-    edgehandler.disableDrawMode();
-
-    this.selectNodeTool();
+    if (!this.cy.edgehandles) {
+      cytoscape.use(edgehandles);
+      this.cy.style(edgeHandleStyle);
+      const edgehandler = this.cy.edgehandles();
+      edgehandler.disableDrawMode();
+    }
   }
 
   updateSelectedNode = () => {
@@ -75,6 +79,7 @@ export default class Graph extends Component {
 
   addNodeTool = () => {
     this.cy.on('tap', (event) => {
+      console.log('triggered');
       if (event.target === this.cy) {
         const { x, y } = event.position;
         this.cy.add({
@@ -135,7 +140,7 @@ export default class Graph extends Component {
         </Grid>
 
         <Grid item xs={9}>
-          <button type="button" onClick={this.saveData}>Save</button>
+          <button type="button" onClick={this.updateData}>Save</button>
           <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
           <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
           <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>

@@ -11,7 +11,11 @@ const extractDiagramDataFromGraphData = (graphData) => {
       }));
     }
     if (graphData.elements.nodes) {
-      nodes.push(graphData.elements.nodes.map((res) => {
+      nodes.push(graphData.elements.nodes.filter((res) => {
+        // Fixes a bug where the handle was being added to the map data
+        if (res.classes === 'eh-handle') {
+          return null;
+        }
         const { data, position } = res;
         return { data, position };
       }));

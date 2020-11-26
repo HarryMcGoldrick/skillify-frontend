@@ -1,3 +1,3 @@
-import Create from './create';
+import Create from './create.jsx';
 
 export default Create;

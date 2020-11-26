@@ -1,13 +1,13 @@
 import { ListItem, ListItemText } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getGraphIds } from '../../services/graph-service';
+import { getGraphViews } from '../../services/graph-service';
 
 const GraphList = () => {
-  const [graphIds, setGraphIds] = useState([]);
+  const [graphViews, setGraphViews] = useState([]);
 
   useEffect(() => {
-    getGraphIds().then((graphs) => {
-      setGraphIds(graphs);
+    getGraphViews().then((graphs) => {
+      setGraphViews(graphs);
     });
   }, []);
 
@@ -17,11 +17,17 @@ const GraphList = () => {
 
   return (
     <ul>
-      {graphIds.map((graph) => (
-        <ListItemLink key={graph} href={`/create/${graph}`}>
-          <ListItemText primary={graph} />
-        </ListItemLink>
-      ))}
+      {graphViews.map((graph) => {
+        if (!graph.id || !graph.name) {
+          return undefined;
+        }
+        const { id, name } = graph;
+        return (
+          <ListItemLink key={id} href={`/edit/${id}`}>
+            <ListItemText primary={name} />
+          </ListItemLink>
+        );
+      })}
     </ul>
   );
 };

@@ -1,17 +1,17 @@
 import 'regenerator-runtime/runtime';
 
-export const saveGraphElements = (elements) => {
-  fetch('http://localhost:3000/graph', {
+export const createNewGraph = (name) => {
+  const response = fetch('http://localhost:3000/graph', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      nodes: elements.nodes,
-      edges: elements.edges,
+      name,
     }),
-  }).then((res) => console.log(res)).catch((err) => console.log(err));
+  }).then((res) => res.json()).then((data) => data);
+  return response;
 };
 
 export const loadGraphElements = async (id) => {
@@ -40,8 +40,8 @@ export const updateGraphElements = async (id, elements) => {
   return response;
 };
 
-export const getGraphIds = async () => {
-  const response = fetch('http://localhost:3000/graph/ids', {
+export const getGraphViews = async () => {
+  const response = fetch('http://localhost:3000/graph/views', {
     method: 'GET',
     headers: {
       Accept: 'application/json',
