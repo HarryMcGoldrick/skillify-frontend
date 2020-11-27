@@ -3,12 +3,14 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { loadGraphElements, saveGraphElements, updateGraphElements } from '../../services/graph-service';
-import extractDiagramDataFromGraphData from '../../utils/graph-utils';
+import { loadGraphElements, updateGraphElements } from '../../services/graph-service';
+import { extractDiagramDataFromGraphData } from '../../utils/graph-data';
 import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
+import GraphDetails from '../graph-details';
+import { getYoutubeVideoForNode } from '../../services/content-service';
 
 export default class Graph extends Component {
   constructor() {
@@ -23,24 +25,26 @@ export default class Graph extends Component {
     const { id } = this.props;
 
     loadGraphElements(id).then((data) => {
+      const graphName = data.graph.name;
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
       this.setState({
         elements: cytoscapeData,
+        graphName,
       });
     });
     this.enableEditing();
-  };
-
-  saveData = () => {
-    console.log(this.cy.json());
-    saveGraphElements(extractDiagramDataFromGraphData(this.cy.json()));
+    this.switchTool(tools.SELECT);
   };
 
   updateData = () => {
     const { id } = this.props;
-    console.log(this.cy.json());
-
     updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
+  }
+
+  getYoutubeContentForNode = (label) => {
+    getYoutubeVideoForNode(label).then((data) => {
+      this.setState({ youtubeNodeData: data.response.items[0] });
+    });
   }
 
   enableEditing = () => {
@@ -52,12 +56,12 @@ export default class Graph extends Component {
     }
   }
 
-  updateSelectedNode = () => {
+  updateSelectedNode = (data) => {
     const { selectedNode } = this.state;
-    const { id, label } = selectedNode;
+    const { id } = selectedNode;
     const node = this.cy.elements(`node[id = "${id}"]`)[0];
     if (node) {
-      node.data('label', label);
+      node.data('label', data.nodeLabel);
     }
   }
 
@@ -74,12 +78,12 @@ export default class Graph extends Component {
       }
       const currentNode = event.target.data();
       this.setState({ selectedNode: { ...currentNode } });
+      this.getYoutubeContentForNode(currentNode.label);
     });
   }
 
   addNodeTool = () => {
     this.cy.on('tap', (event) => {
-      console.log('triggered');
       if (event.target === this.cy) {
         const { x, y } = event.position;
         this.cy.add({
@@ -119,24 +123,19 @@ export default class Graph extends Component {
   }
 
   render() {
-    const { elements, selectedNode } = this.state;
-    const { label, id } = selectedNode;
+    const {
+      elements, selectedNode, graphName, youtubeNodeData,
+    } = this.state;
 
     return (
       <Grid container style={{ minHeight: '100vh' }}>
         <Grid item xs={3}>
-          <h1>
-            Node:
-            {` ${label || ''}`}
-          </h1>
-          <form onSubmit={(event) => {
-            event.preventDefault();
-            this.updateSelectedNode();
-          }}
-          >
-            <TextField name="nodeLabel" variant="outlined" value={label || ''} onChange={(e) => this.setState({ selectedNode: { label: e.target.value, id } })} />
-            <Button type="submit">Submit</Button>
-          </form>
+          <GraphDetails
+            graphName={graphName}
+            selectedNode={selectedNode}
+            updateSelectedNode={this.updateSelectedNode}
+            youtubeContentData={youtubeNodeData}
+          />
         </Grid>
 
         <Grid item xs={9}>
@@ -144,7 +143,6 @@ export default class Graph extends Component {
           <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
           <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
           <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
-
           <CytoscapeComponent
             className="graph"
             elements={elements}
