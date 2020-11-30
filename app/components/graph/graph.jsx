@@ -11,6 +11,7 @@ import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
 import GraphDetails from '../graph-details';
 import { getYoutubeVideoForNode } from '../../services/content-service';
+import GraphToolbar from '../graph-toolbar';
 
 export default class Graph extends Component {
   constructor() {
@@ -143,12 +144,7 @@ export default class Graph extends Component {
 
         <Grid item xs={9}>
           {!viewOnly && (
-          <div>
-            <button type="button" onClick={this.updateData}>Save</button>
-            <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
-            <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
-            <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
-          </div>
+          <GraphToolbar switchTool={this.switchTool} updateData={this.updateData} />
           )}
 
           <CytoscapeComponent
