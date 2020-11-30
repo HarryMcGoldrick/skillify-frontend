@@ -127,6 +127,8 @@ export default class Graph extends Component {
       elements, selectedNode, graphName, youtubeNodeData,
     } = this.state;
 
+    const { viewOnly } = this.props;
+
     return (
       <Grid container style={{ minHeight: '100vh' }}>
         <Grid item xs={3}>
@@ -135,14 +137,20 @@ export default class Graph extends Component {
             selectedNode={selectedNode}
             updateSelectedNode={this.updateSelectedNode}
             youtubeContentData={youtubeNodeData}
+            viewOnly={viewOnly}
           />
         </Grid>
 
         <Grid item xs={9}>
-          <button type="button" onClick={this.updateData}>Save</button>
-          <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
-          <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
-          <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
+          {!viewOnly && (
+          <div>
+            <button type="button" onClick={this.updateData}>Save</button>
+            <button type="button" onClick={() => this.switchTool(tools.SELECT)}>Select</button>
+            <button type="button" onClick={() => this.switchTool(tools.ADD)}>Add</button>
+            <button type="button" onClick={() => this.switchTool(tools.DELETE)}>Delete</button>
+          </div>
+          )}
+
           <CytoscapeComponent
             className="graph"
             elements={elements}
@@ -158,4 +166,5 @@ export default class Graph extends Component {
 
 Graph.propTypes = {
   id: PropTypes.string.isRequired,
+  viewOnly: PropTypes.bool.isRequired,
 };

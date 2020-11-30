@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 const GraphDetails = (props) => {
   const { register, handleSubmit } = useForm();
   const {
-    graphName, selectedNode, updateSelectedNode, youtubeContentData,
+    graphName, selectedNode, updateSelectedNode, youtubeContentData, viewOnly,
   } = props;
   const { label } = selectedNode;
 
@@ -24,7 +24,7 @@ const GraphDetails = (props) => {
         {` ${label || ''}`}
 
       </h3>
-      {label && (
+      {!viewOnly && label && (
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField name="nodeLabel" label="Node label" variant="outlined" inputRef={register({ required: true })} />
@@ -55,6 +55,7 @@ GraphDetails.propTypes = {
   }),
   updateSelectedNode: PropTypes.func.isRequired,
   youtubeContentData: PropTypes.object,
+  viewOnly: PropTypes.bool.isRequired,
 };
 
 GraphDetails.defaultProps = {

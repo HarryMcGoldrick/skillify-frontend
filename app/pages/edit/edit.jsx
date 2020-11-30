@@ -5,7 +5,7 @@ import Graph from '../../components/graph/graph';
 export default function Edit(props) {
   const { id } = props;
   return (
-    <Graph id={id} />
+    <Graph id={id} viewOnly={false} />
   );
 }
 
