@@ -1,30 +1,6 @@
 import 'regenerator-runtime/runtime';
+import axios from '../utils/axios';
 
-export const login = (username, password) => {
-  const response = fetch('http://localhost:3000/user/login', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-  }).then((res) => res.json()).catch((err) => console.log(err));
-  return response;
-};
+export const login = (username, password) => axios.post('http://localhost:3000/user/login', { username, password }).then((res) => res.data);
 
-export const register = (username, password) => {
-  fetch('http://localhost:3000/user/register', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-  }).then((res) => console.log(res)).catch((err) => console.log(err));
-};
+export const register = (username, password) => axios.post('http://localhost:3000/user/register', { username, password }).then((res) => res.data);

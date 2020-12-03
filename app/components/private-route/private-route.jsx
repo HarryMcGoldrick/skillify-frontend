@@ -22,13 +22,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 PrivateRoute.propTypes = {
   component: PropTypes.func,
   match: PropTypes.object,
-  location: PropTypes.string,
+  location: PropTypes.object,
 };
 
 PrivateRoute.defaultProps = {
   component: () => {},
   match: {},
-  location: '',
+  location: {},
 };
 
 export default PrivateRoute;

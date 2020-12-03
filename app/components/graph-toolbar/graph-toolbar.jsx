@@ -11,7 +11,7 @@ const GraphToolbar = (props) => {
   const { switchTool, updateData } = props;
   return (
     <div>
-      <IconButton aria-label="save" onClick={() => updateData}>
+      <IconButton aria-label="save" onClick={() => updateData()}>
         <SaveIcon />
       </IconButton>
       <IconButton aria-label="select" onClick={() => switchTool(tools.SELECT)}>

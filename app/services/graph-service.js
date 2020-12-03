@@ -1,52 +1,13 @@
 import 'regenerator-runtime/runtime';
+import axios from '../utils/axios';
 
-export const createNewGraph = (name) => {
-  const response = fetch('http://localhost:3000/graph', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name,
-    }),
-  }).then((res) => res.json()).then((data) => data);
-  return response;
-};
+export const createNewGraph = (name) => axios.post('http://localhost:3000/graph', { name }).then((res) => res.data);
 
-export const loadGraphElements = async (id) => {
-  const response = fetch(`http://localhost:3000/graph/${id}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  }).then((res) => res.json());
-  return response;
-};
+export const loadGraphElements = async (id) => axios.get(`http://localhost:3000/graph/${id}`).then((res) => res.data);
 
-export const updateGraphElements = async (id, elements) => {
-  const response = fetch(`http://localhost:3000/graph/${id}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      nodes: elements.nodes,
-      edges: elements.edges,
-    }),
-  }).then((res) => res.json());
-  return response;
-};
+export const updateGraphElements = async (id, elements) => axios.post(`http://localhost:3000/graph/${id}`, {
+  nodes: elements.nodes,
+  edges: elements.edges,
+}).then((res) => res.data);
 
-export const getGraphViews = async () => {
-  const response = fetch('http://localhost:3000/graph/views', {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  }).then((res) => res.json());
-  return response;
-};
+export const getGraphViews = async () => axios.get('http://localhost:3000/graph/views').then((res) => res.data);

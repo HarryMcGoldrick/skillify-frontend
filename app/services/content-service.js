@@ -1,13 +1,5 @@
 import 'regenerator-runtime/runtime';
+import axios from '../utils/axios';
 
 // eslint-disable-next-line import/prefer-default-export
-export const getYoutubeVideoForNode = async (label) => {
-  const response = fetch(`http://localhost:3000/content/youtube?label=${label}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  }).then((res) => res.json());
-  return response;
-};
+export const getYoutubeVideoForNode = async (label) => axios.get(`/content/youtube?label=${label}`).then((res) => res.json());
