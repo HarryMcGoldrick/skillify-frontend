@@ -6,7 +6,7 @@ import edgehandles from 'cytoscape-edgehandles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { loadGraphElements, updateGraphElements } from '../../services/graph-service';
-import { extractDiagramDataFromGraphData } from '../../utils/graph-data';
+import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
 import GraphDetails from '../graph-details/graph-details';

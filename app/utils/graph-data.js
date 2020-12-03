@@ -1,6 +1,5 @@
 // Prepares data to be sent to the API
-// eslint-disable-next-line import/prefer-default-export
-export const extractDiagramDataFromGraphData = (graphData) => {
+const extractDiagramDataFromGraphData = (graphData) => {
   const edges = [];
   const nodes = [];
   if (!graphData) return {};
@@ -24,3 +23,5 @@ export const extractDiagramDataFromGraphData = (graphData) => {
   }
   return { edges: edges[0], nodes: nodes[0] };
 };
+
+export default extractDiagramDataFromGraphData;

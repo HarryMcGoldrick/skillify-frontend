@@ -7,6 +7,7 @@ import PanToolIcon from '@material-ui/icons/PanTool';
 import SaveIcon from '@material-ui/icons/Save';
 import { tools } from '../../enums/tools';
 
+// Displays icons to select the relevant graph tool
 const GraphToolbar = (props) => {
   const { switchTool, updateData } = props;
   return (

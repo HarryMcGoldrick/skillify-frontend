@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import { useHistory } from 'react-router-dom';
 import { login } from '../../services/user-service';
+import { getSession } from '../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,8 +24,14 @@ export const LoginForm = () => {
 
   const onSubmit = (data) => {
     login(data.username, data.password).then((res) => {
-      Cookies.set('access_token', res.token, { expires: Math.floor(Date.now() / 1000) + (60 * 60) * 6 });
-      history.push('/');
+      const session = getSession(res.token);
+      if (session) {
+        const { userId, exp: expires } = session;
+        // Set a cookie to expire using the expiry time embedded in the JWT
+        Cookies.set('access_token', res.token, { expires });
+        localStorage.setItem('userId', userId);
+        history.push('/');
+      }
     });
   };
 

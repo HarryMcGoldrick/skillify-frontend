@@ -3,6 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
+// Used to display the details of the graph and selected node
 const GraphDetails = (props) => {
   const { register, handleSubmit } = useForm();
   const {

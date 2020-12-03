@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 
+// Parse the JWT token stored inside the cookies
 export const getSession = () => {
   const jwt = Cookies.get('access_token');
   let session;
@@ -10,6 +11,7 @@ export const getSession = () => {
       session = JSON.parse(window.atob(base64));
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error);
   }
   return session;

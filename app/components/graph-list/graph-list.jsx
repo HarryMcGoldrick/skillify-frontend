@@ -2,6 +2,7 @@ import { ListItem, ListItemText } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { getGraphViews } from '../../services/graph-service';
 
+// Displays a list of graphNames that link to the relevant graph
 const GraphList = () => {
   const [graphViews, setGraphViews] = useState([]);
 
