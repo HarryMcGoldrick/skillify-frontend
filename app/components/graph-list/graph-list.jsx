@@ -6,11 +6,13 @@ const GraphList = () => {
   const [graphViews, setGraphViews] = useState([]);
 
   useEffect(() => {
+    // Returns a list of graphIds and graphNames
     getGraphViews().then((graphs) => {
       setGraphViews(graphs);
     });
   }, []);
 
+  // Creates a linkable ListItem
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }

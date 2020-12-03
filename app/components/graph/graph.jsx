@@ -25,6 +25,7 @@ export default class Graph extends Component {
   componentDidMount = () => {
     const { id } = this.props;
 
+    // Use the graphId from the url to load the associated graph
     loadGraphElements(id).then((data) => {
       const graphName = data.graph.name;
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
@@ -33,22 +34,25 @@ export default class Graph extends Component {
         graphName,
       });
     });
-    this.enableEditing();
+    this.enableEdgehandles();
     this.switchTool(tools.SELECT);
   };
 
+  // Saves the changes made to a graph
   updateData = () => {
     const { id } = this.props;
     updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
   }
 
+  // Get relevant youtube content for a node label
   getYoutubeContentForNode = (label) => {
     getYoutubeVideoForNode(label).then((data) => {
       this.setState({ youtubeNodeData: data.response.items[0] });
     });
   }
 
-  enableEditing = () => {
+  // Adds drawable edges to nodes
+  enableEdgehandles = () => {
     if (!this.cy.edgehandles) {
       cytoscape.use(edgehandles);
       this.cy.style(edgeHandleStyle);
@@ -57,6 +61,7 @@ export default class Graph extends Component {
     }
   }
 
+  // Updates the node label
   updateSelectedNode = (data) => {
     const { selectedNode } = this.state;
     const { id } = selectedNode;
@@ -66,11 +71,13 @@ export default class Graph extends Component {
     }
   }
 
+  // Remove the event listeners added by the tools - enables switching of tools
   removeListeners = () => {
     this.cy.removeListener('tap');
     this.cy.removeListener('click');
   }
 
+  // Sets the currentNode state object when a node is clicked
   selectNodeTool = () => {
     this.cy.on('click', 'node', (event) => {
       // Prevent edgehandle from being selected
@@ -83,6 +90,7 @@ export default class Graph extends Component {
     });
   }
 
+  // Adds a node onto the graph
   addNodeTool = () => {
     this.cy.on('tap', (event) => {
       if (event.target === this.cy) {
@@ -96,6 +104,7 @@ export default class Graph extends Component {
     });
   }
 
+  // Removes nodes and edges on click
   deleteNodeAndEdgeTool = () => {
     this.cy.on('tap', (event) => {
       if (event.target !== this.cy) {
@@ -104,6 +113,7 @@ export default class Graph extends Component {
     });
   }
 
+  // Used to remove listeners and switch tools
   switchTool = (tool) => {
     // Remove previous tools
     this.removeListeners();

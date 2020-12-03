@@ -3,6 +3,9 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import Cookies from 'js-cookie';
+import { useHistory } from 'react-router-dom';
+import { login } from '../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,7 +19,14 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginForm() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const history = useHistory();
+
+  const onSubmit = (data) => {
+    login(data.username, data.password).then((res) => {
+      Cookies.set('access_token', res.token, { expires: Math.floor(Date.now() / 1000) + (60 * 60) * 6 });
+      history.push('/');
+    });
+  };
 
   return (
     <div>

@@ -23,6 +23,7 @@ export const GraphCreateForm = () => {
   const onSubmit = async (data) => {
     createNewGraph(data.name).then((res) => {
       const { graphId } = res;
+      // Navigate to edit page with the graphId returned from the API
       history.push(`/edit/${graphId}`);
     });
   };

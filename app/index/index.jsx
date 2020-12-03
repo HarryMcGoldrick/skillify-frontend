@@ -14,6 +14,7 @@ import Login from '../pages/login';
 import ViewList from '../pages/view-list';
 import Create from '../pages/create';
 import ViewGraph from '../pages/view-graph';
+import PrivateRoute from '../components/private-route/private-route';
 
 const App = () => (
   <>
@@ -22,9 +23,9 @@ const App = () => (
       <Route exact path="/" component={Welcome} />
       <Route exact path="/view" component={ViewList} />
       <Route path="/view/:id" render={({ match }) => (<ViewGraph id={match.params.id} />)} />
-      <Route exact path="/create" component={Create} />
-      <Route path="/edit/:id" render={({ match }) => (<Edit id={match.params.id} />)} />
       <Route exact path="/login" component={Login} />
+      <PrivateRoute exact Route path="/create" component={Create} />
+      <PrivateRoute path="/edit/:id" component={Edit} />
     </Switch>
   </>
 );
