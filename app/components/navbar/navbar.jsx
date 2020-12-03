@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Navbar() {
+export const Navbar = () => {
   const classes = useStyles();
 
   return (
@@ -27,4 +27,6 @@ export default function Navbar() {
       </AppBar>
     </div>
   );
-}
+};
+
+export default Navbar;

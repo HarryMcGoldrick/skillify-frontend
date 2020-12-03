@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Welcome() {
+const Welcome = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -51,4 +51,6 @@ export default function Welcome() {
       </Grid>
     </div>
   );
-}
+};
+
+export default Welcome;

@@ -9,9 +9,8 @@ import { loadGraphElements, updateGraphElements } from '../../services/graph-ser
 import { extractDiagramDataFromGraphData } from '../../utils/graph-data';
 import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
-import GraphDetails from '../graph-details';
+import { GraphDetails, GraphToolbar } from '../index';
 import { getYoutubeVideoForNode } from '../../services/content-service';
-import GraphToolbar from '../graph-toolbar';
 
 export default class Graph extends Component {
   constructor() {

@@ -7,14 +7,10 @@ import {
 } from 'react-router-dom';
 import 'fontsource-roboto';
 import './index.css';
-import Navbar from '../components/navbar';
-import Welcome from '../pages/welcome';
-import Edit from '../pages/edit';
-import Login from '../pages/login';
-import ViewList from '../pages/view-list';
-import Create from '../pages/create';
-import ViewGraph from '../pages/view-graph';
-import PrivateRoute from '../components/private-route/private-route';
+import {
+  Welcome, Edit, Login, ViewList, Create, ViewGraph,
+} from '../pages';
+import { PrivateRoute, Navbar } from '../components';
 
 const App = () => (
   <>

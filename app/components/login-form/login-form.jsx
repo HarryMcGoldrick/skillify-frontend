@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginForm() {
+export const LoginForm = () => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
@@ -54,4 +54,6 @@ export default function LoginForm() {
       </form>
     </div>
   );
-}
+};
+
+export default LoginForm;

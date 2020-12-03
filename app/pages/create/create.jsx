@@ -1,5 +1,5 @@
 import React from 'react';
-import GraphCreateForm from '../../components/graph-create-form';
+import { GraphCreateForm } from '../../components';
 
 const Create = () => (
   <GraphCreateForm />

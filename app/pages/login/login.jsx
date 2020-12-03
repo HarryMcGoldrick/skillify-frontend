@@ -1,9 +1,8 @@
-import { Grid } from '@material-ui/core';
 import React from 'react';
-import LoginForm from '../../components/login-form/login-form';
+import { LoginForm } from '../../components';
 
-export default function Login() {
-  return (
-    <LoginForm />
-  );
-}
+const Login = () => (
+  <LoginForm />
+);
+
+export default Login;
