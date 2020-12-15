@@ -14,7 +14,7 @@ const GraphDetails = (props) => {
   const onSubmit = (data) => updateSelectedNode(data);
 
   return (
-    <div>
+    <div style={{ minWidth: '300px' }}>
       <h3>
         Map:
         {` ${graphName || ''}`}

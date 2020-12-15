@@ -3,8 +3,10 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
-import { Grid } from '@material-ui/core';
+import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import dagre from 'cytoscape-dagre';
+import automove from 'cytoscape-automove';
 import { loadGraphElements, updateGraphElements } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import edgeHandleStyle from './styles';
@@ -20,11 +22,19 @@ export default class Graph extends Component {
     this.state = {
       elements: [],
       selectedNode: {},
+      isDrawerOpened: false,
     };
   }
 
   componentDidMount = () => {
     const { id } = this.props;
+    cytoscape.use(dagre);
+    cytoscape.use(automove);
+    this.cy.automove({
+      // eslint-disable-next-line no-unused-vars
+      nodesMatching(node) { return true; },
+      reposition: 'viewport',
+    });
 
     // Use the graphId from the url to load the associated graph
     loadGraphElements(id).then((data) => {
@@ -42,6 +52,7 @@ export default class Graph extends Component {
   // Saves the changes made to a graph
   updateData = () => {
     const { id } = this.props;
+    this.cy.layout({ name: 'dagre' }).run();
     updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
   }
 
@@ -88,7 +99,14 @@ export default class Graph extends Component {
       const currentNode = event.target.data();
       this.setState({ selectedNode: { ...currentNode } });
       this.getYoutubeContentForNode(currentNode.label);
+      this.toggleDrawer();
     });
+  }
+
+  toggleDrawer = () => {
+    const { isDrawerOpened } = this.state;
+    this.setState({ isDrawerOpened: !isDrawerOpened });
+    this.cy.resize();
   }
 
   // Adds a node onto the graph
@@ -136,24 +154,28 @@ export default class Graph extends Component {
 
   render() {
     const {
-      elements, selectedNode, graphName, youtubeNodeData,
+      elements, selectedNode, graphName, youtubeNodeData, isDrawerOpened,
     } = this.state;
 
     const { viewOnly } = this.props;
 
     return (
-      <Grid container style={{ minHeight: '100vh' }}>
-        <Grid item xs={3}>
-          <GraphDetails
-            graphName={graphName}
-            selectedNode={selectedNode}
-            updateSelectedNode={this.updateSelectedNode}
-            youtubeContentData={youtubeNodeData}
-            viewOnly={viewOnly}
-          />
+      <Grid container justify="center">
+        <Grid item>
+          <Drawer anchor="left" open={isDrawerOpened} variant="persistent">
+            <GraphDetails
+              graphName={graphName}
+              selectedNode={selectedNode}
+              updateSelectedNode={this.updateSelectedNode}
+              youtubeContentData={youtubeNodeData}
+              viewOnly={viewOnly}
+            />
+          </Drawer>
         </Grid>
 
-        <Grid item xs={9}>
+        {/* Inline style has to be used here aswell unfortunately */}
+        <Grid item className={isDrawerOpened ? 'drawer-open' : 'drawer-close'} style={isDrawerOpened ? { marginLeft: '600px' } : {}}>
+
           {!viewOnly && (
           <GraphToolbar switchTool={this.switchTool} updateData={this.updateData} />
           )}
@@ -167,6 +189,7 @@ export default class Graph extends Component {
           />
         </Grid>
       </Grid>
+
     );
   }
 }

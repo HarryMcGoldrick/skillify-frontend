@@ -12,6 +12,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     background: '#F4FAFF',
     boxShadow: 'none',
+    position: 'relative',
+    zIndex: 1400,
   },
 }));
 
@@ -20,9 +22,9 @@ export const Navbar = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.navBar}>
+      <AppBar className={classes.navBar}>
         <Container maxWidth="md">
-          <Toolbar />
+          <Toolbar gutters={false} position="fixed" />
         </Container>
       </AppBar>
     </div>
