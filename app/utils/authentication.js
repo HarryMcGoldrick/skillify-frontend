@@ -1,8 +1,7 @@
 import Cookies from 'js-cookie';
 
 // Parse the JWT token stored inside the cookies
-export const getSession = () => {
-  const jwt = Cookies.get('access_token');
+export const getSession = (jwt) => {
   let session;
   try {
     if (jwt) {
