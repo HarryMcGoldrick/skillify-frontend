@@ -22,7 +22,7 @@ export default class Graph extends Component {
     this.state = {
       elements: [],
       selectedNode: {},
-      isDrawerOpened: false,
+      selectedLayout: '',
     };
   }
 
@@ -44,6 +44,7 @@ export default class Graph extends Component {
         elements: cytoscapeData,
         graphName,
       });
+      this.centerOnGraph();
     });
     this.enableEdgehandles();
     this.switchTool(tools.SELECT);
@@ -52,14 +53,13 @@ export default class Graph extends Component {
   // Saves the changes made to a graph
   updateData = () => {
     const { id } = this.props;
-    this.cy.layout({ name: 'dagre' }).run();
     updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
   }
 
   // Get relevant youtube content for a node label
   getYoutubeContentForNode = (label) => {
-    getYoutubeVideoForNode(label).then((data) => {
-      this.setState({ youtubeNodeData: data.response.items[0] });
+    getYoutubeVideoForNode(label).then((res) => {
+      this.setState({ youtubeNodeData: res.data.response.items[0] });
     });
   }
 
@@ -96,17 +96,17 @@ export default class Graph extends Component {
       if (event.target.classes()[0] === 'eh-handle') {
         return;
       }
-      const currentNode = event.target.data();
-      this.setState({ selectedNode: { ...currentNode } });
-      this.getYoutubeContentForNode(currentNode.label);
-      this.toggleDrawer();
-    });
-  }
 
-  toggleDrawer = () => {
-    const { isDrawerOpened } = this.state;
-    this.setState({ isDrawerOpened: !isDrawerOpened });
-    this.cy.resize();
+      const currentNode = event.target.data();
+      const { selectedNode } = this.state;
+      if (currentNode && currentNode.id === selectedNode.id) {
+        // Deselect node
+        this.setState({ selectedNode: {} });
+      } else {
+        this.setState({ selectedNode: { ...currentNode } });
+        this.getYoutubeContentForNode(currentNode.label);
+      }
+    });
   }
 
   // Adds a node onto the graph
@@ -152,17 +152,36 @@ export default class Graph extends Component {
     }
   }
 
+  switchLayout = (layout) => {
+    this.setState({ selectedLayout: layout });
+  }
+
+  runLayout = () => {
+    const { selectedLayout } = this.state;
+    if (selectedLayout) {
+      this.cy.layout({ name: selectedLayout }).run();
+      this.centerOnGraph();
+    }
+  }
+
+  centerOnGraph = () => {
+    // TODO Need to tinker with this more
+    this.cy.fit();
+  }
+
   render() {
     const {
-      elements, selectedNode, graphName, youtubeNodeData, isDrawerOpened,
+      elements, selectedNode, graphName, youtubeNodeData,
     } = this.state;
+
+    const isNodeSelected = selectedNode.id;
 
     const { viewOnly } = this.props;
 
     return (
       <Grid container justify="center">
         <Grid item>
-          <Drawer anchor="left" open={isDrawerOpened} variant="persistent">
+          <Drawer anchor="left" open={Boolean(isNodeSelected)} variant="persistent">
             <GraphDetails
               graphName={graphName}
               selectedNode={selectedNode}
@@ -173,11 +192,16 @@ export default class Graph extends Component {
           </Drawer>
         </Grid>
 
-        {/* Inline style has to be used here aswell unfortunately */}
-        <Grid item className={isDrawerOpened ? 'drawer-open' : 'drawer-close'} style={isDrawerOpened ? { marginLeft: '600px' } : {}}>
+        {/* Inline style has to be used here unfortunately */}
+        <Grid item className={isNodeSelected ? 'drawer-open' : 'drawer-close'} style={isNodeSelected ? { marginLeft: '600px' } : {}}>
 
           {!viewOnly && (
-          <GraphToolbar switchTool={this.switchTool} updateData={this.updateData} />
+          <GraphToolbar
+            switchTool={this.switchTool}
+            updateData={this.updateData}
+            switchLayout={this.switchLayout}
+            runLayout={this.runLayout}
+          />
           )}
 
           <CytoscapeComponent
