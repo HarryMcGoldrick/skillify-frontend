@@ -117,7 +117,6 @@ export default class Graph extends Component {
         this.cy.add({
           group: 'nodes',
           position: { x, y },
-          data: { label: 'test' },
         });
       }
     });

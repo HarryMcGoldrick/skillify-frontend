@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Link, Typography } from '@material-ui/core';
+import { getExistingSession, isAuthenticated } from '../../utils/authentication';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles(() => ({
 
 export const Navbar = () => {
   const classes = useStyles();
+  const { username: profileText, userId } = isAuthenticated() ? getExistingSession() : 'Login';
 
   return (
     <div className={classes.root}>
@@ -47,7 +49,7 @@ export const Navbar = () => {
             </Link>
           </Typography>
           <span className={classes.linkSeperator} />
-          <Button color="inherit" href="/login">Login</Button>
+          <Button color="inherit" href={profileText ? `/user/${userId}` : '/login'}>{profileText}</Button>
         </Toolbar>
       </AppBar>
     </div>
