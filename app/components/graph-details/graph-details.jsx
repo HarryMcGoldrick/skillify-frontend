@@ -1,31 +1,42 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, makeStyles, TextField } from '@material-ui/core';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
+const useStyles = makeStyles({
+  container: {
+    minWidth: '350px',
+    margin: '10px',
+  },
+  title: {
+    textAlign: 'center',
+  },
+});
+
 // Used to display the details of the graph and selected node
 const GraphDetails = (props) => {
+  const classes = useStyles();
   const { register, handleSubmit } = useForm();
   const {
-    graphName, selectedNode, updateSelectedNode, youtubeContentData, viewOnly,
+    graphName, graphDescription, selectedNode, updateSelectedNode, youtubeContentData, viewOnly,
   } = props;
   const { label } = selectedNode;
 
   const onSubmit = (data) => updateSelectedNode(data);
 
   return (
-    <div style={{ minWidth: '300px' }}>
-      <h3>
-        Map:
+    <div className={classes.container}>
+      <h3 className={classes.title}>
         {` ${graphName || ''}`}
       </h3>
+      <p>{` ${graphDescription || ''}`}</p>
       <hr />
       <h3>
         Node:
         {` ${label || ''}`}
 
       </h3>
-      {!viewOnly && label && (
+      {!viewOnly && (
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField name="nodeLabel" label="Node label" variant="outlined" inputRef={register({ required: true })} />
@@ -33,7 +44,7 @@ const GraphDetails = (props) => {
           </form>
         </div>
       )}
-      {youtubeContentData && (
+      {viewOnly && youtubeContentData && (
       <iframe
         id="ytplayer"
         title="ytplayer"

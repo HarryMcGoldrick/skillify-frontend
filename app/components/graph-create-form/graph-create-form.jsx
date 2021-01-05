@@ -21,7 +21,8 @@ export const GraphCreateForm = () => {
   const history = useHistory();
 
   const onSubmit = async (data) => {
-    createNewGraph(data.name).then((res) => {
+    console.log(data);
+    createNewGraph(data.name, data.description).then((res) => {
       const { graphId } = res;
       // Navigate to edit page with the graphId returned from the API
       history.push(`/edit/${graphId}`);
@@ -41,6 +42,9 @@ export const GraphCreateForm = () => {
         <Paper className={classes.paper}>
           <Grid item xs={12} className={classes.formInput}>
             <TextField name="name" label="Name" variant="outlined" inputRef={register({ required: true })} />
+          </Grid>
+          <Grid item xs={12} className={classes.formInput}>
+            <TextField name="description" label="Description" variant="outlined" inputRef={register({ required: true })} />
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" fullWidth>Create</Button>

@@ -1,7 +1,7 @@
 import 'regenerator-runtime/runtime';
 import axios from '../utils/axios';
 
-export const createNewGraph = (name) => axios.post('http://localhost:3000/graph', { name }).then((res) => res.data);
+export const createNewGraph = (name, description) => axios.post('http://localhost:3000/graph', { name, description }).then((res) => res.data);
 
 export const loadGraphElements = async (id) => axios.get(`http://localhost:3000/graph/${id}`).then((res) => res.data);
 

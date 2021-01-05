@@ -10,7 +10,7 @@
 .drawer-open {
   width: 100%;
   /* Limits the width of the node graph to prevent nodes being dragged offscreen */
-  padding-right: 350px;
+  padding-right: 320px;
 }
 
 .drawer-close {

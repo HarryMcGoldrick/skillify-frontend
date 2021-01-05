@@ -23,11 +23,12 @@ export default class Graph extends Component {
       elements: [],
       selectedNode: {},
       selectedLayout: '',
+      drawerOpen: false,
     };
   }
 
   componentDidMount = () => {
-    const { id } = this.props;
+    const { id, viewOnly } = this.props;
     cytoscape.use(dagre);
     cytoscape.use(automove);
     this.cy.automove({
@@ -36,17 +37,25 @@ export default class Graph extends Component {
       reposition: 'viewport',
     });
 
+    if (viewOnly) {
+      this.cy.autolock(true);
+    } else {
+      this.enableEdgehandles();
+    }
+
     // Use the graphId from the url to load the associated graph
     loadGraphElements(id).then((data) => {
+      console.log(data);
       const graphName = data.graph.name;
+      const graphDescription = data.graph.description;
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
       this.setState({
         elements: cytoscapeData,
         graphName,
+        graphDescription,
       });
       this.centerOnGraph();
     });
-    this.enableEdgehandles();
     this.switchTool(tools.SELECT);
   };
 
@@ -80,6 +89,7 @@ export default class Graph extends Component {
     const node = this.cy.elements(`node[id = "${id}"]`)[0];
     if (node) {
       node.data('label', data.nodeLabel);
+      this.selectNode(node.data());
     }
   }
 
@@ -91,22 +101,33 @@ export default class Graph extends Component {
 
   // Sets the currentNode state object when a node is clicked
   selectNodeTool = () => {
+    this.cy.on('tap', (event) => {
+      if (event.target === this.cy) {
+        this.selectNode({});
+        this.setState({ drawerOpen: false });
+      }
+    });
+
     this.cy.on('click', 'node', (event) => {
       // Prevent edgehandle from being selected
       if (event.target.classes()[0] === 'eh-handle') {
         return;
       }
 
-      const currentNode = event.target.data();
-      const { selectedNode } = this.state;
-      if (currentNode && currentNode.id === selectedNode.id) {
-        // Deselect node
-        this.setState({ selectedNode: {} });
-      } else {
-        this.setState({ selectedNode: { ...currentNode } });
-        this.getYoutubeContentForNode(currentNode.label);
-      }
+      const currentNode = event.target;
+      const style = {
+        style: {
+          'background-color': 'red',
+        },
+      };
+      currentNode.style(style.style);
+      this.selectNode(currentNode.data());
     });
+  }
+
+  selectNode = (node) => {
+    this.setState({ selectedNode: { ...node }, drawerOpen: true });
+    // this.getYoutubeContentForNode(node.label);
   }
 
   // Adds a node onto the graph
@@ -118,6 +139,9 @@ export default class Graph extends Component {
           group: 'nodes',
           position: { x, y },
         });
+        // Select the newest node added
+        const node = this.cy.nodes().pop();
+        this.selectNode(node.data());
       }
     });
   }
@@ -170,19 +194,19 @@ export default class Graph extends Component {
 
   render() {
     const {
-      elements, selectedNode, graphName, youtubeNodeData,
+      elements, selectedNode, graphName, youtubeNodeData, drawerOpen, graphDescription,
     } = this.state;
-
-    const isNodeSelected = selectedNode.id;
 
     const { viewOnly } = this.props;
 
     return (
       <Grid container justify="center">
+
         <Grid item>
-          <Drawer anchor="left" open={Boolean(isNodeSelected)} variant="persistent">
+          <Drawer anchor="left" open={drawerOpen} variant="persistent">
             <GraphDetails
               graphName={graphName}
+              graphDescription={graphDescription}
               selectedNode={selectedNode}
               updateSelectedNode={this.updateSelectedNode}
               youtubeContentData={youtubeNodeData}
@@ -192,7 +216,7 @@ export default class Graph extends Component {
         </Grid>
 
         {/* Inline style has to be used here unfortunately */}
-        <Grid item className={isNodeSelected ? 'drawer-open' : 'drawer-close'} style={isNodeSelected ? { marginLeft: '600px' } : {}}>
+        <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
 
           {!viewOnly && (
           <GraphToolbar
