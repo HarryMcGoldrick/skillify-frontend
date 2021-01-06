@@ -13,6 +13,7 @@ import edgeHandleStyle from './styles';
 import { tools } from '../../enums/tools';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
+import NodeDetails from '../node-details/node-details';
 
 import { getYoutubeVideoForNode } from '../../services/content-service';
 
@@ -45,7 +46,6 @@ export default class Graph extends Component {
 
     // Use the graphId from the url to load the associated graph
     loadGraphElements(id).then((data) => {
-      console.log(data);
       const graphName = data.graph.name;
       const graphDescription = data.graph.description;
       const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
@@ -126,7 +126,7 @@ export default class Graph extends Component {
   }
 
   selectNode = (node) => {
-    this.setState({ selectedNode: { ...node }, drawerOpen: true });
+    this.setState({ selectedNode: { ...node } });
     // this.getYoutubeContentForNode(node.label);
   }
 
@@ -198,6 +198,8 @@ export default class Graph extends Component {
     } = this.state;
 
     const { viewOnly } = this.props;
+    const nodeSelected = Boolean(selectedNode.id);
+    console.log(nodeSelected);
 
     return (
       <Grid container justify="center">
@@ -226,6 +228,8 @@ export default class Graph extends Component {
             runLayout={this.runLayout}
           />
           )}
+
+          <NodeDetails isOpen={nodeSelected} nodeData={selectedNode} />
 
           <CytoscapeComponent
             className="graph"
