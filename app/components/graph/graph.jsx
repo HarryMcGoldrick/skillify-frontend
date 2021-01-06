@@ -7,15 +7,11 @@ import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import dagre from 'cytoscape-dagre';
 import automove from 'cytoscape-automove';
-import { loadGraphElements, updateGraphElements } from '../../services/graph-service';
-import extractDiagramDataFromGraphData from '../../utils/graph-data';
+import { loadGraphElements } from '../../services/graph-service';
 import edgeHandleStyle from './styles';
-import { tools } from '../../enums/tools';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
 import NodeDetails from '../node-details/node-details';
-
-import { getYoutubeVideoForNode } from '../../services/content-service';
 
 export default class Graph extends Component {
   constructor() {
@@ -23,25 +19,18 @@ export default class Graph extends Component {
     this.state = {
       elements: [],
       selectedNode: {},
-      selectedLayout: '',
       drawerOpen: false,
     };
   }
 
   componentDidMount = () => {
     const { id, viewOnly } = this.props;
-    cytoscape.use(dagre);
-    cytoscape.use(automove);
-    this.cy.automove({
-      // eslint-disable-next-line no-unused-vars
-      nodesMatching(node) { return true; },
-      reposition: 'viewport',
-    });
+    this.initCytoscapeExtensions();
 
     if (viewOnly) {
-      this.cy.autolock(true);
+      this.initViewMode();
     } else {
-      this.enableEdgehandles();
+      this.initEditMode();
     }
 
     // Use the graphId from the url to load the associated graph
@@ -54,23 +43,10 @@ export default class Graph extends Component {
         graphName,
         graphDescription,
       });
-      this.centerOnGraph();
+      // Center the graph with a padding of 200
+      this.cy.fit(200);
     });
-    this.switchTool(tools.SELECT);
   };
-
-  // Saves the changes made to a graph
-  updateData = () => {
-    const { id } = this.props;
-    updateGraphElements(id, extractDiagramDataFromGraphData(this.cy.json()));
-  }
-
-  // Get relevant youtube content for a node label
-  getYoutubeContentForNode = (label) => {
-    getYoutubeVideoForNode(label).then((res) => {
-      this.setState({ youtubeNodeData: res.data.response.items[0] });
-    });
-  }
 
   // Adds drawable edges to nodes
   enableEdgehandles = () => {
@@ -82,124 +58,37 @@ export default class Graph extends Component {
     }
   }
 
-  // Updates the node label
-  updateSelectedNode = (data) => {
-    const { selectedNode } = this.state;
-    const { id } = selectedNode;
-    const node = this.cy.elements(`node[id = "${id}"]`)[0];
-    if (node) {
-      node.data('label', data.nodeLabel);
-      this.selectNode(node.data());
-    }
-  }
-
-  // Remove the event listeners added by the tools - enables switching of tools
-  removeListeners = () => {
-    this.cy.removeListener('tap');
-    this.cy.removeListener('click');
-  }
-
-  // Sets the currentNode state object when a node is clicked
-  selectNodeTool = () => {
-    this.cy.on('tap', (event) => {
-      if (event.target === this.cy) {
-        this.selectNode({});
-        this.setState({ drawerOpen: false });
-      }
-    });
-
-    this.cy.on('click', 'node', (event) => {
-      // Prevent edgehandle from being selected
-      if (event.target.classes()[0] === 'eh-handle') {
-        return;
-      }
-
-      const currentNode = event.target;
-      const style = {
-        style: {
-          'background-color': 'red',
-        },
-      };
-      currentNode.style(style.style);
-      this.selectNode(currentNode.data());
-    });
-  }
-
   selectNode = (node) => {
     this.setState({ selectedNode: { ...node } });
-    // this.getYoutubeContentForNode(node.label);
-  }
+  };
 
-  // Adds a node onto the graph
-  addNodeTool = () => {
-    this.cy.on('tap', (event) => {
-      if (event.target === this.cy) {
-        const { x, y } = event.position;
-        this.cy.add({
-          group: 'nodes',
-          position: { x, y },
-        });
-        // Select the newest node added
-        const node = this.cy.nodes().pop();
-        this.selectNode(node.data());
-      }
+  initCytoscapeExtensions = () => {
+    // Layouts & extensions
+    cytoscape.use(dagre);
+    cytoscape.use(automove);
+    // Prevent moving nodes out of viewport
+    this.cy.automove({
+      // eslint-disable-next-line no-unused-vars
+      nodesMatching(node) { return true; },
+      reposition: 'viewport',
     });
   }
 
-  // Removes nodes and edges on click
-  deleteNodeAndEdgeTool = () => {
-    this.cy.on('tap', (event) => {
-      if (event.target !== this.cy) {
-        this.cy.remove(event.target);
-      }
-    });
+  initEditMode = () => {
+    this.enableEdgehandles();
   }
 
-  // Used to remove listeners and switch tools
-  switchTool = (tool) => {
-    // Remove previous tools
-    this.removeListeners();
-
-    switch (tool) {
-      case tools.SELECT:
-        this.selectNodeTool();
-        break;
-      case tools.ADD:
-        this.addNodeTool();
-        break;
-      case tools.DELETE:
-        this.deleteNodeAndEdgeTool();
-        break;
-      default:
-        break;
-    }
-  }
-
-  switchLayout = (layout) => {
-    this.setState({ selectedLayout: layout });
-  }
-
-  runLayout = () => {
-    const { selectedLayout } = this.state;
-    if (selectedLayout) {
-      this.cy.layout({ name: selectedLayout }).run();
-      this.centerOnGraph();
-    }
-  }
-
-  centerOnGraph = () => {
-    // TODO Need to tinker with this more
-    this.cy.fit();
+  initViewMode = () => {
+    this.cy.autolock(true);
   }
 
   render() {
     const {
-      elements, selectedNode, graphName, youtubeNodeData, drawerOpen, graphDescription,
+      elements, selectedNode, graphName, drawerOpen, graphDescription,
     } = this.state;
 
-    const { viewOnly } = this.props;
+    const { viewOnly, id: graphId } = this.props;
     const nodeSelected = Boolean(selectedNode.id);
-    console.log(nodeSelected);
 
     return (
       <Grid container justify="center">
@@ -209,9 +98,6 @@ export default class Graph extends Component {
             <GraphDetails
               graphName={graphName}
               graphDescription={graphDescription}
-              selectedNode={selectedNode}
-              updateSelectedNode={this.updateSelectedNode}
-              youtubeContentData={youtubeNodeData}
               viewOnly={viewOnly}
             />
           </Drawer>
@@ -220,12 +106,12 @@ export default class Graph extends Component {
         {/* Inline style has to be used here unfortunately */}
         <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
 
-          {!viewOnly && (
+          {!viewOnly && this.cy && (
           <GraphToolbar
-            switchTool={this.switchTool}
+            graphId={graphId}
             updateData={this.updateData}
-            switchLayout={this.switchLayout}
-            runLayout={this.runLayout}
+            selectNode={this.selectNode}
+            cy={this.cy}
           />
           )}
 

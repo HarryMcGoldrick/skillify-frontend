@@ -21,7 +21,6 @@ export const GraphCreateForm = () => {
   const history = useHistory();
 
   const onSubmit = async (data) => {
-    console.log(data);
     createNewGraph(data.name, data.description).then((res) => {
       const { graphId } = res;
       // Navigate to edit page with the graphId returned from the API

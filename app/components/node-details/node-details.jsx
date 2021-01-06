@@ -6,17 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grow, makeStyles } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const Transition = React.forwardRef((props, ref) => <Grow in ref={ref} {...props} />);
 
 const useStyles = makeStyles(() => ({
-  dialog: {
-    // minWidth: '400px',
-  },
   paper: {
     minWidth: '200px',
   },
-
 }));
 
 export default function NodeDetails(props) {
@@ -30,13 +27,27 @@ export default function NodeDetails(props) {
     setOpen(isOpen);
   }, [props]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
+
+  // // Get relevant youtube content for a node label
+  // getYoutubeContentForNode = (label) => {
+  //   getYoutubeVideoForNode(label).then((res) => {
+  //     this.setState({ youtubeNodeData: res.data.response.items[0] });
+  //   });
+  // }
+
+  // // Updates the node label
+  // updateSelectedNode = (data) => {
+  //   const { selectedNode } = this.state;
+  //   const { id } = selectedNode;
+  //   const node = this.cy.elements(`node[id = "${id}"]`)[0];
+  //   if (node) {
+  //     node.data('label', data.nodeLabel);
+  //     this.selectNode(node.data());
+  //   }
+  // }
 
   return (
     <div>
@@ -64,3 +75,11 @@ export default function NodeDetails(props) {
     </div>
   );
 }
+
+NodeDetails.propTypes = {
+  nodeData: PropTypes.shape({
+    label: PropTypes.string,
+    description: PropTypes.string,
+  }).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+};
