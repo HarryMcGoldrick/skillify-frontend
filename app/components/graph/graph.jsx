@@ -11,7 +11,7 @@ import { loadGraphElements } from '../../services/graph-service';
 import edgeHandleStyle from './styles';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
-import NodeDetails from '../node-details/node-details';
+import NodeDialog from '../node-dialog/node-dialog';
 
 export default class Graph extends Component {
   constructor() {
@@ -115,7 +115,7 @@ export default class Graph extends Component {
           />
           )}
 
-          <NodeDetails isOpen={nodeSelected} nodeData={selectedNode} />
+          <NodeDialog isOpen={nodeSelected} nodeData={selectedNode} />
 
           <CytoscapeComponent
             className="graph"

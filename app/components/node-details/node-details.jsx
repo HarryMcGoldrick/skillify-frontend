@@ -1,85 +1,64 @@
-import React, { useEffect } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { Grow, makeStyles } from '@material-ui/core';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
+import {
+  Button, Grid, makeStyles, TextField,
+} from '@material-ui/core';
 
-const Transition = React.forwardRef((props, ref) => <Grow in ref={ref} {...props} />);
-
-const useStyles = makeStyles(() => ({
-  paper: {
-    minWidth: '200px',
+const useStyles = makeStyles((theme) => ({
+  formInput: {
+    padding: theme.spacing(1),
+  },
+  formSubmit: {
+    marginTop: '20px',
+    margin: '10px',
   },
 }));
 
-export default function NodeDetails(props) {
-  const [open, setOpen] = React.useState(false);
+const NodeDetails = (props) => {
   const classes = useStyles();
-  const { nodeData } = props;
-  const { label, description } = nodeData;
 
-  useEffect(() => {
-    const { isOpen } = props;
-    setOpen(isOpen);
-  }, [props]);
+  const { register, handleSubmit } = useForm();
+  const { editMode, description, label } = props;
 
-  const handleClose = () => {
-    setOpen(false);
+  const onSubmit = () => {
+
   };
 
-  // // Get relevant youtube content for a node label
-  // getYoutubeContentForNode = (label) => {
-  //   getYoutubeVideoForNode(label).then((res) => {
-  //     this.setState({ youtubeNodeData: res.data.response.items[0] });
-  //   });
-  // }
-
-  // // Updates the node label
-  // updateSelectedNode = (data) => {
-  //   const { selectedNode } = this.state;
-  //   const { id } = selectedNode;
-  //   const node = this.cy.elements(`node[id = "${id}"]`)[0];
-  //   if (node) {
-  //     node.data('label', data.nodeLabel);
-  //     this.selectNode(node.data());
-  //   }
-  // }
-
   return (
-    <div>
-      <Dialog
-        classes={{ paper: classes.paper }}
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">{label}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {description}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Complete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <>
+      {!editMode ? (
+        <>
+          <p>{label}</p>
+          <p>{description}</p>
+        </>
+      ) : (
+        <form>
+          <Grid item xs={12} className={classes.formInput}>
+            <TextField name="Label" type="text" label="Label" inputRef={register({ required: true })} />
+          </Grid>
+          <Grid item xs={12} className={classes.formInput}>
+            <TextField multiline type="text" name="description" label="description" inputRef={register({ required: true })} />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" className={classes.formSubmit}>Cancel</Button>
+            <Button type="submit" className={classes.formSubmit}>Comfirm</Button>
+          </Grid>
+        </form>
+      )}
+    </>
   );
-}
+};
 
 NodeDetails.propTypes = {
-  nodeData: PropTypes.shape({
-    label: PropTypes.string,
-    description: PropTypes.string,
-  }).isRequired,
-  isOpen: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool.isRequired,
+  label: PropTypes.string,
+  description: PropTypes.string,
 };
+
+NodeDetails.defaultProps = {
+  label: '',
+  description: '',
+};
+
+export default NodeDetails;

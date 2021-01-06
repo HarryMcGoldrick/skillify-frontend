@@ -51,7 +51,7 @@ export const LoginForm = () => {
               <TextField name="username" label="username" variant="outlined" inputRef={register({ required: true })} />
             </Grid>
             <Grid item xs={12} className={classes.formInput}>
-              <TextField name="password" label="password" variant="outlined" inputRef={register({ required: true })} />
+              <TextField type="password" name="password" label="password" variant="outlined" inputRef={register({ required: true })} />
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" fullWidth>Login</Button>
