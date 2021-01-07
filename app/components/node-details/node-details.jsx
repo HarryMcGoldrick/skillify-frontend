@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import {
-  Button, Grid, makeStyles, TextField,
+  Button, Grid, IconButton, makeStyles, TextField,
 } from '@material-ui/core';
+import CreateIcon from '@material-ui/icons/Create';
 import { GetNodeWithId } from '../../utils/node-utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,15 +19,14 @@ const useStyles = makeStyles((theme) => ({
 
 const NodeDetails = (props) => {
   const classes = useStyles();
-  const { register, handleSubmit, watch } = useForm();
-  const {
-    editMode, nodeData, cy,
-  } = props;
-  const { id, label, description } = nodeData;
+  const { register, handleSubmit } = useForm();
+  const [editMode, setEditMode] = useState(false);
+  const [currentNodeData, setCurrentNodeData] = useState({});
+  const { cy } = props;
+  const { nodeData } = props;
 
   const onSubmit = (data) => {
-    console.log(data);
-    const node = GetNodeWithId(cy, id);
+    const node = GetNodeWithId(cy, nodeData.id);
     if (node) {
       if (data.label) {
         node.data('label', data.label);
@@ -35,14 +35,39 @@ const NodeDetails = (props) => {
         node.data('description', data.description);
       }
     }
+    setCurrentNodeData(node.data());
+    setEditMode(false);
+  };
+
+  useEffect(() => {
+    setCurrentNodeData(nodeData);
+  }, [props]);
+
+  const handleEdit = () => {
+    setEditMode(!editMode);
   };
 
   return (
     <>
+      <IconButton onClick={handleEdit} style={{ float: 'right' }}>
+        <CreateIcon />
+      </IconButton>
       {!editMode ? (
         <>
-          <p>{label}</p>
-          <p>{description}</p>
+          {currentNodeData.label && (
+          <p>
+            Name:
+            {' '}
+            {currentNodeData.label}
+          </p>
+          )}
+          {currentNodeData.description && (
+          <p>
+            Description:
+            {' '}
+            {currentNodeData.description}
+          </p>
+          )}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -62,14 +87,8 @@ const NodeDetails = (props) => {
 };
 
 NodeDetails.propTypes = {
-  editMode: PropTypes.bool.isRequired,
-  label: PropTypes.string,
-  description: PropTypes.string,
-};
-
-NodeDetails.defaultProps = {
-  label: '',
-  description: '',
+  cy: PropTypes.object.isRequired,
+  nodeData: PropTypes.object.isRequired,
 };
 
 export default NodeDetails;

@@ -6,7 +6,7 @@ import PanToolIcon from '@material-ui/icons/PanTool';
 import SaveIcon from '@material-ui/icons/Save';
 import InfoIcon from '@material-ui/icons/Info';
 import {
-  Button, makeStyles, Menu, MenuItem,
+  Button, Grid, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
 import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
 import { tools } from '../../enums/tools';
@@ -119,7 +119,7 @@ const GraphToolbar = (props) => {
   });
 
   return (
-    <div>
+    <Grid>
       <Button
         variant="contained"
         color="primary"
@@ -188,7 +188,7 @@ const GraphToolbar = (props) => {
         <MenuItem onClick={() => handleClose('')}>None</MenuItem>
 
       </Menu>
-    </div>
+    </Grid>
   );
 };
 

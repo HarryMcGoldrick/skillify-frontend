@@ -12,6 +12,7 @@ import edgeHandleStyle from './styles';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
 import NodeDialog from '../node-dialog/node-dialog';
+import NodeDrawerPanel from '../node-drawer-panel/node-drawer-panel';
 
 export default class Graph extends Component {
   constructor() {
@@ -108,27 +109,38 @@ export default class Graph extends Component {
           </Drawer>
         </Grid>
 
+        {this.cy && (
+        <Grid item>
+          <Drawer
+            anchor="right"
+            open={Boolean(selectedNode.id)}
+            variant="persistent"
+          >
+            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} />
+          </Drawer>
+        </Grid>
+        )}
+
         {/* Inline style has to be used here unfortunately */}
         <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
+          <Grid itemclassName={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
+            {!viewOnly && this.cy && (
+            <GraphToolbar
+              graphId={graphId}
+              selectNode={this.selectNode}
+              toggleDrawer={this.toggleDrawer}
+              cy={this.cy}
+            />
+            )}
 
-          {!viewOnly && this.cy && (
-          <GraphToolbar
-            graphId={graphId}
-            selectNode={this.selectNode}
-            toggleDrawer={this.toggleDrawer}
-            cy={this.cy}
-          />
-          )}
-
-          {this.cy && (<NodeDialog isOpen={Boolean(selectedNode.id)} nodeData={selectedNode} cy={this.cy} />)}
-
-          <CytoscapeComponent
-            className="graph"
-            elements={elements}
-            cy={(cy) => {
-              this.cy = cy;
-            }}
-          />
+            <CytoscapeComponent
+              className="graph"
+              elements={elements}
+              cy={(cy) => {
+                this.cy = cy;
+              }}
+            />
+          </Grid>
         </Grid>
       </Grid>
 
