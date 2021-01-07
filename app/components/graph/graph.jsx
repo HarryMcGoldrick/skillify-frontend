@@ -82,6 +82,11 @@ export default class Graph extends Component {
     this.cy.autolock(true);
   }
 
+  toggleDrawer = () => {
+    const { drawerOpen } = this.state;
+    this.setState({ drawerOpen: !drawerOpen });
+  }
+
   render() {
     const {
       elements, selectedNode, graphName, drawerOpen, graphDescription,
@@ -109,13 +114,13 @@ export default class Graph extends Component {
           {!viewOnly && this.cy && (
           <GraphToolbar
             graphId={graphId}
-            updateData={this.updateData}
             selectNode={this.selectNode}
+            toggleDrawer={this.toggleDrawer}
             cy={this.cy}
           />
           )}
 
-          <NodeDialog isOpen={nodeSelected} nodeData={selectedNode} />
+          {this.cy && (<NodeDialog isOpen={Boolean(selectedNode.id)} nodeData={selectedNode} cy={this.cy} />)}
 
           <CytoscapeComponent
             className="graph"

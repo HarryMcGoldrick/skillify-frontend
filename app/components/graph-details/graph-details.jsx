@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   container: {
-    minWidth: '350px',
+    width: '350px',
     margin: '10px',
   },
   title: {
@@ -24,7 +24,7 @@ const GraphDetails = (props) => {
       <h3 className={classes.title}>
         {` ${graphName || ''}`}
       </h3>
-      <p>{` ${graphDescription || ''}`}</p>
+      <p style={{ textOverflow: 'wrap' }}>{` ${graphDescription || ''}`}</p>
       <hr />
     </div>
   );

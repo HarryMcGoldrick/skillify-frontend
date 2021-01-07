@@ -12,6 +12,28 @@ import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
 import NodeDetails from '../node-details/node-details';
 
+function TabPanel(props) {
+  const {
+    children, value, index, ...other
+  } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography component="span">{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
 const Transition = React.forwardRef((props, ref) => <Grow in ref={ref} {...props} />);
 
 const useStyles = makeStyles(() => ({
@@ -25,7 +47,7 @@ export default function NodeDialog(props) {
   const [value, setValue] = React.useState(0);
   const [editMode, setEditMode] = React.useState(false);
   const classes = useStyles();
-  const { nodeData } = props;
+  const { nodeData, cy } = props;
   const { label, description } = nodeData;
 
   const handleChange = (event, newValue) => {
@@ -97,7 +119,7 @@ export default function NodeDialog(props) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <NodeDetails label={label} description={description} editMode={editMode} />
+            <NodeDetails nodeData={nodeData} editMode={editMode} cy={cy} />
           </TabPanel>
           <TabPanel value={value} index={1} />
           <TabPanel value={value} index={2} />
@@ -119,25 +141,3 @@ NodeDialog.propTypes = {
   }).isRequired,
   isOpen: PropTypes.bool.isRequired,
 };
-
-function TabPanel(props) {
-  const {
-    children, value, index, ...other
-  } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component="span">{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}

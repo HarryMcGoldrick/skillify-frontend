@@ -4,6 +4,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import SaveIcon from '@material-ui/icons/Save';
+import InfoIcon from '@material-ui/icons/Info';
 import {
   Button, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const GraphToolbar = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedLayout, setSelectedLayout] = useState({});
-  const { cy, selectNode } = props;
+  const { cy, selectNode, toggleDrawer } = props;
   const classes = useStyles();
 
   const runLayout = () => {
@@ -123,6 +124,15 @@ const GraphToolbar = (props) => {
         variant="contained"
         color="primary"
         className={classes.button}
+        startIcon={<InfoIcon />}
+        onClick={() => toggleDrawer()}
+      >
+        Map Info
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
         startIcon={<SaveIcon />}
         onClick={() => updateData()}
       >
@@ -186,6 +196,7 @@ GraphToolbar.propTypes = {
   cy: PropTypes.object.isRequired,
   selectNode: PropTypes.func.isRequired,
   graphId: PropTypes.string.isRequired,
+  toggleDrawer: PropTypes.func.isRequired,
 };
 
 export default GraphToolbar;

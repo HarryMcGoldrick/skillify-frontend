@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import {
   Button, Grid, makeStyles, TextField,
 } from '@material-ui/core';
+import { GetNodeWithId } from '../../utils/node-utils';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -17,12 +18,23 @@ const useStyles = makeStyles((theme) => ({
 
 const NodeDetails = (props) => {
   const classes = useStyles();
+  const { register, handleSubmit, watch } = useForm();
+  const {
+    editMode, nodeData, cy,
+  } = props;
+  const { id, label, description } = nodeData;
 
-  const { register, handleSubmit } = useForm();
-  const { editMode, description, label } = props;
-
-  const onSubmit = () => {
-
+  const onSubmit = (data) => {
+    console.log(data);
+    const node = GetNodeWithId(cy, id);
+    if (node) {
+      if (data.label) {
+        node.data('label', data.label);
+      }
+      if (data.description) {
+        node.data('description', data.description);
+      }
+    }
   };
 
   return (
@@ -33,15 +45,14 @@ const NodeDetails = (props) => {
           <p>{description}</p>
         </>
       ) : (
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} className={classes.formInput}>
-            <TextField name="Label" type="text" label="Label" inputRef={register({ required: true })} />
+            <TextField name="label" type="text" label="label" inputRef={register} />
           </Grid>
           <Grid item xs={12} className={classes.formInput}>
-            <TextField multiline type="text" name="description" label="description" inputRef={register({ required: true })} />
+            <TextField multiline type="text" name="description" label="description" inputRef={register} />
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" className={classes.formSubmit}>Cancel</Button>
             <Button type="submit" className={classes.formSubmit}>Comfirm</Button>
           </Grid>
         </form>

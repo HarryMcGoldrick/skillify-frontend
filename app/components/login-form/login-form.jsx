@@ -30,7 +30,7 @@ export const LoginForm = () => {
         // Set a cookie to expire using the expiry time embedded in the JWT
         Cookies.set('access_token', res.token, { expires });
         localStorage.setItem('userId', userId);
-        history.push('/');
+        history.goBack();
       }
     });
   };
