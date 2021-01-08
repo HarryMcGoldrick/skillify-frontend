@@ -7,12 +7,13 @@ import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import dagre from 'cytoscape-dagre';
 import automove from 'cytoscape-automove';
-import { loadGraphElements } from '../../services/graph-service';
+import { loadGraphElements, addGraphToGraphProgress } from '../../services/graph-service';
 import edgeHandleStyle from './styles';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
-import NodeDialog from '../node-dialog/node-dialog';
 import NodeDrawerPanel from '../node-drawer-panel/node-drawer-panel';
+import { isAuthenticated, getUserId } from '../../utils/authentication';
+import { getUserProgressInfo } from '../../services/user-service';
 
 export default class Graph extends Component {
   constructor() {
@@ -21,11 +22,15 @@ export default class Graph extends Component {
       elements: [],
       selectedNode: {},
       drawerOpen: false,
+      completedNodes: [],
+      progressMode: false,
+      graphId: '',
     };
   }
 
   componentDidMount = () => {
     const { id, viewOnly } = this.props;
+    this.setState({ graphId: id });
     this.initCytoscapeExtensions();
 
     if (viewOnly) {
@@ -47,6 +52,22 @@ export default class Graph extends Component {
       // Center the graph with a padding of 200
       this.cy.fit(200);
     });
+
+    // If user is logged in check if this graph exists in the users progress info
+    if (isAuthenticated() && viewOnly) {
+      const userId = getUserId();
+      getUserProgressInfo(userId).then((res) => {
+        const { id: graphId } = this.props;
+        const { graphs_progressing: graphs } = res;
+        graphs.filter((graph) => {
+          if (graph._id === graphId) {
+            this.setState({ completedNodes: graph.completedNodes, progressMode: true });
+            this.initProgressMode();
+          }
+          return null;
+        });
+      });
+    }
   };
 
   // Adds drawable edges to nodes
@@ -83,6 +104,31 @@ export default class Graph extends Component {
     this.cy.autolock(true);
   }
 
+  initProgressMode = async () => {
+    // Mark each node as completed
+    this.setState({ progressMode: true });
+
+    const { completedNodes } = this.state;
+
+    const nodesInMap = this.cy.nodes().values();
+    const nodeArray = Array.from(nodesInMap);
+
+    nodeArray.forEach((node) => {
+      const nodeData = node.data();
+      if (completedNodes.includes(nodeData.id)) {
+        node.style('background-color', 'red');
+      }
+    });
+  }
+
+  addGraphToProgress = async () => {
+    const { graphId } = this.state;
+    const initGraph = await addGraphToGraphProgress(graphId, getUserId());
+    if (initGraph.res) {
+      this.initProgressMode();
+    }
+  }
+
   toggleDrawer = () => {
     const { drawerOpen } = this.state;
     this.setState({ drawerOpen: !drawerOpen });
@@ -90,11 +136,11 @@ export default class Graph extends Component {
 
   render() {
     const {
-      elements, selectedNode, graphName, drawerOpen, graphDescription,
+      elements, selectedNode, graphName, drawerOpen, graphDescription, completedNodes, progressMode, graphId,
     } = this.state;
 
-    const { viewOnly, id: graphId } = this.props;
-    const nodeSelected = Boolean(selectedNode.id);
+    const { viewOnly } = this.props;
+    const isSelectedNodeComplete = Boolean(completedNodes.includes(selectedNode.id));
 
     return (
       <Grid container justify="center">
@@ -105,6 +151,8 @@ export default class Graph extends Component {
               graphName={graphName}
               graphDescription={graphDescription}
               viewOnly={viewOnly}
+              addGraphToProgress={this.addGraphToProgress}
+              progressMode={progressMode}
             />
           </Drawer>
         </Grid>
@@ -116,16 +164,17 @@ export default class Graph extends Component {
             open={Boolean(selectedNode.id)}
             variant="persistent"
           >
-            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} />
+            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} isNodeComplete={isSelectedNodeComplete} />
           </Drawer>
         </Grid>
         )}
 
         {/* Inline style has to be used here unfortunately */}
         <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
-          <Grid itemclassName={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
-            {!viewOnly && this.cy && (
+          <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
+            {this.cy && (
             <GraphToolbar
+              viewOnly={viewOnly}
               graphId={graphId}
               selectNode={this.selectNode}
               toggleDrawer={this.toggleDrawer}

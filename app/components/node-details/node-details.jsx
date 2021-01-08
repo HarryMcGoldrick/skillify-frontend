@@ -5,7 +5,10 @@ import {
   Button, Grid, IconButton, makeStyles, TextField,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
+import { useParams } from 'react-router-dom';
 import { GetNodeWithId } from '../../utils/node-utils';
+import { addNodeToGraphProgress } from '../../services/graph-service';
+import { getUserId } from '../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -22,8 +25,11 @@ const NodeDetails = (props) => {
   const { register, handleSubmit } = useForm();
   const [editMode, setEditMode] = useState(false);
   const [currentNodeData, setCurrentNodeData] = useState({});
-  const { cy } = props;
-  const { nodeData } = props;
+  const [isComplete, setIsComplete] = useState({});
+  const {
+    cy, nodeData, isNodeComplete, isProgressMode,
+  } = props;
+  const { id: graphId } = useParams();
 
   const onSubmit = (data) => {
     const node = GetNodeWithId(cy, nodeData.id);
@@ -41,10 +47,22 @@ const NodeDetails = (props) => {
 
   useEffect(() => {
     setCurrentNodeData(nodeData);
+    setIsComplete(isNodeComplete);
   }, [props]);
 
   const handleEdit = () => {
     setEditMode(!editMode);
+  };
+
+  const addNodeToProgress = () => {
+    const node = GetNodeWithId(cy, nodeData.id);
+    console.log(graphId);
+    addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+      if (data.res) {
+        setIsComplete(true);
+        node.style('background-color', 'red');
+      }
+    });
   };
 
   return (
@@ -67,6 +85,16 @@ const NodeDetails = (props) => {
             {' '}
             {currentNodeData.description}
           </p>
+          )}
+          {!isComplete && isProgressMode && (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={addNodeToProgress}
+            >
+              Complete
+            </Button>
           )}
         </>
       ) : (

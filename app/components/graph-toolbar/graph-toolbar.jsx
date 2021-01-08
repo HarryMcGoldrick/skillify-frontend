@@ -25,7 +25,9 @@ const useStyles = makeStyles((theme) => ({
 const GraphToolbar = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedLayout, setSelectedLayout] = useState({});
-  const { cy, selectNode, toggleDrawer } = props;
+  const {
+    cy, selectNode, toggleDrawer, viewOnly,
+  } = props;
   const classes = useStyles();
 
   const runLayout = () => {
@@ -129,65 +131,69 @@ const GraphToolbar = (props) => {
       >
         Map Info
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<SaveIcon />}
-        onClick={() => updateData()}
-      >
-        Save
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<PanToolIcon />}
-        onClick={() => switchTool(tools.SELECT)}
-      >
-        Select
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<AddCircleIcon />}
-        onClick={() => switchTool(tools.ADD)}
-      >
-        Add
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<DeleteIcon />}
-        onClick={() => switchTool(tools.DELETE)}
-      >
-        Delete
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={runLayout}
-        startIcon={<PlayCircleFilled />}
-      >
-        Run Layout
-      </Button>
-      <Button variant="contained" color="primary" aria-haspopup="true" onClick={handleClick} startIcon={<ExpandMore />}>
-        Layouts
-      </Button>
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        color="primary"
-      >
-        <MenuItem onClick={() => handleClose(layouts.DAGRE)}>Dagre</MenuItem>
-        <MenuItem onClick={() => handleClose('')}>None</MenuItem>
+      {!viewOnly && (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<SaveIcon />}
+            onClick={() => updateData()}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<PanToolIcon />}
+            onClick={() => switchTool(tools.SELECT)}
+          >
+            Select
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<AddCircleIcon />}
+            onClick={() => switchTool(tools.ADD)}
+          >
+            Add
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<DeleteIcon />}
+            onClick={() => switchTool(tools.DELETE)}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={runLayout}
+            startIcon={<PlayCircleFilled />}
+          >
+            Run Layout
+          </Button>
+          <Button variant="contained" color="primary" aria-haspopup="true" onClick={handleClick} startIcon={<ExpandMore />}>
+            Layouts
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            color="primary"
+          >
+            <MenuItem onClick={() => handleClose(layouts.DAGRE)}>Dagre</MenuItem>
+            <MenuItem onClick={() => handleClose('')}>None</MenuItem>
 
-      </Menu>
+          </Menu>
+        </>
+      )}
     </Grid>
   );
 };

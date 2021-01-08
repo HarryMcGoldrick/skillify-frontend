@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import React from 'react';
+import { Button, makeStyles } from '@material-ui/core';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
@@ -15,9 +15,14 @@ const useStyles = makeStyles({
 // Used to display the details of the graph
 const GraphDetails = (props) => {
   const classes = useStyles();
+  // const [isProgressMode, setIsProgressMode] = useState(false);
   const {
-    graphName, graphDescription, viewOnly,
+    graphName, graphDescription, viewOnly, addGraphToProgress, progressMode,
   } = props;
+
+  // useEffect(() => {
+  //   setIsProgressMode(progressMode);
+  // }, [props]);
 
   return (
     <div className={classes.container}>
@@ -26,6 +31,16 @@ const GraphDetails = (props) => {
       </h3>
       <p style={{ textOverflow: 'wrap' }}>{` ${graphDescription || ''}`}</p>
       <hr />
+      {viewOnly && !progressMode && (
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        onClick={addGraphToProgress}
+      >
+        Begin tracking
+      </Button>
+      )}
     </div>
   );
 };

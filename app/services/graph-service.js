@@ -1,13 +1,19 @@
 import 'regenerator-runtime/runtime';
 import axios from '../utils/axios';
 
-export const createNewGraph = (name, description) => axios.post('http://localhost:3000/graph', { name, description }).then((res) => res.data);
+const baseUrl = 'http://localhost:3000/graph';
 
-export const loadGraphElements = async (id) => axios.get(`http://localhost:3000/graph/${id}`).then((res) => res.data);
+export const createNewGraph = (name, description) => axios.post(baseUrl, { name, description }).then((res) => res.data);
 
-export const updateGraphElements = async (id, elements) => axios.post(`http://localhost:3000/graph/${id}`, {
+export const loadGraphElements = async (id) => axios.get(`${baseUrl}/${id}`).then((res) => res.data);
+
+export const updateGraphElements = async (id, elements) => axios.post(`${baseUrl}/${id}`, {
   nodes: elements.nodes,
   edges: elements.edges,
 }).then((res) => res.data);
 
-export const getGraphViews = async () => axios.get('http://localhost:3000/graph/views').then((res) => res.data);
+export const getGraphViews = async () => axios.get(`${baseUrl}/views`).then((res) => res.data);
+
+export const addGraphToGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress`, { graphId, userId }).then((res) => res.data);
+
+export const addNodeToGraphProgress = async (nodeId, graphId, userId) => axios.post(`${baseUrl}/progress/node`, { graphId, userId, nodeId }).then((res) => res.data);
