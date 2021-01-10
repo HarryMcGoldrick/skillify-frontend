@@ -164,7 +164,7 @@ export default class Graph extends Component {
             open={Boolean(selectedNode.id)}
             variant="persistent"
           >
-            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} isNodeComplete={isSelectedNodeComplete} />
+            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} isNodeComplete={isSelectedNodeComplete} viewOnly={viewOnly} />
           </Drawer>
         </Grid>
         )}

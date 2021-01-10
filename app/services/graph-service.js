@@ -3,7 +3,7 @@ import axios from '../utils/axios';
 
 const baseUrl = 'http://localhost:3000/graph';
 
-export const createNewGraph = (name, description) => axios.post(baseUrl, { name, description }).then((res) => res.data);
+export const createNewGraph = (name, description, userId) => axios.post(`${baseUrl}/create`, { name, description, userId }).then((res) => res.data);
 
 export const loadGraphElements = async (id) => axios.get(`${baseUrl}/${id}`).then((res) => res.data);
 

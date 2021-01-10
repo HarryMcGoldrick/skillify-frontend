@@ -5,14 +5,19 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import SaveIcon from '@material-ui/icons/Save';
 import InfoIcon from '@material-ui/icons/Info';
+import CreateIcon from '@material-ui/icons/Create';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import {
   Button, Grid, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
 import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import { tools } from '../../enums/tools';
 import { layouts } from '../../enums/layouts';
 import { updateGraphElements } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
+import { getUserInfo } from '../../services/user-service';
+import { getUserId } from '../../utils/authentication';
 
 // Displays icons to select the relevant graph tool
 
@@ -25,10 +30,13 @@ const useStyles = makeStyles((theme) => ({
 const GraphToolbar = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedLayout, setSelectedLayout] = useState({});
+  const [isUserCreatedMap, setIsUserCreatedMap] = useState(false);
   const {
     cy, selectNode, toggleDrawer, viewOnly,
   } = props;
   const classes = useStyles();
+  const history = useHistory();
+  const { graphId } = props;
 
   const runLayout = () => {
     if (selectedLayout) {
@@ -116,8 +124,27 @@ const GraphToolbar = (props) => {
     updateGraphElements(graphId, extractDiagramDataFromGraphData(cy.json()));
   };
 
+  const goToEditPage = () => {
+    history.push(`/edit/${graphId}`);
+    // Need to fully refresh page or graph won't load properly
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
+  };
+
+  const goToViewPage = () => {
+    history.push(`/view/${graphId}`);
+    // Need to fully refresh page or graph won't load properly
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
+  };
+
   useEffect(() => {
     switchTool(tools.SELECT);
+    getUserInfo(getUserId()).then((res) => {
+      const { graphs_created: graphsCreated } = res;
+      console.log(graphsCreated);
+      if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
+    });
   });
 
   return (
@@ -131,8 +158,28 @@ const GraphToolbar = (props) => {
       >
         Map Info
       </Button>
+      {viewOnly && isUserCreatedMap && (
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<CreateIcon />}
+        onClick={() => goToEditPage()}
+      >
+        Edit Mode
+      </Button>
+      )}
       {!viewOnly && (
         <>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<VisibilityIcon />}
+            onClick={() => goToViewPage()}
+          >
+            View Mode
+          </Button>
           <Button
             variant="contained"
             color="primary"

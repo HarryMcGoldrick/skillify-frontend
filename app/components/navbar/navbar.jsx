@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 export const Navbar = () => {
   const classes = useStyles();
-  const { username: profileText, userId } = isAuthenticated() ? getExistingSession() : 'Login';
+  const { username: profileText } = isAuthenticated() ? getExistingSession() : 'Login';
 
   return (
     <div className={classes.root}>
@@ -49,7 +49,7 @@ export const Navbar = () => {
             </Link>
           </Typography>
           <span className={classes.linkSeperator} />
-          <Button color="inherit" href={profileText ? `/user/${userId}` : '/login'}>{profileText}</Button>
+          <Button color="inherit" href={profileText ? `/user/${profileText}` : '/login'}>{profileText}</Button>
         </Toolbar>
       </AppBar>
     </div>

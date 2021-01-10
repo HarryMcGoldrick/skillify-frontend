@@ -26,10 +26,10 @@ export const LoginForm = () => {
     login(data.username, data.password).then((res) => {
       const session = getSession(res.token);
       if (session) {
-        const { userId, exp: expires } = session;
+        const { username, exp: expires } = session;
         // Set a cookie to expire using the expiry time embedded in the JWT
         Cookies.set('access_token', res.token, { expires });
-        localStorage.setItem('userId', userId);
+        localStorage.setItem('username', username);
         history.goBack();
       }
     });

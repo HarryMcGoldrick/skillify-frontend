@@ -5,6 +5,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { createNewGraph } from '../../services/graph-service';
+import { getUserId } from '../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,7 +22,7 @@ export const GraphCreateForm = () => {
   const history = useHistory();
 
   const onSubmit = async (data) => {
-    createNewGraph(data.name, data.description).then((res) => {
+    createNewGraph(data.name, data.description, getUserId()).then((res) => {
       const { graphId } = res;
       // Navigate to edit page with the graphId returned from the API
       history.push(`/edit/${graphId}`);

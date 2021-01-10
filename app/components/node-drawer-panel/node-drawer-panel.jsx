@@ -8,7 +8,7 @@ import NodeDetails from '../node-details/node-details';
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
-    nodeData, cy, isNodeComplete, progressMode,
+    nodeData, cy, isNodeComplete, progressMode, viewOnly,
   } = props;
 
   const handleChange = (event, newValue) => {
@@ -25,7 +25,7 @@ const NodeDrawerPanel = (props) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <NodeDetails nodeData={nodeData} cy={cy} isNodeComplete={isNodeComplete} isProgressMode={progressMode} />
+        <NodeDetails nodeData={nodeData} cy={cy} isNodeComplete={isNodeComplete} isProgressMode={progressMode} viewOnly={viewOnly} />
       </TabPanel>
       <TabPanel value={value} index={1} />
       <TabPanel value={value} index={2} />

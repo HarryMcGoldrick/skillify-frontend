@@ -38,6 +38,8 @@ export const logOut = () => {
   localStorage.removeItem('userId');
 };
 
-export const isAuthenticated = () => !!(Cookies.get('access_token') && localStorage.getItem('userId'));
+export const isAuthenticated = () => !!(Cookies.get('access_token') && localStorage.getItem('username'));
 
-export const getUserId = () => localStorage.getItem('userId');
+export const getUserId = () => getSession(Cookies.get('access_token')).userId;
+
+export const getUserName = () => localStorage.getItem('username');

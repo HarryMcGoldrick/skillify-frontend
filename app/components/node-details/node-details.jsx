@@ -27,7 +27,7 @@ const NodeDetails = (props) => {
   const [currentNodeData, setCurrentNodeData] = useState({});
   const [isComplete, setIsComplete] = useState({});
   const {
-    cy, nodeData, isNodeComplete, isProgressMode,
+    cy, nodeData, isNodeComplete, isProgressMode, viewOnly,
   } = props;
   const { id: graphId } = useParams();
 
@@ -47,6 +47,12 @@ const NodeDetails = (props) => {
 
   useEffect(() => {
     setCurrentNodeData(nodeData);
+    const isEmptyNodeAndEditMode = !nodeData.label && !nodeData.description && !editMode && !viewOnly;
+    if (isEmptyNodeAndEditMode) {
+      setEditMode(true);
+    } else {
+      setEditMode(false);
+    }
     setIsComplete(isNodeComplete);
   }, [props]);
 
@@ -56,7 +62,6 @@ const NodeDetails = (props) => {
 
   const addNodeToProgress = () => {
     const node = GetNodeWithId(cy, nodeData.id);
-    console.log(graphId);
     addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
       if (data.res) {
         setIsComplete(true);
@@ -67,9 +72,11 @@ const NodeDetails = (props) => {
 
   return (
     <>
+      {!viewOnly && (
       <IconButton onClick={handleEdit} style={{ float: 'right' }}>
         <CreateIcon />
       </IconButton>
+      )}
       {!editMode ? (
         <>
           {currentNodeData.label && (

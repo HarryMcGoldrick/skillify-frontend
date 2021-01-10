@@ -26,7 +26,7 @@ const GraphList = () => {
         }
         const { id, name } = graph;
         return (
-          <ListItemLink key={id} href={`/edit/${id}`}>
+          <ListItemLink key={id} href={`/view/${id}`}>
             <ListItemText primary={name} />
           </ListItemLink>
         );
