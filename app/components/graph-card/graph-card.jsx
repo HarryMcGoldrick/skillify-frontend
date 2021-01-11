@@ -42,19 +42,19 @@ const GraphCard = (props) => {
           <Typography gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="subtitle1" color="textSecondary" component="p">
             {description}
+            <span style={{ float: 'right' }}>
+              <Typography variant="subtitle2" color="textSecondary" component="span">
+                Created by:
+                {' '}
+                {userInfo.username}
+              </Typography>
+            </span>
           </Typography>
+
         </CardContent>
       </CardActionArea>
-      {/* <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions> */}
     </Card>
   );
 };

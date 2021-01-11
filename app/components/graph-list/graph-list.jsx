@@ -52,7 +52,7 @@ const GraphList = () => {
               if (!graph.id || !graph.name) {
                 return undefined;
               }
-              const { id, name } = graph;
+              const { id } = graph;
               return (
 
                 <ListItemLink key={id} href={`/view/${id}`} alignItems="flex-start">
