@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
+import cola from 'cytoscape-cola';
 import edgehandles from 'cytoscape-edgehandles';
 import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';

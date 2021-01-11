@@ -14,7 +14,7 @@ import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { tools } from '../../enums/tools';
 import { layouts } from '../../enums/layouts';
-import { updateGraphElements } from '../../services/graph-service';
+import { updateGraphElements, sendGraphDataForImage } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import { getUserInfo } from '../../services/user-service';
 import { getUserId } from '../../utils/authentication';
@@ -40,7 +40,8 @@ const GraphToolbar = (props) => {
 
   const runLayout = () => {
     if (selectedLayout) {
-      cy.layout({ name: selectedLayout }).run();
+      const layout = cy.layout({ name: selectedLayout });
+      layout.run();
       cy.fit();
     }
   };
@@ -122,6 +123,7 @@ const GraphToolbar = (props) => {
   const updateData = () => {
     const { graphId } = props;
     updateGraphElements(graphId, extractDiagramDataFromGraphData(cy.json()));
+    sendGraphDataForImage(graphId, cy.json());
   };
 
   const goToEditPage = () => {

@@ -7,10 +7,13 @@ export const createNewGraph = (name, description, userId) => axios.post(`${baseU
 
 export const loadGraphElements = async (id) => axios.get(`${baseUrl}/${id}`).then((res) => res.data);
 
-export const updateGraphElements = async (id, elements) => axios.post(`${baseUrl}/${id}`, {
+export const updateGraphElements = async (id, elements, image) => axios.post(`${baseUrl}/${id}`, {
   nodes: elements.nodes,
   edges: elements.edges,
+  image,
 }).then((res) => res.data);
+
+export const sendGraphDataForImage = async (id, elements) => axios.post(`${baseUrl}/${id}/image`, { elements }).then((res) => res.data);
 
 export const getGraphViews = async () => axios.get(`${baseUrl}/views`).then((res) => res.data);
 
