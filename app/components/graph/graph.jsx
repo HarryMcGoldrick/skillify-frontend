@@ -153,6 +153,7 @@ export default class Graph extends Component {
               viewOnly={viewOnly}
               addGraphToProgress={this.addGraphToProgress}
               progressMode={progressMode}
+              cy={this.cy}
             />
           </Drawer>
         </Grid>
