@@ -7,7 +7,7 @@ import {
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
 import { GetNodeWithId } from '../../utils/node-utils';
-import { addNodeToGraphProgress } from '../../services/graph-service';
+import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
 import { getUserId } from '../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +27,7 @@ const NodeDetails = (props) => {
   const [currentNodeData, setCurrentNodeData] = useState({});
   const [isComplete, setIsComplete] = useState({});
   const {
-    cy, nodeData, isNodeComplete, isProgressMode, viewOnly,
+    cy, nodeData, isNodeComplete, isProgressMode, viewOnly, completedNodes,
   } = props;
   const { id: graphId } = useParams();
 
@@ -53,7 +53,7 @@ const NodeDetails = (props) => {
     } else {
       setEditMode(false);
     }
-    setIsComplete(isNodeComplete);
+    setIsComplete(Boolean(completedNodes.includes(nodeData.id)));
   }, [props]);
 
   const handleEdit = () => {
@@ -66,6 +66,20 @@ const NodeDetails = (props) => {
       if (data.res) {
         setIsComplete(true);
         node.style('background-color', 'red');
+        completedNodes.push(nodeData.id);
+      }
+    });
+  };
+
+  const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
+
+  const removeNodeFromProgress = () => {
+    const node = GetNodeWithId(cy, nodeData.id);
+    removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+      if (data.res) {
+        setIsComplete(false);
+        node.style('background-color', 'gray');
+        removeItemFromArray(completedNodes, nodeData.id);
       }
     });
   };
@@ -101,6 +115,16 @@ const NodeDetails = (props) => {
               onClick={addNodeToProgress}
             >
               Complete
+            </Button>
+          )}
+          {isComplete && isProgressMode && (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={removeNodeFromProgress}
+            >
+              Incomplete
             </Button>
           )}
         </>

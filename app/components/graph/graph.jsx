@@ -141,7 +141,6 @@ export default class Graph extends Component {
     } = this.state;
 
     const { viewOnly } = this.props;
-    const isSelectedNodeComplete = Boolean(completedNodes.includes(selectedNode.id));
 
     return (
       <Grid container justify="center">
@@ -165,7 +164,7 @@ export default class Graph extends Component {
             open={Boolean(selectedNode.id)}
             variant="persistent"
           >
-            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} isNodeComplete={isSelectedNodeComplete} viewOnly={viewOnly} />
+            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} completedNodes={completedNodes} viewOnly={viewOnly} />
           </Drawer>
         </Grid>
         )}

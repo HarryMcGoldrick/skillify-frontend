@@ -20,3 +20,7 @@ export const getGraphViews = async () => axios.get(`${baseUrl}/views`).then((res
 export const addGraphToGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress`, { graphId, userId }).then((res) => res.data);
 
 export const addNodeToGraphProgress = async (nodeId, graphId, userId) => axios.post(`${baseUrl}/progress/node`, { graphId, userId, nodeId }).then((res) => res.data);
+
+export const removeGraphFromGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress/remove`, { graphId, userId }).then((res) => res.data);
+
+export const removeNodeFromGraphProgress = async (nodeId, graphId, userId) => axios.post(`${baseUrl}/progress/node/remove`, { graphId, userId, nodeId }).then((res) => res.data);
