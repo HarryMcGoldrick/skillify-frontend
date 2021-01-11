@@ -33,6 +33,7 @@ export default class Graph extends Component {
     const { id, viewOnly } = this.props;
     this.setState({ graphId: id });
     this.initCytoscapeExtensions();
+    this.cy.style(edgeHandleStyle);
 
     if (viewOnly) {
       this.initViewMode();
@@ -75,7 +76,6 @@ export default class Graph extends Component {
   enableEdgehandles = () => {
     if (!this.cy.edgehandles) {
       cytoscape.use(edgehandles);
-      this.cy.style(edgeHandleStyle);
       const edgehandler = this.cy.edgehandles();
       edgehandler.disableDrawMode();
     }

@@ -68,13 +68,6 @@ export default function NodeDialog(props) {
     setEditMode(!editMode);
   };
 
-  // // Get relevant youtube content for a node label
-  // getYoutubeContentForNode = (label) => {
-  //   getYoutubeVideoForNode(label).then((res) => {
-  //     this.setState({ youtubeNodeData: res.data.response.items[0] });
-  //   });
-  // }
-
   // // Updates the node label
   // updateSelectedNode = (data) => {
   //   const { selectedNode } = this.state;
