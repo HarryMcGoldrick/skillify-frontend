@@ -17,7 +17,7 @@ import { layouts } from '../../enums/layouts';
 import { updateGraphElements, sendGraphDataForImage } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import { getUserInfo } from '../../services/user-service';
-import { getUserId } from '../../utils/authentication';
+import { getUserId, isAuthenticated } from '../../utils/authentication';
 
 // Displays icons to select the relevant graph tool
 
@@ -142,11 +142,12 @@ const GraphToolbar = (props) => {
 
   useEffect(() => {
     switchTool(tools.SELECT);
-    getUserInfo(getUserId()).then((res) => {
-      const { graphs_created: graphsCreated } = res;
-      console.log(graphsCreated);
-      if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
-    });
+    if (isAuthenticated()) {
+      getUserInfo(getUserId()).then((res) => {
+        const { graphs_created: graphsCreated } = res;
+        if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
+      });
+    }
   });
 
   return (
