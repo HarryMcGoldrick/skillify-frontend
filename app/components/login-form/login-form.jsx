@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     padding: theme.spacing(3),
   },
+  submit: {
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(1),
+  },
 }));
 
 export const LoginForm = () => {
@@ -68,8 +72,8 @@ export const LoginForm = () => {
                 Not registed?
               </Link>
             </Grid>
-            <Grid item xs={12} className={classes.formInput}>
-              <Button type="submit" fullWidth>Login</Button>
+            <Grid item xs={12} className={classes.submit}>
+              <Button type="submit" fullWidth variant="contained">Login</Button>
             </Grid>
           </Paper>
         </Grid>

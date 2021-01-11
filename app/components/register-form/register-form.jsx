@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     padding: theme.spacing(3),
   },
+  submit: {
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(1),
+  },
 }));
 
 const RegisterForm = () => {
@@ -71,8 +75,8 @@ const RegisterForm = () => {
             <Grid item xs={12} className={classes.formInput}>
               <TextField type="password" name="password" label="password" variant="outlined" inputRef={register({ required: true })} className={classes.textField} />
             </Grid>
-            <Grid item xs={12} className={classes.formInput}>
-              <Button type="submit" fullWidth>Register</Button>
+            <Grid item xs={12} className={classes.submit}>
+              <Button type="submit" fullWidth variant="contained">Register</Button>
             </Grid>
           </Paper>
         </Grid>
