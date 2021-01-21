@@ -8,7 +8,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
 import { GetNodeWithId } from '../../utils/node-utils';
 import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
-import { getUserId } from '../../utils/authentication';
+import { getUserId, isAuthenticated } from '../../utils/authentication';
+import { getUserProgressInfo } from '../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -26,8 +27,9 @@ const NodeDetails = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [currentNodeData, setCurrentNodeData] = useState({});
   const [isComplete, setIsComplete] = useState({});
+  const [completedNodes, setCompletedNodes] = useState([]);
   const {
-    cy, nodeData, isNodeComplete, isProgressMode, viewOnly, completedNodes,
+    cy, nodeData, isProgressMode, viewOnly,
   } = props;
   const { id: graphId } = useParams();
 
@@ -45,6 +47,22 @@ const NodeDetails = (props) => {
     setEditMode(false);
   };
 
+  const updateCompletedNodes = () => {
+    // If user is logged in check if this graph exists in the users progress info
+    if (isAuthenticated() && viewOnly) {
+      const userId = getUserId();
+      getUserProgressInfo(userId).then((res) => {
+        const { graphs_progressing: graphs } = res;
+        graphs.filter((graph) => {
+          if (graph._id === graphId) {
+            setCompletedNodes(graph.completedNodes);
+          }
+          return null;
+        });
+      });
+    }
+  };
+
   useEffect(() => {
     setCurrentNodeData(nodeData);
     const isEmptyNodeAndEditMode = !nodeData.label && !nodeData.description && !editMode && !viewOnly;
@@ -56,6 +74,10 @@ const NodeDetails = (props) => {
     setIsComplete(Boolean(completedNodes.includes(nodeData.id)));
   }, [props]);
 
+  useEffect(() => {
+    updateCompletedNodes();
+  }, []);
+
   const handleEdit = () => {
     setEditMode(!editMode);
   };
@@ -64,6 +86,7 @@ const NodeDetails = (props) => {
     const node = GetNodeWithId(cy, nodeData.id);
     addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
       if (data.res) {
+        updateCompletedNodes();
         setIsComplete(true);
         node.style('background-color', 'red');
         completedNodes.push(nodeData.id);
@@ -77,6 +100,7 @@ const NodeDetails = (props) => {
     const node = GetNodeWithId(cy, nodeData.id);
     removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
       if (data.res) {
+        updateCompletedNodes();
         setIsComplete(false);
         node.style('background-color', 'gray');
         removeItemFromArray(completedNodes, nodeData.id);

@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
-import cola from 'cytoscape-cola';
 import edgehandles from 'cytoscape-edgehandles';
 import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import dagre from 'cytoscape-dagre';
-import automove from 'cytoscape-automove';
 import { loadGraphElements, addGraphToGraphProgress } from '../../services/graph-service';
 import edgeHandleStyle from './styles';
 import GraphDetails from '../graph-details/graph-details';
@@ -88,13 +86,13 @@ export default class Graph extends Component {
   initCytoscapeExtensions = () => {
     // Layouts & extensions
     cytoscape.use(dagre);
-    cytoscape.use(automove);
-    // Prevent moving nodes out of viewport
-    this.cy.automove({
-      // eslint-disable-next-line no-unused-vars
-      nodesMatching(node) { return true; },
-      reposition: 'viewport',
-    });
+    // cytoscape.use(automove);
+    // // Prevent moving nodes out of viewport
+    // this.cy.automove({
+    //   // eslint-disable-next-line no-unused-vars
+    //   nodesMatching(node) { return true; },
+    //   reposition: 'viewport',
+    // });
   }
 
   initEditMode = () => {

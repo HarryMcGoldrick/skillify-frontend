@@ -28,7 +28,7 @@ const Welcome = () => {
         style={{ minHeight: '60vh' }}
       >
         <Grid item xs={3}>
-          <h1 className={classes.title}>Welcome! 👋</h1>
+          <h1 className={classes.title}>Skillify</h1>
           <Link to="/view">
             <Button
               variant="contained"
