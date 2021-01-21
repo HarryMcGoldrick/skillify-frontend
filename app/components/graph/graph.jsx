@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
@@ -16,102 +16,69 @@ import { getUserProgressInfo } from '../../services/user-service';
 
 export const CytoscapeContext = React.createContext();
 
-export default class Graph extends Component {
-  constructor() {
-    super();
-    this.state = {
-      elements: [],
-      selectedNode: {},
-      drawerOpen: false,
-      completedNodes: [],
-      progressMode: false,
-      graphId: '',
-    };
-  }
+const Graph = (props) => {
+  const { viewOnly, id } = props;
 
-  componentDidMount = () => {
-    const { id, viewOnly } = this.props;
-    this.setState({ graphId: id });
-    this.initCytoscapeExtensions();
-    this.cy.style(edgeHandleStyle);
+  const [cy, setCy] = useState(null);
+  const [elements, setElements] = useState(null);
+  const [toggleGraphDetails, setToggleGraphDetails] = useState(false);
+  const [completedNodes, setCompletedNodes] = useState([]);
+  const [isProgressMode, setIsProgressMode] = useState(false);
+  const [graphId, setGraphId] = useState('');
+  const [selectedNode, setSelectedNode] = useState({});
+  const [graphName, setGraphName] = useState('');
+  const [graphDescription, setGraphDescription] = useState('');
 
-    if (viewOnly) {
-      this.initViewMode();
-    } else {
-      this.initEditMode();
-    }
-
-    // Use the graphId from the url to load the associated graph
-    loadGraphElements(id).then((data) => {
-      const graphName = data.graph.name;
-      const graphDescription = data.graph.description;
-      const cytoscapeData = [...data.graph.nodes, ...data.graph.edges];
-      this.setState({
-        elements: cytoscapeData,
-        graphName,
-        graphDescription,
-      });
-      // Center the graph with a padding of 200
-      this.cy.fit(200);
-    });
-
-    // If user is logged in check if this graph exists in the users progress info
-    if (isAuthenticated() && viewOnly) {
-      const userId = getUserId();
-      getUserProgressInfo(userId).then((res) => {
-        const { id: graphId } = this.props;
-        const { graphs_progressing: graphs } = res;
-        graphs.filter((graph) => {
-          if (graph._id === graphId) {
-            this.setState({ completedNodes: graph.completedNodes, progressMode: true });
-            this.initProgressMode();
-          }
-          return null;
-        });
-      });
-    }
-  };
+  // constructor() {
+  //   super();
+  //   state = {
+  //     elements: [],
+  //     selectedNode: {},
+  //     drawerOpen: false,
+  //     completedNodes: [],
+  //     progressMode: false,
+  //     graphId: '',
+  //   };
+  // }
 
   // Adds drawable edges to nodes
-  enableEdgehandles = () => {
-    if (!this.cy.edgehandles) {
+  const enableEdgehandles = () => {
+    if (!cy.edgehandles) {
       cytoscape.use(edgehandles);
-      const edgehandler = this.cy.edgehandles();
+      const edgehandler = cy.edgehandles();
       edgehandler.disableDrawMode();
     }
-  }
-
-  selectNode = (node) => {
-    this.setState({ selectedNode: { ...node } });
   };
 
-  initCytoscapeExtensions = () => {
+  const selectNode = (node) => {
+    setSelectedNode({ ...node });
+  };
+
+  const initCytoscapeExtensions = () => {
     // Layouts & extensions
     cytoscape.use(dagre);
     // cytoscape.use(automove);
     // // Prevent moving nodes out of viewport
-    // this.cy.automove({
+    // cy.automove({
     //   // eslint-disable-next-line no-unused-vars
     //   nodesMatching(node) { return true; },
     //   reposition: 'viewport',
     // });
-  }
+  };
 
-  initEditMode = () => {
-    this.enableEdgehandles();
-  }
+  const initEditMode = () => {
+    enableEdgehandles();
+  };
 
-  initViewMode = () => {
-    this.cy.autolock(true);
-  }
+  const initViewMode = () => {
+    cy.autolock(true);
+  };
 
-  initProgressMode = async () => {
+  const initProgressMode = async () => {
     // Mark each node as completed
-    this.setState({ progressMode: true });
+    setIsProgressMode(true);
 
-    const { completedNodes } = this.state;
-
-    const nodesInMap = this.cy.nodes().values();
+    const nodesInMap = cy.nodes().values();
     const nodeArray = Array.from(nodesInMap);
 
     nodeArray.forEach((node) => {
@@ -120,85 +87,126 @@ export default class Graph extends Component {
         node.style('background-color', 'red');
       }
     });
-  }
+  };
 
-  addGraphToProgress = async () => {
-    const { graphId } = this.state;
+  const addGraphToProgress = async () => {
     const initGraph = await addGraphToGraphProgress(graphId, getUserId());
     if (initGraph.res) {
-      this.initProgressMode();
+      initProgressMode();
     }
-  }
+  };
 
-  toggleDrawer = () => {
-    const { drawerOpen } = this.state;
-    this.setState({ drawerOpen: !drawerOpen });
-  }
+  const toggleDrawer = () => {
+    setToggleGraphDetails(!toggleGraphDetails);
+  };
 
-  render() {
-    const {
-      elements, selectedNode, graphName, drawerOpen, graphDescription, completedNodes, progressMode, graphId,
-    } = this.state;
+  // This useEffect is used to get the elements needed to render the graph.
+  // cy will be undefined in this useEffect block so don't call it here.
+  useEffect(() => {
+    setGraphId(id);
 
-    const { viewOnly } = this.props;
+    // Use the graphId from the url to load the associated graph
+    loadGraphElements(id).then((data) => {
+      setElements([...data.graph.nodes, ...data.graph.edges]);
+      setGraphName(data.graph.name);
+      setGraphDescription(data.graph.description);
+    });
 
-    return (
-      <CytoscapeContext.Provider value={this.cy}>
-        <Grid container justify="center">
+    // If user is logged in check if this graph exists in the users progress info
+    if (isAuthenticated() && viewOnly) {
+      const userId = getUserId();
+      getUserProgressInfo(userId).then((res) => {
+        const { graphs_progressing: graphs } = res;
+        graphs.filter((graph) => {
+          if (graph._id === graphId) {
+            setCompletedNodes(graph.completedNodes);
+            setIsProgressMode(true);
+            initProgressMode();
+          }
+          return null;
+        });
+      });
+    }
+  }, []);
 
-          <Grid item>
-            <Drawer anchor="left" open={drawerOpen} variant="persistent">
-              <GraphDetails
-                graphName={graphName}
-                graphDescription={graphDescription}
-                viewOnly={viewOnly}
-                addGraphToProgress={this.addGraphToProgress}
-                progressMode={progressMode}
-                cy={this.cy}
-              />
-            </Drawer>
-          </Grid>
+  // This useEffect block is to facilitate calls on cy.
+  useEffect(() => {
+    // Ensures that cytoscape has been initialised before calling below
+    if (!cy) return undefined;
+    if (!cy.ready()) return undefined;
 
-          {this.cy && (
+    initCytoscapeExtensions();
+    cy.style(edgeHandleStyle);
+
+    if (viewOnly) {
+      initViewMode();
+    } else {
+      initEditMode();
+    }
+  }, [cy]);
+
+  return (
+    <CytoscapeContext.Provider value={cy}>
+      <Grid container justify="center">
+        {cy && (
+        <Grid item>
+          <Drawer anchor="left" open={toggleGraphDetails} variant="persistent">
+            <GraphDetails
+              graphName={graphName}
+              graphDescription={graphDescription}
+              viewOnly={viewOnly}
+              addGraphToProgress={addGraphToProgress}
+              progressMode={isProgressMode}
+              cy={cy}
+            />
+          </Drawer>
+        </Grid>
+        )}
+
+        {cy && (
           <Grid item>
             <Drawer
               anchor="right"
               open={Boolean(selectedNode.id)}
               variant="persistent"
             >
-              <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} completedNodes={completedNodes} viewOnly={viewOnly} />
+              <NodeDrawerPanel nodeData={selectedNode} cy={cy} progressMode={isProgressMode} completedNodes={completedNodes} viewOnly={viewOnly} />
             </Drawer>
           </Grid>
-          )}
+        )}
 
-          {/* Inline style has to be used here unfortunately */}
-          <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
-            <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
-              {this.cy && (
+        {/* Inline style has to be used here unfortunately */}
+        <Grid item className={toggleGraphDetails ? 'drawer-open' : 'drawer-close'} style={toggleGraphDetails ? { marginLeft: '740px' } : {}}>
+          <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
+            {cy && (
               <GraphToolbar
                 viewOnly={viewOnly}
                 graphId={graphId}
-                selectNode={this.selectNode}
-                toggleDrawer={this.toggleDrawer}
-                cy={this.cy}
+                selectNode={selectNode}
+                toggleDrawer={toggleDrawer}
+                cy={cy}
               />
-              )}
+            )}
+            {elements && (
+            <CytoscapeComponent
+              className="graph"
+              elements={elements}
+              cy={(cyto) => {
+                console.log(cyto);
+                setCy(cyto);
+              }}
+            />
+            )}
 
-              <CytoscapeComponent
-                className="graph"
-                elements={elements}
-                cy={(cy) => {
-                  this.cy = cy;
-                }}
-              />
-            </Grid>
           </Grid>
         </Grid>
-      </CytoscapeContext.Provider>
+      </Grid>
+    </CytoscapeContext.Provider>
 
-    );
-  }
-}
+  );
+};
+
+export default Graph;
 
 Graph.propTypes = {
   id: PropTypes.string.isRequired,
