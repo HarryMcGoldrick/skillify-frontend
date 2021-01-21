@@ -70,6 +70,7 @@ const GraphToolbar = (props) => {
       }
 
       const currentNode = event.target;
+      event.target.select();
       selectNode(currentNode.data());
     });
   };

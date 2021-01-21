@@ -14,6 +14,8 @@ import NodeDrawerPanel from '../node-drawer-panel/node-drawer-panel';
 import { isAuthenticated, getUserId } from '../../utils/authentication';
 import { getUserProgressInfo } from '../../services/user-service';
 
+export const CytoscapeContext = React.createContext();
+
 export default class Graph extends Component {
   constructor() {
     super();
@@ -141,56 +143,58 @@ export default class Graph extends Component {
     const { viewOnly } = this.props;
 
     return (
-      <Grid container justify="center">
+      <CytoscapeContext.Provider value={this.cy}>
+        <Grid container justify="center">
 
-        <Grid item>
-          <Drawer anchor="left" open={drawerOpen} variant="persistent">
-            <GraphDetails
-              graphName={graphName}
-              graphDescription={graphDescription}
-              viewOnly={viewOnly}
-              addGraphToProgress={this.addGraphToProgress}
-              progressMode={progressMode}
-              cy={this.cy}
-            />
-          </Drawer>
-        </Grid>
+          <Grid item>
+            <Drawer anchor="left" open={drawerOpen} variant="persistent">
+              <GraphDetails
+                graphName={graphName}
+                graphDescription={graphDescription}
+                viewOnly={viewOnly}
+                addGraphToProgress={this.addGraphToProgress}
+                progressMode={progressMode}
+                cy={this.cy}
+              />
+            </Drawer>
+          </Grid>
 
-        {this.cy && (
-        <Grid item>
-          <Drawer
-            anchor="right"
-            open={Boolean(selectedNode.id)}
-            variant="persistent"
-          >
-            <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} completedNodes={completedNodes} viewOnly={viewOnly} />
-          </Drawer>
-        </Grid>
-        )}
+          {this.cy && (
+          <Grid item>
+            <Drawer
+              anchor="right"
+              open={Boolean(selectedNode.id)}
+              variant="persistent"
+            >
+              <NodeDrawerPanel nodeData={selectedNode} cy={this.cy} progressMode={progressMode} completedNodes={completedNodes} viewOnly={viewOnly} />
+            </Drawer>
+          </Grid>
+          )}
 
-        {/* Inline style has to be used here unfortunately */}
-        <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
-          <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
-            {this.cy && (
-            <GraphToolbar
-              viewOnly={viewOnly}
-              graphId={graphId}
-              selectNode={this.selectNode}
-              toggleDrawer={this.toggleDrawer}
-              cy={this.cy}
-            />
-            )}
+          {/* Inline style has to be used here unfortunately */}
+          <Grid item className={drawerOpen ? 'drawer-open' : 'drawer-close'} style={drawerOpen ? { marginLeft: '740px' } : {}}>
+            <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '481px' } : {}}>
+              {this.cy && (
+              <GraphToolbar
+                viewOnly={viewOnly}
+                graphId={graphId}
+                selectNode={this.selectNode}
+                toggleDrawer={this.toggleDrawer}
+                cy={this.cy}
+              />
+              )}
 
-            <CytoscapeComponent
-              className="graph"
-              elements={elements}
-              cy={(cy) => {
-                this.cy = cy;
-              }}
-            />
+              <CytoscapeComponent
+                className="graph"
+                elements={elements}
+                cy={(cy) => {
+                  this.cy = cy;
+                }}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </CytoscapeContext.Provider>
 
     );
   }

@@ -1,8 +1,10 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../../utils/authentication';
 import NodeCard from '../node-card/node-card';
+import { CytoscapeContext } from '../graph/graph';
+import { GetSelectedNode } from '../../utils/node-utils';
 
 const useStyles = makeStyles({
   container: {
@@ -16,10 +18,11 @@ const useStyles = makeStyles({
 
 // Used to display the details of the graph
 const GraphDetails = (props) => {
+  const cy = useContext(CytoscapeContext);
   const classes = useStyles();
   const [nodes, setNodes] = useState([]);
   const {
-    graphName, graphDescription, viewOnly, addGraphToProgress, progressMode, cy,
+    graphName, graphDescription, viewOnly, addGraphToProgress, progressMode,
   } = props;
 
   useEffect(() => {
@@ -28,7 +31,6 @@ const GraphDetails = (props) => {
         const nodesInMap = cy.nodes().values();
         const nodeArray = Array.from(nodesInMap);
         setNodes(nodeArray);
-        console.log(nodeArray);
       }
     }
   }, [props]);
