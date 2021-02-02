@@ -32,7 +32,10 @@ const GraphToolbar = (props) => {
   const [selectedLayout, setSelectedLayout] = useState({});
   const [isUserCreatedMap, setIsUserCreatedMap] = useState(false);
   const {
-    cy, selectNode, toggleDrawer, viewOnly,
+    cy, toggleDrawer, viewOnly, elements,
+  } = props;
+  const {
+    addNode, selectNode, removeNode,
   } = props;
   const classes = useStyles();
   const history = useHistory();
@@ -68,9 +71,7 @@ const GraphToolbar = (props) => {
       if (event.target.classes()[0] === 'eh-handle') {
         return;
       }
-
       const currentNode = event.target;
-      event.target.select();
       selectNode(currentNode.data());
     });
   };
@@ -79,14 +80,7 @@ const GraphToolbar = (props) => {
   const addNodeTool = () => {
     cy.on('tap', (event) => {
       if (event.target === cy) {
-        const { x, y } = event.position;
-        cy.add({
-          group: 'nodes',
-          position: { x, y },
-        });
-        // Select the newest node added
-        const node = cy.nodes().pop();
-        selectNode(node.data());
+        addNode(event.position);
       }
     });
   };
@@ -142,14 +136,16 @@ const GraphToolbar = (props) => {
   };
 
   useEffect(() => {
-    switchTool(tools.SELECT);
-    if (isAuthenticated()) {
-      getUserInfo(getUserId()).then((res) => {
-        const { graphs_created: graphsCreated } = res;
-        if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
-      });
+    if (cy) {
+      switchTool(tools.SELECT);
+      if (isAuthenticated()) {
+        getUserInfo(getUserId()).then((res) => {
+          const { graphs_created: graphsCreated } = res;
+          if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
+        });
+      }
     }
-  });
+  }, []);
 
   return (
     <Grid>

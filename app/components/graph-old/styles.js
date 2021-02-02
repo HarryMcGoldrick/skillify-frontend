@@ -13,6 +13,12 @@ const style = [
       'target-arrow-shape': 'triangle', // there are far more options for this property here: http://js.cytoscape.org/#style/edge-arrow
     },
   },
+  {
+    selector: '.completed',
+    style: {
+      'background-color': 'red',
+    },
+  },
 
   {
     selector: '.eh-handle',

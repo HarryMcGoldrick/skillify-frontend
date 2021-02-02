@@ -2,9 +2,7 @@ import { Button, makeStyles } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../../utils/authentication';
-import NodeCard from '../node-card/node-card';
-import { CytoscapeContext } from '../graph/graph';
-import { GetSelectedNode } from '../../utils/node-utils';
+import { CytoscapeContext } from '../graph-old/graph';
 
 const useStyles = makeStyles({
   container: {

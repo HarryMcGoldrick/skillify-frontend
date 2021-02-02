@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
-import { GetNodeWithId } from '../../utils/node-utils';
+import { getNodeWithId } from '../../utils/graph-utils';
 import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { getUserProgressInfo } from '../../services/user-service';
@@ -34,7 +34,7 @@ const NodeDetails = (props) => {
   const { id: graphId } = useParams();
 
   const onSubmit = (data) => {
-    const node = GetNodeWithId(cy, nodeData.id);
+    const node = getNodeWithId(cy, nodeData.id);
     if (node) {
       if (data.label) {
         node.data('label', data.label);
@@ -83,7 +83,7 @@ const NodeDetails = (props) => {
   };
 
   const addNodeToProgress = () => {
-    const node = GetNodeWithId(cy, nodeData.id);
+    const node = getNodeWithId(cy, nodeData.id);
     addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
       if (data.res) {
         updateCompletedNodes();
@@ -97,7 +97,7 @@ const NodeDetails = (props) => {
   const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
 
   const removeNodeFromProgress = () => {
-    const node = GetNodeWithId(cy, nodeData.id);
+    const node = getNodeWithId(cy, nodeData.id);
     removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
       if (data.res) {
         updateCompletedNodes();

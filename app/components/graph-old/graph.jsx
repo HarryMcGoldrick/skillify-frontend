@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import './graph.css';
 import cytoscape from 'cytoscape';
@@ -28,18 +28,6 @@ const Graph = (props) => {
   const [selectedNode, setSelectedNode] = useState({});
   const [graphName, setGraphName] = useState('');
   const [graphDescription, setGraphDescription] = useState('');
-
-  // constructor() {
-  //   super();
-  //   state = {
-  //     elements: [],
-  //     selectedNode: {},
-  //     drawerOpen: false,
-  //     completedNodes: [],
-  //     progressMode: false,
-  //     graphId: '',
-  //   };
-  // }
 
   // Adds drawable edges to nodes
   const enableEdgehandles = () => {
@@ -192,7 +180,6 @@ const Graph = (props) => {
               className="graph"
               elements={elements}
               cy={(cyto) => {
-                console.log(cyto);
                 setCy(cyto);
               }}
             />
