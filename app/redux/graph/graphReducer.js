@@ -1,5 +1,5 @@
 import {
-  ADD_NODE, FETCH_GRAPH_SUCCESS, REMOVE_NODE, SELECT_NODE, UPDATE_ELEMENTS,
+  ADD_NODE, COMPLETE_NODE, COMPLETE_NODE_BATCH, FETCH_GRAPH_SUCCESS, REMOVE_NODE, SELECT_NODE, UPDATE_ELEMENTS, TOGGLE_GRAPH_DETAILS,
 } from './graphTypes';
 import { initialState } from './initialState';
 
@@ -38,6 +38,28 @@ const reducer = (state = initialState, action) => {
         elements: action.payload.elements,
         graphData: action.payload.graphData,
       };
+    case COMPLETE_NODE:
+      return {
+        ...state,
+        completedNodes: [
+          ...state.completedNodes,
+          action.payload,
+        ],
+      };
+    case COMPLETE_NODE_BATCH:
+      return {
+        ...state,
+        completedNodes: [
+          ...state.completedNodes,
+          ...action.payload,
+        ],
+      };
+    case TOGGLE_GRAPH_DETAILS:
+      return {
+        ...state,
+        showGraphDetails: !state.showGraphDetails,
+      };
+
     default: return state;
   }
 };

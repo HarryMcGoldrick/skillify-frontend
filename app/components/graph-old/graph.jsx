@@ -7,7 +7,7 @@ import { Drawer, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import dagre from 'cytoscape-dagre';
 import { loadGraphElements, addGraphToGraphProgress } from '../../services/graph-service';
-import edgeHandleStyle from './styles';
+import edgeHandleStyle from '../../containers/graph-container/edgehandle-style';
 import GraphDetails from '../graph-details/graph-details';
 import GraphToolbar from '../graph-toolbar/graph-toolbar';
 import NodeDrawerPanel from '../node-drawer-panel/node-drawer-panel';

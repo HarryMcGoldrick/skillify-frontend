@@ -24,7 +24,10 @@
         "linebreak-style": 0,
         "react/jsx-props-no-spreading": 0,
         "react/forbid-prop-types": 0,
-        "no-underscore-dangle": 0
+        "react/prop-types": 0,
+        "no-underscore-dangle": 0,
+        "no-unused-expressions" : { "allowTernary": true }
+        
     }
 
 }

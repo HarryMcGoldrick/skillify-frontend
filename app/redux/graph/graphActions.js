@@ -1,5 +1,5 @@
 import {
-  ADD_NODE, REMOVE_NODE, SELECT_NODE, UPDATE_ELEMENTS,
+  ADD_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS,
 } from './graphTypes';
 
 export const selectNode = (node) => ({
@@ -26,4 +26,8 @@ export const removeNode = (id) => ({
 export const updateElements = (elements) => ({
   type: UPDATE_ELEMENTS,
   payload: elements,
+});
+
+export const toggleGraphDetails = () => ({
+  type: TOGGLE_GRAPH_DETAILS,
 });

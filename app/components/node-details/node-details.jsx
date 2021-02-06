@@ -47,22 +47,6 @@ const NodeDetails = (props) => {
     setEditMode(false);
   };
 
-  const updateCompletedNodes = () => {
-    // If user is logged in check if this graph exists in the users progress info
-    if (isAuthenticated() && viewOnly) {
-      const userId = getUserId();
-      getUserProgressInfo(userId).then((res) => {
-        const { graphs_progressing: graphs } = res;
-        graphs.filter((graph) => {
-          if (graph._id === graphId) {
-            setCompletedNodes(graph.completedNodes);
-          }
-          return null;
-        });
-      });
-    }
-  };
-
   useEffect(() => {
     setCurrentNodeData(nodeData);
     const isEmptyNodeAndEditMode = !nodeData.label && !nodeData.description && !editMode && !viewOnly;
@@ -74,39 +58,35 @@ const NodeDetails = (props) => {
     setIsComplete(Boolean(completedNodes.includes(nodeData.id)));
   }, [props]);
 
-  useEffect(() => {
-    updateCompletedNodes();
-  }, []);
-
   const handleEdit = () => {
     setEditMode(!editMode);
   };
 
-  const addNodeToProgress = () => {
-    const node = getNodeWithId(cy, nodeData.id);
-    addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
-      if (data.res) {
-        updateCompletedNodes();
-        setIsComplete(true);
-        node.style('background-color', 'red');
-        completedNodes.push(nodeData.id);
-      }
-    });
-  };
+  // const addNodeToProgress = () => {
+  //   const node = getNodeWithId(cy, nodeData.id);
+  //   addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+  //     if (data.res) {
+  //       updateCompletedNodes();
+  //       setIsComplete(true);
+  //       node.style('background-color', 'red');
+  //       completedNodes.push(nodeData.id);
+  //     }
+  //   });
+  // };
 
   const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
 
-  const removeNodeFromProgress = () => {
-    const node = getNodeWithId(cy, nodeData.id);
-    removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
-      if (data.res) {
-        updateCompletedNodes();
-        setIsComplete(false);
-        node.style('background-color', 'gray');
-        removeItemFromArray(completedNodes, nodeData.id);
-      }
-    });
-  };
+  // const removeNodeFromProgress = () => {
+  //   const node = getNodeWithId(cy, nodeData.id);
+  //   removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+  //     if (data.res) {
+  //       updateCompletedNodes();
+  //       setIsComplete(false);
+  //       node.style('background-color', 'gray');
+  //       removeItemFromArray(completedNodes, nodeData.id);
+  //     }
+  //   });
+  // };
 
   return (
     <>
@@ -131,7 +111,7 @@ const NodeDetails = (props) => {
             {currentNodeData.description}
           </p>
           )}
-          {!isComplete && isProgressMode && (
+          {/* {!isComplete && isProgressMode && (
             <Button
               variant="contained"
               color="primary"
@@ -150,7 +130,7 @@ const NodeDetails = (props) => {
             >
               Incomplete
             </Button>
-          )}
+          )} */}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -167,11 +147,6 @@ const NodeDetails = (props) => {
       )}
     </>
   );
-};
-
-NodeDetails.propTypes = {
-  cy: PropTypes.object.isRequired,
-  nodeData: PropTypes.object.isRequired,
 };
 
 export default NodeDetails;
