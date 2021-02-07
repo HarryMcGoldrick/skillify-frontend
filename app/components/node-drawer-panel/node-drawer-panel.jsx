@@ -1,14 +1,15 @@
 import {
   AppBar, Box, Tab, Tabs, Typography,
 } from '@material-ui/core';
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import NodeDetails from '../node-details/node-details';
+import NodeLearningTab from '../node-learning-tab/node-learning-tab';
 
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
-    nodeData, cy, isNodeComplete, progressMode, viewOnly,
+    nodeData, progressMode, viewOnly,
   } = props;
 
   const handleChange = (event, newValue) => {
@@ -17,28 +18,36 @@ const NodeDrawerPanel = (props) => {
 
   return (
     <div>
-      <AppBar position="static" color="transparent">
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label="Details" />
-          <Tab label="Learning" />
-          <Tab label="Appearance" />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <NodeDetails nodeData={nodeData} cy={cy} isNodeComplete={isNodeComplete} isProgressMode={progressMode} viewOnly={viewOnly} />
-      </TabPanel>
-      <TabPanel value={value} index={1} />
-      <TabPanel value={value} index={2} />
+      {nodeData.id && (
+        <div>
+          <AppBar position="static" color="transparent">
+            <Tabs value={value} onChange={handleChange}>
+              <Tab label="Details" />
+              <Tab label="Learning" />
+              <Tab label="Appearance" />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <NodeDetails nodeData={nodeData} isProgressMode={progressMode} viewOnly={viewOnly} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <NodeLearningTab nodeData={nodeData} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <h3>under construction!</h3>
+          </TabPanel>
+        </div>
+      )}
     </div>
   );
 };
 
-NodeDrawerPanel.propTypes = {
-  nodeData: PropTypes.object.isRequired,
-  cy: PropTypes.object.isRequired,
-};
+const mapStateToProps = (state) => ({
+  nodeData: state.graph.selectedNode,
+  progressMode: state.graph.isProgressMode,
+});
 
-export default NodeDrawerPanel;
+export default connect(mapStateToProps)(NodeDrawerPanel);
 
 function TabPanel(props) {
   const {

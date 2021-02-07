@@ -11,13 +11,18 @@ import {
   Button, Grid, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
 import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { tools } from '../../enums/tools';
 import { layouts } from '../../enums/layouts';
-import { updateGraphElements } from '../../services/graph-service';
+import { sendGraphDataForImage, updateGraphElements } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import { getUserInfo } from '../../services/user-service';
-import { getUserId } from '../../utils/authentication';
+import { getUserId, isAuthenticated } from '../../utils/authentication';
+import dagre from 'cytoscape-dagre';
+import cytoscape from 'cytoscape';
+import { connect } from 'react-redux';
+import { addNode, removeNode, selectNode, toggleGraphDetails, updateElements } from '../../redux/graph/graphActions';
+
 
 // Displays icons to select the relevant graph tool
 
@@ -32,15 +37,27 @@ const GraphToolbar = (props) => {
   const [selectedLayout, setSelectedLayout] = useState({});
   const [isUserCreatedMap, setIsUserCreatedMap] = useState(false);
   const {
-    cy, selectNode, toggleDrawer, viewOnly,
+    cy, viewOnly, addNode, selectNode, removeNode, toggleGraphDetails, updateElements
   } = props;
+
   const classes = useStyles();
   const history = useHistory();
-  const { graphId } = props;
+  const { id: graphId } = useParams();
+
+
+  const initLayouts = () => {
+    cytoscape.use(dagre)
+  }
 
   const runLayout = () => {
     if (selectedLayout) {
-      cy.layout({ name: selectedLayout }).run();
+      const layout = cy.layout({ name: selectedLayout });
+      // Ensure element state is set before layout so it can be undone
+      updateElements(cy.json(true).elements)
+      layout.run();
+      layout.one('layoutstop', () => {
+        updateElements(cy.json(true).elements)
+        });
       cy.fit();
     }
   };
@@ -67,7 +84,6 @@ const GraphToolbar = (props) => {
       if (event.target.classes()[0] === 'eh-handle') {
         return;
       }
-
       const currentNode = event.target;
       selectNode(currentNode.data());
     });
@@ -77,14 +93,7 @@ const GraphToolbar = (props) => {
   const addNodeTool = () => {
     cy.on('tap', (event) => {
       if (event.target === cy) {
-        const { x, y } = event.position;
-        cy.add({
-          group: 'nodes',
-          position: { x, y },
-        });
-        // Select the newest node added
-        const node = cy.nodes().pop();
-        selectNode(node.data());
+        addNode(event.position);
       }
     });
   };
@@ -93,7 +102,7 @@ const GraphToolbar = (props) => {
   const deleteNodeAndEdgeTool = () => {
     cy.on('tap', (event) => {
       if (event.target !== cy) {
-        cy.remove(event.target);
+        removeNode(event.target.data().id);
       }
     });
   };
@@ -120,32 +129,30 @@ const GraphToolbar = (props) => {
 
   // Saves the changes made to a graph
   const updateData = () => {
-    const { graphId } = props;
     updateGraphElements(graphId, extractDiagramDataFromGraphData(cy.json()));
+    sendGraphDataForImage(graphId, cy.json());
   };
 
   const goToEditPage = () => {
     history.push(`/edit/${graphId}`);
-    // Need to fully refresh page or graph won't load properly
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   const goToViewPage = () => {
     history.push(`/view/${graphId}`);
-    // Need to fully refresh page or graph won't load properly
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   useEffect(() => {
-    switchTool(tools.SELECT);
-    getUserInfo(getUserId()).then((res) => {
-      const { graphs_created: graphsCreated } = res;
-      console.log(graphsCreated);
-      if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
-    });
-  });
+    if (cy) {
+      switchTool(tools.SELECT);
+      if (isAuthenticated()) {
+        getUserInfo(getUserId()).then((res) => {
+          const { graphs_created: graphsCreated } = res;
+          if (graphsCreated.includes(graphId)) setIsUserCreatedMap(true);
+        });
+      }
+      initLayouts();
+    }
+  }, []);
 
   return (
     <Grid>
@@ -154,7 +161,7 @@ const GraphToolbar = (props) => {
         color="primary"
         className={classes.button}
         startIcon={<InfoIcon />}
-        onClick={() => toggleDrawer()}
+        onClick={() => toggleGraphDetails()}
       >
         Map Info
       </Button>
@@ -245,11 +252,16 @@ const GraphToolbar = (props) => {
   );
 };
 
-GraphToolbar.propTypes = {
-  cy: PropTypes.object.isRequired,
-  selectNode: PropTypes.func.isRequired,
-  graphId: PropTypes.string.isRequired,
-  toggleDrawer: PropTypes.func.isRequired,
-};
+const mapDispatchToProps = (dispatch) => ({
+  addNode: (pos) => dispatch(addNode(pos)),
+  removeNode: (id) => dispatch(removeNode(id)),
+  toggleGraphDetails: () => dispatch(toggleGraphDetails()),
+  selectNode: (node) => dispatch(selectNode(node)),
+  updateElements: (elements) => dispatch(updateElements(elements)),
+})
 
-export default GraphToolbar;
+
+
+export default connect(null, mapDispatchToProps)(GraphToolbar);
+
+

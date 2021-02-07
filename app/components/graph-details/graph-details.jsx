@@ -1,6 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { isAuthenticated } from '../../utils/authentication';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles({
   container: {
@@ -15,45 +16,59 @@ const useStyles = makeStyles({
 // Used to display the details of the graph
 const GraphDetails = (props) => {
   const classes = useStyles();
-  // const [isProgressMode, setIsProgressMode] = useState(false);
+  const [nodes, setNodes] = useState([]);
   const {
-    graphName, graphDescription, viewOnly, addGraphToProgress, progressMode,
+    graphData, viewOnly, progressMode, elements
   } = props;
 
-  // useEffect(() => {
-  //   setIsProgressMode(progressMode);
-  // }, [props]);
+  const {name, description} = graphData
+
+
+  const addGraphToProgress = async () => {
+    const initGraph = await addGraphToGraphProgress(graphId, getUserId());
+    if (initGraph.res) {
+      initProgressMode();
+    }
+  };
 
   return (
-    <div className={classes.container}>
-      <h3 className={classes.title}>
-        {` ${graphName || ''}`}
-      </h3>
-      <p style={{ textOverflow: 'wrap' }}>{` ${graphDescription || ''}`}</p>
-      <hr />
-      {viewOnly && !progressMode && (
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={addGraphToProgress}
-      >
-        Begin tracking
-      </Button>
-      )}
-    </div>
+    <>
+      <div className={classes.container}>
+        <h3 className={classes.title}>
+          {` ${name || ''}`}
+        </h3>
+        <p style={{ textOverflow: 'wrap' }}>{` ${description || ''}`}</p>
+        <hr />
+        {viewOnly && !progressMode && isAuthenticated() && (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={addGraphToProgress}
+        >
+          Begin tracking
+        </Button>
+        )}
+      </div>
+      {/* {nodes.map((node) => {
+        if (node.data().label) {
+          return <NodeCard nodeData={node.data()} />;
+        }
+        return null;
+      })} */}
+      <div />
+    </>
   );
 };
 
-GraphDetails.propTypes = {
-  graphName: PropTypes.string,
-  graphDescription: PropTypes.string,
-  viewOnly: PropTypes.bool.isRequired,
-};
+const mapStateToProps = (state) => ({
+  elements: state.graph.elements,
+  showGraphDetails: state.graph.showGraphDetails,
+  graphData: state.graph.graphData
+})
 
-GraphDetails.defaultProps = {
-  graphName: '',
-  graphDescription: '',
-};
+const mapDispatchToProps = (dispatch) => ({
+  updateProgressMode: () => updateProgressMode()
+})
 
-export default GraphDetails;
+export default connect(mapStateToProps, mapDispatchToProps)(GraphDetails);

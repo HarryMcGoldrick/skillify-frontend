@@ -6,9 +6,10 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
-import { GetNodeWithId } from '../../utils/node-utils';
-import { addNodeToGraphProgress } from '../../services/graph-service';
-import { getUserId } from '../../utils/authentication';
+import { getNodeWithId } from '../../utils/graph-utils';
+import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
+import { getUserId, isAuthenticated } from '../../utils/authentication';
+import { getUserProgressInfo } from '../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -26,13 +27,14 @@ const NodeDetails = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [currentNodeData, setCurrentNodeData] = useState({});
   const [isComplete, setIsComplete] = useState({});
+  const [completedNodes, setCompletedNodes] = useState([]);
   const {
-    cy, nodeData, isNodeComplete, isProgressMode, viewOnly,
+    cy, nodeData, isProgressMode, viewOnly,
   } = props;
   const { id: graphId } = useParams();
 
   const onSubmit = (data) => {
-    const node = GetNodeWithId(cy, nodeData.id);
+    const node = getNodeWithId(cy, nodeData.id);
     if (node) {
       if (data.label) {
         node.data('label', data.label);
@@ -53,22 +55,38 @@ const NodeDetails = (props) => {
     } else {
       setEditMode(false);
     }
-    setIsComplete(isNodeComplete);
+    setIsComplete(Boolean(completedNodes.includes(nodeData.id)));
   }, [props]);
 
   const handleEdit = () => {
     setEditMode(!editMode);
   };
 
-  const addNodeToProgress = () => {
-    const node = GetNodeWithId(cy, nodeData.id);
-    addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
-      if (data.res) {
-        setIsComplete(true);
-        node.style('background-color', 'red');
-      }
-    });
-  };
+  // const addNodeToProgress = () => {
+  //   const node = getNodeWithId(cy, nodeData.id);
+  //   addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+  //     if (data.res) {
+  //       updateCompletedNodes();
+  //       setIsComplete(true);
+  //       node.style('background-color', 'red');
+  //       completedNodes.push(nodeData.id);
+  //     }
+  //   });
+  // };
+
+  const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
+
+  // const removeNodeFromProgress = () => {
+  //   const node = getNodeWithId(cy, nodeData.id);
+  //   removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
+  //     if (data.res) {
+  //       updateCompletedNodes();
+  //       setIsComplete(false);
+  //       node.style('background-color', 'gray');
+  //       removeItemFromArray(completedNodes, nodeData.id);
+  //     }
+  //   });
+  // };
 
   return (
     <>
@@ -93,7 +111,7 @@ const NodeDetails = (props) => {
             {currentNodeData.description}
           </p>
           )}
-          {!isComplete && isProgressMode && (
+          {/* {!isComplete && isProgressMode && (
             <Button
               variant="contained"
               color="primary"
@@ -103,6 +121,16 @@ const NodeDetails = (props) => {
               Complete
             </Button>
           )}
+          {isComplete && isProgressMode && (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={removeNodeFromProgress}
+            >
+              Incomplete
+            </Button>
+          )} */}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -119,11 +147,6 @@ const NodeDetails = (props) => {
       )}
     </>
   );
-};
-
-NodeDetails.propTypes = {
-  cy: PropTypes.object.isRequired,
-  nodeData: PropTypes.object.isRequired,
 };
 
 export default NodeDetails;

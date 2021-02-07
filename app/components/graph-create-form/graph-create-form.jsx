@@ -1,5 +1,5 @@
 import {
-  Button, Grid, makeStyles, Paper, TextField,
+  Button, Grid, makeStyles, Paper, TextField, Typography,
 } from '@material-ui/core';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,16 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   formInput: {
+    padding: theme.spacing(1),
+  },
+  heading: {
+    padding: theme.spacing(3),
+  },
+  textField: {
+    width: 350,
+  },
+  submit: {
+    marginTop: theme.spacing(3),
     padding: theme.spacing(1),
   },
 }));
@@ -37,17 +47,20 @@ export const GraphCreateForm = () => {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '30vh' }}
+        style={{ minHeight: '60vh' }}
       >
         <Paper className={classes.paper}>
-          <Grid item xs={12} className={classes.formInput}>
-            <TextField name="name" label="Name" variant="outlined" inputRef={register({ required: true })} />
+          <Grid item xs={12} className={classes.heading}>
+            <Typography variant="h4" align="center">Create your graph!</Typography>
           </Grid>
           <Grid item xs={12} className={classes.formInput}>
-            <TextField name="description" label="Description" variant="outlined" inputRef={register({ required: true })} />
+            <TextField name="name" label="Name" variant="outlined" inputRef={register({ required: true })} className={classes.textField} />
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" fullWidth>Create</Button>
+          <Grid item xs={12} className={classes.formInput}>
+            <TextField name="description" label="Description" variant="outlined" inputRef={register({ required: true })} className={classes.textField} />
+          </Grid>
+          <Grid item xs={12} className={classes.submit}>
+            <Button type="submit" fullWidth variant="contained">Create</Button>
           </Grid>
         </Paper>
       </Grid>

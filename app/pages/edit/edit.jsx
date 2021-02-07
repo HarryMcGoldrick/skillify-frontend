@@ -1,16 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Graph } from '../../components';
+import GraphPage from '../../containers/graph-page-container/graph-page';
 
 const Edit = (props) => {
-  const { id } = props;
+  const viewOnly = false;
+
   return (
-    <Graph id={id} viewOnly={false} />
+   <GraphPage viewOnly={viewOnly}></GraphPage>
   );
 };
 
-Edit.propTypes = {
-  id: PropTypes.string.isRequired,
-};
-
-export default Edit;
+export default Edit
