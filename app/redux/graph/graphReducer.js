@@ -59,6 +59,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         showGraphDetails: !state.showGraphDetails,
       };
+    case TOGGLE_GRAPH_DETAILS:
+      return {
+        ...state,
+        progressMode: !state.progressMode,
+      };
 
     default: return state;
   }

@@ -20,6 +20,8 @@ import { getUserInfo } from '../../services/user-service';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import dagre from 'cytoscape-dagre';
 import cytoscape from 'cytoscape';
+import { connect } from 'react-redux';
+import { addNode, removeNode, selectNode, toggleGraphDetails, updateElements } from '../../redux/graph/graphActions';
 
 
 // Displays icons to select the relevant graph tool
@@ -35,7 +37,7 @@ const GraphToolbar = (props) => {
   const [selectedLayout, setSelectedLayout] = useState({});
   const [isUserCreatedMap, setIsUserCreatedMap] = useState(false);
   const {
-    cy, viewOnly, addNode, selectNode, removeNode, toggleGraphDetails
+    cy, viewOnly, addNode, selectNode, removeNode, toggleGraphDetails, updateElements
   } = props;
 
   const classes = useStyles();
@@ -50,7 +52,12 @@ const GraphToolbar = (props) => {
   const runLayout = () => {
     if (selectedLayout) {
       const layout = cy.layout({ name: selectedLayout });
+      // Ensure element state is set before layout so it can be undone
+      updateElements(cy.json(true).elements)
       layout.run();
+      layout.one('layoutstop', () => {
+        updateElements(cy.json(true).elements)
+        });
       cy.fit();
     }
   };
@@ -128,16 +135,10 @@ const GraphToolbar = (props) => {
 
   const goToEditPage = () => {
     history.push(`/edit/${graphId}`);
-    // Need to fully refresh page or graph won't load properly
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   const goToViewPage = () => {
     history.push(`/view/${graphId}`);
-    // Need to fully refresh page or graph won't load properly
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
   };
 
   useEffect(() => {
@@ -251,4 +252,16 @@ const GraphToolbar = (props) => {
   );
 };
 
-export default GraphToolbar;
+const mapDispatchToProps = (dispatch) => ({
+  addNode: (pos) => dispatch(addNode(pos)),
+  removeNode: (id) => dispatch(removeNode(id)),
+  toggleGraphDetails: () => dispatch(toggleGraphDetails()),
+  selectNode: (node) => dispatch(selectNode(node)),
+  updateElements: (elements) => dispatch(updateElements(elements)),
+})
+
+
+
+export default connect(null, mapDispatchToProps)(GraphToolbar);
+
+

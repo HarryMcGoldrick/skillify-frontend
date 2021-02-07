@@ -1,8 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { isAuthenticated } from '../../utils/authentication';
-import { CytoscapeContext } from '../graph-old/graph';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles({
   container: {
@@ -16,30 +15,29 @@ const useStyles = makeStyles({
 
 // Used to display the details of the graph
 const GraphDetails = (props) => {
-  const cy = useContext(CytoscapeContext);
   const classes = useStyles();
   const [nodes, setNodes] = useState([]);
   const {
-    graphName, graphDescription, viewOnly, addGraphToProgress, progressMode,
+    graphData, viewOnly, progressMode, elements
   } = props;
 
-  useEffect(() => {
-    if (cy) {
-      if (cy.nodes()) {
-        const nodesInMap = cy.nodes().values();
-        const nodeArray = Array.from(nodesInMap);
-        setNodes(nodeArray);
-      }
+  const {name, description} = graphData
+
+
+  const addGraphToProgress = async () => {
+    const initGraph = await addGraphToGraphProgress(graphId, getUserId());
+    if (initGraph.res) {
+      initProgressMode();
     }
-  }, [props]);
+  };
 
   return (
     <>
       <div className={classes.container}>
         <h3 className={classes.title}>
-          {` ${graphName || ''}`}
+          {` ${name || ''}`}
         </h3>
-        <p style={{ textOverflow: 'wrap' }}>{` ${graphDescription || ''}`}</p>
+        <p style={{ textOverflow: 'wrap' }}>{` ${description || ''}`}</p>
         <hr />
         {viewOnly && !progressMode && isAuthenticated() && (
         <Button
@@ -63,15 +61,14 @@ const GraphDetails = (props) => {
   );
 };
 
-GraphDetails.propTypes = {
-  graphName: PropTypes.string,
-  graphDescription: PropTypes.string,
-  viewOnly: PropTypes.bool.isRequired,
-};
+const mapStateToProps = (state) => ({
+  elements: state.graph.elements,
+  showGraphDetails: state.graph.showGraphDetails,
+  graphData: state.graph.graphData
+})
 
-GraphDetails.defaultProps = {
-  graphName: '',
-  graphDescription: '',
-};
+const mapDispatchToProps = (dispatch) => ({
+  updateProgressMode: () => updateProgressMode()
+})
 
-export default GraphDetails;
+export default connect(mapStateToProps, mapDispatchToProps)(GraphDetails);

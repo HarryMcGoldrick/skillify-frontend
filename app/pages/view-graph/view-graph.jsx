@@ -1,16 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Graph } from '../../components';
+import GraphPage from '../../containers/graph-page-container/graph-page';
 
 const ViewGraph = (props) => {
-  const { id } = props;
-  return (
-    <Graph id={id} viewOnly />
-  );
-};
+  const viewOnly = true;
 
-ViewGraph.propTypes = {
-  id: PropTypes.string.isRequired,
+  return (
+   <GraphPage viewOnly={viewOnly}></GraphPage>
+  );
 };
 
 export default ViewGraph;

@@ -1,5 +1,5 @@
 import {
-  ADD_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS,
+  ADD_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS, UPDATE_PROGRESS_MODE,
 } from './graphTypes';
 
 export const selectNode = (node) => ({
@@ -30,4 +30,8 @@ export const updateElements = (elements) => ({
 
 export const toggleGraphDetails = () => ({
   type: TOGGLE_GRAPH_DETAILS,
+});
+
+export const updateProgressMode = () => ({
+  type: UPDATE_PROGRESS_MODE,
 });
