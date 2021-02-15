@@ -1,7 +1,10 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React, { useState } from 'react';
-import { isAuthenticated } from '../../utils/authentication';
+import React, { useEffect, useState } from 'react';
+import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { connect } from 'react-redux';
+import { addGraphToGraphProgress } from '../../services/graph-service';
+import { updateProgressMode } from '../../redux/graph/graphActions';
+import { useParams } from 'react-router';
 
 const useStyles = makeStyles({
   container: {
@@ -16,18 +19,17 @@ const useStyles = makeStyles({
 // Used to display the details of the graph
 const GraphDetails = (props) => {
   const classes = useStyles();
-  const [nodes, setNodes] = useState([]);
+  const {id: graphId} = useParams();
   const {
     graphData, viewOnly, progressMode, elements
   } = props;
 
   const {name, description} = graphData
 
-
   const addGraphToProgress = async () => {
     const initGraph = await addGraphToGraphProgress(graphId, getUserId());
     if (initGraph.res) {
-      initProgressMode();
+      props.updateProgressMode(true);
     }
   };
 
@@ -64,11 +66,12 @@ const GraphDetails = (props) => {
 const mapStateToProps = (state) => ({
   elements: state.graph.elements,
   showGraphDetails: state.graph.showGraphDetails,
-  graphData: state.graph.graphData
+  graphData: state.graph.graphData,
+  progressMode: state.graph.progressMode
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  updateProgressMode: () => updateProgressMode()
+  updateProgressMode: (mode) => dispatch(updateProgressMode(mode))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphDetails);

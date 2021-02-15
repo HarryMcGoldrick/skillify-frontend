@@ -15,7 +15,7 @@ const GraphPage = (props) => {
     <Grid container justify="center">
       <Grid item>
         <Drawer anchor="left" open={showGraphDetails} variant="persistent">
-          <GraphDetails />
+          <GraphDetails viewOnly={viewOnly}/>
         </Drawer>
       </Grid>
 

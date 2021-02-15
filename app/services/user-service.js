@@ -9,4 +9,4 @@ export const register = (username, password) => axios.post(`${baseUrl}/register`
 
 export const getUserInfo = (userId) => axios.get(`${baseUrl}/${userId}/userinfo`).then((res) => res.data);
 
-export const getUserProgressInfo = (userId) => axios.get(`${baseUrl}/${userId}/progress`).then((res) => res.data);
+export const getUserProgressInfo = (userId, graphId) => axios.post(`${baseUrl}/progress`, {userId, graphId}).then((res) => res.data);

@@ -1,5 +1,5 @@
 import {
-  ADD_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS, UPDATE_PROGRESS_MODE,
+  ADD_NODE, ADD_COMPLETED_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS, UPDATE_PROGRESS_MODE, REMOVE_COMPLETED_NODE, UPDATE_NODE,
 } from './graphTypes';
 
 export const selectNode = (node) => ({
@@ -23,6 +23,11 @@ export const removeNode = (id) => ({
   payload: id,
 });
 
+export const updateNode = (node) => ({
+  type: UPDATE_NODE,
+  payload: node,
+});
+
 export const updateElements = (elements) => ({
   type: UPDATE_ELEMENTS,
   payload: elements,
@@ -32,6 +37,17 @@ export const toggleGraphDetails = () => ({
   type: TOGGLE_GRAPH_DETAILS,
 });
 
-export const updateProgressMode = () => ({
+export const updateProgressMode = (mode) => ({
   type: UPDATE_PROGRESS_MODE,
+  payload: mode,
 });
+
+export const addNodeToCompletedNodes = (nodeId) => ({
+  type: ADD_COMPLETED_NODE,
+  payload: nodeId
+})
+
+export const removeNodeFromCompletedNodes = (nodeId) => ({
+  type: REMOVE_COMPLETED_NODE,
+  payload: nodeId
+})

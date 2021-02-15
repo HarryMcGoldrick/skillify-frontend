@@ -10,6 +10,8 @@ import { getNodeWithId } from '../../utils/graph-utils';
 import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { getUserProgressInfo } from '../../services/user-service';
+import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../redux/graph/graphActions';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -25,30 +27,21 @@ const NodeDetails = (props) => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
   const [editMode, setEditMode] = useState(false);
-  const [currentNodeData, setCurrentNodeData] = useState({});
-  const [isComplete, setIsComplete] = useState({});
-  const [completedNodes, setCompletedNodes] = useState([]);
+  const [isComplete, setIsComplete] = useState(false);
   const {
-    cy, nodeData, isProgressMode, viewOnly,
+    cy, nodeData, progressMode, viewOnly, selectedNode, completedNodes
   } = props;
   const { id: graphId } = useParams();
 
   const onSubmit = (data) => {
-    const node = getNodeWithId(cy, nodeData.id);
-    if (node) {
-      if (data.label) {
-        node.data('label', data.label);
-      }
-      if (data.description) {
-        node.data('description', data.description);
-      }
-    }
-    setCurrentNodeData(node.data());
     setEditMode(false);
+    props.updateNode({
+      ...selectedNode,
+      ...data
+    })
   };
 
   useEffect(() => {
-    setCurrentNodeData(nodeData);
     const isEmptyNodeAndEditMode = !nodeData.label && !nodeData.description && !editMode && !viewOnly;
     if (isEmptyNodeAndEditMode) {
       setEditMode(true);
@@ -62,31 +55,23 @@ const NodeDetails = (props) => {
     setEditMode(!editMode);
   };
 
-  // const addNodeToProgress = () => {
-  //   const node = getNodeWithId(cy, nodeData.id);
-  //   addNodeToGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
-  //     if (data.res) {
-  //       updateCompletedNodes();
-  //       setIsComplete(true);
-  //       node.style('background-color', 'red');
-  //       completedNodes.push(nodeData.id);
-  //     }
-  //   });
-  // };
+  const addNodeToProgress = () => {
+    addNodeToGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
+      if (data.res) {
+        props.addNodeToCompletedNodes(selectedNode.id);
+        setIsComplete(true);
+      }
+    });
+  };
 
-  const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
-
-  // const removeNodeFromProgress = () => {
-  //   const node = getNodeWithId(cy, nodeData.id);
-  //   removeNodeFromGraphProgress(nodeData.id, graphId, getUserId()).then((data) => {
-  //     if (data.res) {
-  //       updateCompletedNodes();
-  //       setIsComplete(false);
-  //       node.style('background-color', 'gray');
-  //       removeItemFromArray(completedNodes, nodeData.id);
-  //     }
-  //   });
-  // };
+  const removeNodeFromProgress = () => {
+    removeNodeFromGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
+      if (data.res) {
+        props.removeNodeFromCompletedNodes(selectedNode.id)
+        setIsComplete(false);
+      }
+    });
+  };
 
   return (
     <>
@@ -97,40 +82,40 @@ const NodeDetails = (props) => {
       )}
       {!editMode ? (
         <>
-          {currentNodeData.label && (
+          {selectedNode.label && (
           <p>
             Name:
             {' '}
-            {currentNodeData.label}
+            {selectedNode.label}
           </p>
           )}
-          {currentNodeData.description && (
+          {selectedNode.description && (
           <p>
             Description:
             {' '}
-            {currentNodeData.description}
+            {selectedNode.description}
           </p>
           )}
-          {/* {!isComplete && isProgressMode && (
+          {!isComplete && progressMode && (
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={addNodeToProgress}
+              onClick={() => addNodeToProgress()}
             >
               Complete
             </Button>
           )}
-          {isComplete && isProgressMode && (
+          {isComplete && progressMode && (
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={removeNodeFromProgress}
+              onClick={() => removeNodeFromProgress()}
             >
               Incomplete
             </Button>
-          )} */}
+          )}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -149,4 +134,17 @@ const NodeDetails = (props) => {
   );
 };
 
-export default NodeDetails;
+const mapStateToProps = (state) => ({
+  selectedNode: state.graph.selectedNode,
+  progressMode: state.graph.progressMode,
+  completedNodes: state.graph.completedNodes
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  addNodeToCompletedNodes: (nodeId) => dispatch(addNodeToCompletedNodes(nodeId)),
+  removeNodeFromCompletedNodes: (nodeId) => dispatch(removeNodeFromCompletedNodes(nodeId)),
+  updateNode: (node) => dispatch(updateNode(node)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NodeDetails);
+

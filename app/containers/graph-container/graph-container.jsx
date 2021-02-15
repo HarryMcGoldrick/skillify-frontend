@@ -8,14 +8,17 @@ import edgeHandleStyle from './edgehandle-style';
 import { GraphToolbar } from '../../components';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, UPDATE_GRAPH_REQUEST } from '../../redux/graph/graphTypes';
+import { updateProgressMode } from '../../redux/graph/graphActions';
+import viewOnlyStyle from './viewOnly-style';
 
 function GraphContainer(props) {
-  const { elements, viewOnly } = props;
+  const { elements, viewOnly, progressMode, updateProgressMode } = props;
   let cyRef = useRef(null);
   const { id: graphId } = useParams();
   const [cy, setCy] = useState(null);
 
   const initEditMode = () => {
+    updateProgressMode(false);
     if (!cy.edgehandles) {
       cytoscape.use(edgehandles);
       cy.style(edgeHandleStyle);
@@ -26,6 +29,7 @@ function GraphContainer(props) {
 
   const initViewMode = () => {
     cy.autolock(true);
+    cy.style(viewOnlyStyle);
   };
 
 
@@ -33,10 +37,9 @@ function GraphContainer(props) {
     props.fetchGraphData(graphId);
 
     // If user is logged in check if this graph exists in the users progress info
-    if (isAuthenticated() && !viewOnly) {
+    if (isAuthenticated() && viewOnly) {
       const userId = getUserId();
       props.fetchCompletedNodes(userId, graphId);
-      
     }
 
     setCy(cyRef);
@@ -47,6 +50,7 @@ function GraphContainer(props) {
       // Enable configuration based on view mode 
       viewOnly ? initViewMode() : initEditMode();
     }
+
   }, [cy]);
 
   return (
@@ -66,11 +70,13 @@ function GraphContainer(props) {
 const mapStateToProps = (state) => ({
   elements: state.graph.elements,
   selectedNode: state.graph.selectedNode,
+  progressMode: state.graph.progressMode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchGraphData: (graphId) => dispatch({type: FETCH_GRAPH_REQUEST, payload: {graphId}}),
   fetchCompletedNodes: (userId, graphId) => dispatch({type: FETCH_COMPLETED_NODES_REQUEST, payload: {userId, graphId}}),
+  updateProgressMode: () => dispatch(updateProgressMode())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);
