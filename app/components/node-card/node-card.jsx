@@ -2,20 +2,25 @@ import {
   Card, CardActionArea, CardContent, makeStyles, Typography,
 } from '@material-ui/core';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { selectNode } from '../../redux/graph/graphActions';
 
 const useStyles = makeStyles({
   root: {
-    width: 400,
+    width: 350,
+    margin: 0
   },
 });
 
 const NodeCard = (props) => {
   const classes = useStyles();
-  const { nodeData } = props;
+  const { node } = props;
+  const { data: nodeData} = node;
   const { label, description } = nodeData;
+  const dispatch = useDispatch()
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={() => dispatch(selectNode(node))}>
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

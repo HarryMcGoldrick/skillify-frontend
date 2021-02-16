@@ -9,8 +9,11 @@ import NodeLearningTab from '../node-learning-tab/node-learning-tab';
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
-    nodeData, progressMode, viewOnly,
+    selectedNode, progressMode, viewOnly,
   } = props;
+
+  const {data: nodeData} = selectedNode
+  console.log(nodeData);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -18,7 +21,7 @@ const NodeDrawerPanel = (props) => {
 
   return (
     <div>
-      {nodeData.id && (
+      {nodeData && nodeData.id && (
         <div>
           <AppBar position="static" color="transparent">
             <Tabs value={value} onChange={handleChange}>
@@ -43,7 +46,7 @@ const NodeDrawerPanel = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  nodeData: state.graph.selectedNode,
+  selectedNode: state.graph.selectedNode,
   progressMode: state.graph.isProgressMode,
 });
 

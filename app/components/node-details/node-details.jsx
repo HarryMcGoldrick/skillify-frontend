@@ -56,7 +56,7 @@ const NodeDetails = (props) => {
   };
 
   const addNodeToProgress = () => {
-    addNodeToGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
+    addNodeToGraphProgress(selectedNode.data.id, graphId, getUserId()).then((data) => {
       if (data.res) {
         props.addNodeToCompletedNodes(selectedNode.id);
         setIsComplete(true);
@@ -65,9 +65,9 @@ const NodeDetails = (props) => {
   };
 
   const removeNodeFromProgress = () => {
-    removeNodeFromGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
+    removeNodeFromGraphProgress(selectedNode.data.id, graphId, getUserId()).then((data) => {
       if (data.res) {
-        props.removeNodeFromCompletedNodes(selectedNode.id)
+        props.removeNodeFromCompletedNodes(selectedNode.data.id)
         setIsComplete(false);
       }
     });
@@ -82,18 +82,18 @@ const NodeDetails = (props) => {
       )}
       {!editMode ? (
         <>
-          {selectedNode.label && (
+          {selectedNode.data.label && (
           <p>
             Name:
             {' '}
-            {selectedNode.label}
+            {selectedNode.data.label}
           </p>
           )}
-          {selectedNode.description && (
+          {selectedNode.data.description && (
           <p>
             Description:
             {' '}
-            {selectedNode.description}
+            {selectedNode.data.description}
           </p>
           )}
           {!isComplete && progressMode && (

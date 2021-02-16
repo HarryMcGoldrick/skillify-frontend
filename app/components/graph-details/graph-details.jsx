@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { addGraphToGraphProgress } from '../../services/graph-service';
 import { updateProgressMode } from '../../redux/graph/graphActions';
 import { useParams } from 'react-router';
+import { checkIsNode } from '../../utils/node-utils';
+import NodeCard from '../node-card/node-card';
 
 const useStyles = makeStyles({
   container: {
@@ -14,6 +16,9 @@ const useStyles = makeStyles({
   title: {
     textAlign: 'center',
   },
+  nodeList: {
+    padding: 0,
+  }
 });
 
 // Used to display the details of the graph
@@ -52,12 +57,14 @@ const GraphDetails = (props) => {
         </Button>
         )}
       </div>
-      {/* {nodes.map((node) => {
-        if (node.data().label) {
-          return <NodeCard nodeData={node.data()} />;
+      <ul className={classes.nodeList}>
+      {elements.map((ele) => {
+        if (checkIsNode(ele)) {
+          return <NodeCard node={ele} key={ele.data.id}></NodeCard>;
         }
         return null;
-      })} */}
+      })}
+      </ul>
       <div />
     </>
   );

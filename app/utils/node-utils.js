@@ -51,4 +51,15 @@ export const updateCompletedNodes = (elements, completedNodeIds) => {
   return updatedElements;
 }
 
+export const checkIsNode = (element) => {
+  if (!element.source) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
+
+// only to used when having access to cy
+export const getNodeWithId = (cy, id) => cy.elements(`node[id = "${id}"]`)[0];

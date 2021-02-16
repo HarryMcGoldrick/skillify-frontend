@@ -68,17 +68,6 @@ export default function NodeDialog(props) {
     setEditMode(!editMode);
   };
 
-  // // Updates the node label
-  // updateSelectedNode = (data) => {
-  //   const { selectedNode } = this.state;
-  //   const { id } = selectedNode;
-  //   const node = this.cy.elements(`node[id = "${id}"]`)[0];
-  //   if (node) {
-  //     node.data('label', data.nodeLabel);
-  //     this.selectNode(node.data());
-  //   }
-  // }
-
   return (
     <div>
       <Dialog

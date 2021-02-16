@@ -10,7 +10,7 @@
 .drawer-open {
   width: 100%;
   /* Limits the width of the node graph to prevent nodes being dragged offscreen */
-  padding-right: 320px;
+  padding-right: 400px;
 }
 
 
@@ -21,4 +21,8 @@
 .MuiDrawer-paper {
   /* Prevent drawer covering appbar */
   top: unset !important;
+}
+
+.graph-details-drawer {
+  overflow-y: hidden im !important;
 }

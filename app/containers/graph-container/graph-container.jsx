@@ -10,9 +10,10 @@ import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, UPDATE_GRAPH_REQUEST } from '../../redux/graph/graphTypes';
 import { updateProgressMode } from '../../redux/graph/graphActions';
 import viewOnlyStyle from './viewOnly-style';
+import { getNodeWithId } from '../../utils/graph-utils';
 
 function GraphContainer(props) {
-  const { elements, viewOnly, progressMode, updateProgressMode } = props;
+  const { elements, viewOnly, selectedNode, updateProgressMode } = props;
   let cyRef = useRef(null);
   const { id: graphId } = useParams();
   const [cy, setCy] = useState(null);
@@ -50,8 +51,24 @@ function GraphContainer(props) {
       // Enable configuration based on view mode 
       viewOnly ? initViewMode() : initEditMode();
     }
-
   }, [cy]);
+
+  useEffect(() => {
+    if (cy && selectedNode && selectedNode.data) {
+      const node = getNodeWithId(cy, selectedNode.data.id)
+      // Unselect all prior nodes to prevent multiple selected nodes
+      cy.nodes().unselect()
+      // Select current node to highlight it
+      node.select()
+      // Animate a smooth transition to center on that node
+      cy.animate({
+        center: {eles: node},
+        zoom: 2
+      })
+
+ 
+    }
+  }, [cy, selectedNode]);
 
   return (
     <div>
