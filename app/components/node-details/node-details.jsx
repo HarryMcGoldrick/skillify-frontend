@@ -12,6 +12,7 @@ import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { getUserProgressInfo } from '../../services/user-service';
 import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../redux/graph/graphActions';
 import { connect } from 'react-redux';
+import NodeObjectives from '../node-objectives/node-objectives';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -56,7 +57,7 @@ const NodeDetails = (props) => {
   };
 
   const addNodeToProgress = () => {
-    addNodeToGraphProgress(selectedNode.data.id, graphId, getUserId()).then((data) => {
+    addNodeToGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
       if (data.res) {
         props.addNodeToCompletedNodes(selectedNode.id);
         setIsComplete(true);
@@ -65,9 +66,9 @@ const NodeDetails = (props) => {
   };
 
   const removeNodeFromProgress = () => {
-    removeNodeFromGraphProgress(selectedNode.data.id, graphId, getUserId()).then((data) => {
+    removeNodeFromGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
       if (data.res) {
-        props.removeNodeFromCompletedNodes(selectedNode.data.id)
+        props.removeNodeFromCompletedNodes(selectedNode.id)
         setIsComplete(false);
       }
     });
@@ -82,18 +83,18 @@ const NodeDetails = (props) => {
       )}
       {!editMode ? (
         <>
-          {selectedNode.data.label && (
+          {selectedNode.label && (
           <p>
             Name:
             {' '}
-            {selectedNode.data.label}
+            {selectedNode.label}
           </p>
           )}
-          {selectedNode.data.description && (
+          {selectedNode.description && (
           <p>
             Description:
             {' '}
-            {selectedNode.data.description}
+            {selectedNode.description}
           </p>
           )}
           {!isComplete && progressMode && (
@@ -130,7 +131,8 @@ const NodeDetails = (props) => {
           </Grid>
         </form>
       )}
-    </>
+        <NodeObjectives nodeData={nodeData}></NodeObjectives>
+      </>
   );
 };
 

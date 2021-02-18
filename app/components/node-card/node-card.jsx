@@ -15,8 +15,7 @@ const useStyles = makeStyles({
 const NodeCard = (props) => {
   const classes = useStyles();
   const { node } = props;
-  const { data: nodeData} = node;
-  const { label, description } = nodeData;
+  const { label, description } = node;
   const dispatch = useDispatch()
 
   return (

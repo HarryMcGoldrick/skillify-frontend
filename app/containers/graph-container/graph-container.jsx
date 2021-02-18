@@ -54,8 +54,8 @@ function GraphContainer(props) {
   }, [cy]);
 
   useEffect(() => {
-    if (cy && selectedNode && selectedNode.data) {
-      const node = getNodeWithId(cy, selectedNode.data.id)
+    if (cy && selectedNode.id) {
+      const node = getNodeWithId(cy, selectedNode.id)
       // Unselect all prior nodes to prevent multiple selected nodes
       cy.nodes().unselect()
       // Select current node to highlight it

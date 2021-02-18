@@ -12,8 +12,6 @@ const NodeDrawerPanel = (props) => {
     selectedNode, progressMode, viewOnly,
   } = props;
 
-  const {data: nodeData} = selectedNode
-  console.log(nodeData);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -21,7 +19,7 @@ const NodeDrawerPanel = (props) => {
 
   return (
     <div>
-      {nodeData && nodeData.id && (
+      {selectedNode.id && (
         <div>
           <AppBar position="static" color="transparent">
             <Tabs value={value} onChange={handleChange}>
@@ -31,10 +29,10 @@ const NodeDrawerPanel = (props) => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <NodeDetails nodeData={nodeData} isProgressMode={progressMode} viewOnly={viewOnly} />
+            <NodeDetails nodeData={selectedNode} isProgressMode={progressMode} viewOnly={viewOnly} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <NodeLearningTab nodeData={nodeData} />
+            <NodeLearningTab nodeData={selectedNode} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <h3>under construction!</h3>

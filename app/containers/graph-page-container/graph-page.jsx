@@ -11,7 +11,6 @@ const GraphPage = (props) => {
     selectedNode, showGraphDetails, viewOnly
   } = props;
 
-  const {data: nodeData} = selectedNode;
 
   return (
     <Grid container justify="center">
@@ -24,7 +23,7 @@ const GraphPage = (props) => {
       <Grid item>
         <Drawer
           anchor="right"
-          open={nodeData && Boolean(nodeData.id)}
+          open={Boolean(selectedNode.id)}
           variant="persistent"
         >
           <NodeDrawerPanel viewOnly={viewOnly} />
@@ -33,7 +32,7 @@ const GraphPage = (props) => {
 
       {/* Inline style has to be used here unfortunately */}
       <Grid item className={showGraphDetails ? 'drawer-open' : 'drawer-close'} style={showGraphDetails ? { marginLeft: '800px' } : {}}>
-        <Grid item className={nodeData && nodeData.id ? 'node-drawer-open' : 'node-drawer-close'} style={nodeData && nodeData.id ? { marginRight: '500px' } : {}}>
+        <Grid item className={selectedNode.id ? 'node-drawer-open' : 'node-drawer-close'} style={selectedNode.id ? { marginRight: '500px' } : {}}>
           <GraphContainer viewOnly={viewOnly} />
         </Grid>
       </Grid>

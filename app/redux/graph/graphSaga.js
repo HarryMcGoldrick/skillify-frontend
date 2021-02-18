@@ -23,7 +23,6 @@ function* fetchGraphData(action) {
 function* fetchCompletedNodes(action) {
     try {
       const data = yield call(getUserProgressInfo, action.payload.userId, action.payload.graphId);
-      console.log(data);
       if (data.completedNodes.length > 0) {
          yield put({type: FETCH_COMPLETED_NODES_SUCCESS,  payload: {
          completedNodes: [...data.completedNodes],

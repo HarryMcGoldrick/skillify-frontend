@@ -85,7 +85,7 @@ const GraphToolbar = (props) => {
         return;
       }
       const currentNode = event.target;
-      selectNode({data: {...currentNode.data()}, position: {...currentNode.position()}});
+      selectNode(currentNode.data());
     });
   };
 

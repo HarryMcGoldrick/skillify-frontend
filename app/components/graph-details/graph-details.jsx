@@ -58,9 +58,9 @@ const GraphDetails = (props) => {
         )}
       </div>
       <ul className={classes.nodeList}>
-      {elements.map((ele) => {
+      {elements.map((ele, index) => {
         if (checkIsNode(ele)) {
-          return <NodeCard node={ele} key={ele.data.id}></NodeCard>;
+          return <NodeCard node={ele} key={index}></NodeCard>;
         }
         return null;
       })}
