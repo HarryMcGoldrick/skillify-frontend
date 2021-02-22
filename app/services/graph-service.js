@@ -12,6 +12,10 @@ export const updateGraphElements = async (id, elements) => axios.post(`${baseUrl
   edges: elements.edges,
 }).then((res) => res.data);
 
+export const updateGraphStyle = async (id, styleSheet) => axios.post(`${baseUrl}/${id}/style`, { styleSheet }).then((res) => res.data);
+
+export const fetchGraphStyle = async (id) => axios.get(`${baseUrl}/${id}/style`).then((res) => res.data);
+
 export const sendGraphDataForImage = async (id, elements) => axios.post(`${baseUrl}/${id}/image`, { elements }).then((res) => res.data);
 
 export const getGraphViews = async () => axios.get(`${baseUrl}/views`).then((res) => res.data);

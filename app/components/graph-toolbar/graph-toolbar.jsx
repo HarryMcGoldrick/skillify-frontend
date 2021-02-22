@@ -14,7 +14,7 @@ import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router-dom';
 import { tools } from '../../enums/tools';
 import { layouts } from '../../enums/layouts';
-import { sendGraphDataForImage, updateGraphElements } from '../../services/graph-service';
+import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../utils/graph-data';
 import { getUserInfo } from '../../services/user-service';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
@@ -130,6 +130,7 @@ const GraphToolbar = (props) => {
   // Saves the changes made to a graph
   const updateData = () => {
     updateGraphElements(graphId, extractDiagramDataFromGraphData(cy.json()));
+    updateGraphStyle(graphId, cy.json().style)
     sendGraphDataForImage(graphId, cy.json());
   };
 

@@ -4,11 +4,11 @@ import cytoscape from 'cytoscape';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import edgehandles from 'cytoscape-edgehandles';
-import edgeHandleStyle from './edgehandle-style';
+import editStyle from './edit-style';
 import { GraphToolbar } from '../../components';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
-import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, UPDATE_GRAPH_REQUEST } from '../../redux/graph/graphTypes';
-import { updateProgressMode } from '../../redux/graph/graphActions';
+import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, FETCH_STYLE_SHEET_REQUEST, } from '../../redux/graph/graphTypes';
+import { updateProgressMode, updateStyleSheet } from '../../redux/graph/graphActions';
 import viewOnlyStyle from './viewOnly-style';
 import { getNodeWithId } from '../../utils/graph-utils';
 
@@ -22,7 +22,7 @@ function GraphContainer(props) {
     updateProgressMode(false);
     if (!cy.edgehandles) {
       cytoscape.use(edgehandles);
-      cy.style(edgeHandleStyle);
+      props.updateStyleSheet(editStyle);
       const edgehandler = cy.edgehandles();
       edgehandler.disableDrawMode();
     }
@@ -30,12 +30,13 @@ function GraphContainer(props) {
 
   const initViewMode = () => {
     cy.autolock(true);
-    cy.style(viewOnlyStyle);
+    props.updateStyleSheet(viewOnlyStyle);
   };
 
 
   useEffect(() => {
     props.fetchGraphData(graphId);
+    props.fetchStyleSheet(graphId);
 
     // If user is logged in check if this graph exists in the users progress info
     if (isAuthenticated() && viewOnly) {
@@ -79,6 +80,7 @@ function GraphContainer(props) {
         cy={(cyto) => {
           cyRef = cyto;
         }}
+        stylesheet={props.styleSheet}
       />
     </div>
   );
@@ -88,12 +90,15 @@ const mapStateToProps = (state) => ({
   elements: state.graph.elements,
   selectedNode: state.graph.selectedNode,
   progressMode: state.graph.progressMode,
+  styleSheet: state.graph.styleSheet,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchGraphData: (graphId) => dispatch({type: FETCH_GRAPH_REQUEST, payload: {graphId}}),
+  fetchStyleSheet: (graphId) => dispatch({type: FETCH_STYLE_SHEET_REQUEST, payload: {graphId}}),
   fetchCompletedNodes: (userId, graphId) => dispatch({type: FETCH_COMPLETED_NODES_REQUEST, payload: {userId, graphId}}),
-  updateProgressMode: () => dispatch(updateProgressMode())
+  updateProgressMode: (mode) => dispatch(updateProgressMode(mode)),
+  updateStyleSheet: (styleSheet) => dispatch(updateStyleSheet(styleSheet)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);

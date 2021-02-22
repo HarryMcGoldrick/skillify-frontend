@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import NodeDetails from '../node-details/node-details';
 import NodeLearningTab from '../node-learning-tab/node-learning-tab';
+import NodeAppearance from '../node-apperance/node-appearance';
 
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
@@ -35,7 +36,7 @@ const NodeDrawerPanel = (props) => {
             <NodeLearningTab nodeData={selectedNode} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <h3>under construction!</h3>
+            <NodeAppearance/>
           </TabPanel>
         </div>
       )}

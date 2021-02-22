@@ -6,5 +6,6 @@ export const initialState = {
   selectedNode: {},
   showGraphDetails: false,
   elements: [],
-  graphData: {}
+  graphData: {},
+  styleSheet: []
 };

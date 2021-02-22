@@ -1,3 +1,5 @@
+// Note styles are applied from top to bottom
+
 const style = [
   {
     selector: 'node[label]',
@@ -6,17 +8,29 @@ const style = [
     },
   },
   {
+    selector: ':selected',
+    style: {
+      'background-color': 'blue',
+    },
+  },
+  {
     selector: 'edge',
     style: {
       width: 3,
       'curve-style': 'bezier',
-      'target-arrow-shape': 'triangle', // there are far more options for this property here: http://js.cytoscape.org/#style/edge-arrow
+      'target-arrow-shape': 'triangle',
     },
   },
   {
     selector: '.completed',
     style: {
       'background-color': 'red',
+    },
+  },
+  {
+    selector: '.triangle',
+    style: {
+      'shape': 'triangle',
     },
   },
 

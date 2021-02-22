@@ -6,6 +6,12 @@ const style = [
       },
     },
     {
+      selector: ':selected',
+      style: {
+        'background-color': 'blue',
+      },
+    },
+    {
       selector: 'edge',
       style: {
         width: 3,
