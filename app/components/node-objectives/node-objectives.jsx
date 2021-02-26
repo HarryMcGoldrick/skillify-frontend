@@ -62,16 +62,18 @@ function NodeObjectives(props) {
 
     useEffect(() => {
         const {id: nodeId} = nodeData;
-        fetchNodeObjectives(graphId, getUserId(), nodeId).then(data => {
-            if (data.objectives.length > 0) {
-                const list = data.objectives[0];
-                if (list.items) {
-                    setItemList(list.items);
+        if (isAuthenticated()) {
+            fetchNodeObjectives(graphId, getUserId(), nodeId).then(data => {
+                if (data.objectives.length > 0) {
+                    const list = data.objectives[0];
+                    if (list.items) {
+                        setItemList(list.items);
+                    }
+                } else {
+                    setItemList([]);
                 }
-            } else {
-                setItemList([]);
-            }
-        });
+            });
+        }
     }, [nodeData])
 
     return (

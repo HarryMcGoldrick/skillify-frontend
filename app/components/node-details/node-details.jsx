@@ -131,7 +131,7 @@ const NodeDetails = (props) => {
           </Grid>
         </form>
       )}
-        <NodeObjectives nodeData={nodeData}></NodeObjectives>
+      {isAuthenticated() && (<NodeObjectives nodeData={nodeData}></NodeObjectives>)}
       </>
   );
 };
