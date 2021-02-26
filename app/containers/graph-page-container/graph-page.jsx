@@ -1,10 +1,12 @@
 import { Drawer, Grid } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { GraphDetails } from '../../components';
 import NodeDrawerPanel from '../../components/node-drawer-panel/node-drawer-panel';
 import GraphContainer from '../graph-container/graph-container';
 import './graph-page.css'
+import { Prompt } from 'react-router'
+
 
 const GraphPage = (props) => {
   const {
@@ -12,7 +14,14 @@ const GraphPage = (props) => {
   } = props;
 
 
+  useEffect(() => {
+    if (!viewOnly) {
+      window.onbeforeunload = () => true
+    }
+  }, [])
+
   return (
+    <div>
     <Grid container justify="center">
       <Grid item>
         <Drawer anchor="left" open={showGraphDetails} variant="persistent">
@@ -38,6 +47,10 @@ const GraphPage = (props) => {
       </Grid>
     </Grid>
 
+    <Prompt 
+      when={!viewOnly}
+      message={'Any unsaved changes will be lost!'}/>
+  </div>
   );
 };
 
