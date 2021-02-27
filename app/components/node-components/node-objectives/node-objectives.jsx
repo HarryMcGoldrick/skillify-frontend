@@ -3,8 +3,8 @@ import { Add, Delete } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
-import { getUserId, isAuthenticated } from '../../utils/authentication';
-import { fetchNodeObjectives, updateNodeObjectives } from '../../services/user-service';
+import { getUserId, isAuthenticated } from '../../../utils/authentication';
+import { fetchNodeObjectives, updateNodeObjectives } from '../../../services/user-service';
 
 function NodeObjectives(props) {
     const { nodeData } = props;

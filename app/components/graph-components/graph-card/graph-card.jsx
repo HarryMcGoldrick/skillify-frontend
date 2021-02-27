@@ -3,7 +3,7 @@ import {
   Card, CardActionArea, CardActions, CardContent, CardMedia, makeStyles, Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getUserInfo } from '../../services/user-service';
+import { getUserInfo } from '../../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {

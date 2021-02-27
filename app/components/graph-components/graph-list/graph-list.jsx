@@ -1,11 +1,10 @@
 import {
   Grid,
-  ListItem, ListItemText, makeStyles, Paper,
+  ListItem, makeStyles, Paper,
 } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
 import React, { useEffect, useState } from 'react';
-import { getGraphViews } from '../../services/graph-service';
-import GraphCard from '../graph-card/graph-card';
+import { getGraphViews } from '../../../services/graph-service';
+import GraphCard from '../../../components';
 
 const useStyles = makeStyles((theme) => ({
   container: {

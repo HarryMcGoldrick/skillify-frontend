@@ -1,12 +1,12 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getUserId, isAuthenticated } from '../../utils/authentication';
+import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { connect } from 'react-redux';
-import { addGraphToGraphProgress } from '../../services/graph-service';
-import { updateProgressMode } from '../../redux/graph/graphActions';
+import { addGraphToGraphProgress } from '../../../services/graph-service';
+import { updateProgressMode } from '../../../redux/graph/graphActions';
 import { useParams } from 'react-router';
-import { checkIsNode } from '../../utils/node-utils';
-import NodeCard from '../node-card/node-card';
+import { checkIsNode } from '../../../utils/node-utils';
+import { NodeCard } from '../../../components';
 
 const useStyles = makeStyles({
   container: {

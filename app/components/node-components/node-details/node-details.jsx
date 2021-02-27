@@ -6,13 +6,11 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
-import { getNodeWithId } from '../../utils/graph-utils';
-import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../services/graph-service';
-import { getUserId, isAuthenticated } from '../../utils/authentication';
-import { getUserProgressInfo } from '../../services/user-service';
-import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../redux/graph/graphActions';
+import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../../services/graph-service';
+import { getUserId, isAuthenticated } from '../../../utils/authentication';
+import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../../redux/graph/graphActions';
 import { connect } from 'react-redux';
-import NodeObjectives from '../node-objectives/node-objectives';
+import { NodeObjectives } from '../../../components';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {

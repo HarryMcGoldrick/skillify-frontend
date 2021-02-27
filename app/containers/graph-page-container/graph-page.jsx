@@ -1,8 +1,7 @@
 import { Drawer, Grid } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { GraphDetails } from '../../components';
-import NodeDrawerPanel from '../../components/node-drawer-panel/node-drawer-panel';
+import { GraphDetails, NodeDrawerPanel } from '../../components';
 import GraphContainer from '../graph-container/graph-container';
 import './graph-page.css'
 import { Prompt } from 'react-router'

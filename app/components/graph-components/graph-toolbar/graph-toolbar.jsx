@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PanToolIcon from '@material-ui/icons/PanTool';
@@ -12,16 +11,16 @@ import {
 } from '@material-ui/core';
 import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router-dom';
-import { tools } from '../../enums/tools';
-import { layouts } from '../../enums/layouts';
-import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../services/graph-service';
-import extractDiagramDataFromGraphData from '../../utils/graph-data';
-import { getUserInfo } from '../../services/user-service';
-import { getUserId, isAuthenticated } from '../../utils/authentication';
+import { tools } from '../../../enums/tools';
+import { layouts } from '../../../enums/layouts';
+import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../../services/graph-service';
+import extractDiagramDataFromGraphData from '../../../utils/graph-data';
+import { getUserInfo } from '../../../services/user-service';
+import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import dagre from 'cytoscape-dagre';
 import cytoscape from 'cytoscape';
 import { connect } from 'react-redux';
-import { addNode, removeNode, selectNode, toggleGraphDetails, updateElements } from '../../redux/graph/graphActions';
+import { addNode, removeNode, selectNode, toggleGraphDetails, updateElements } from '../../../redux/graph/graphActions';
 
 
 // Displays icons to select the relevant graph tool

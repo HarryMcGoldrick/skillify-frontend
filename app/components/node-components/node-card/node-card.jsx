@@ -3,7 +3,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { selectNode } from '../../redux/graph/graphActions';
+import { selectNode } from '../../../redux/graph/graphActions';
 
 const useStyles = makeStyles({
   root: {

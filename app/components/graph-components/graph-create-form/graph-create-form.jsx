@@ -5,9 +5,9 @@ import { Autocomplete } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { createNewGraph } from '../../services/graph-service';
-import { getAllTags } from '../../services/tag-service';
-import { getUserId } from '../../utils/authentication';
+import { createNewGraph } from '../../../services/graph-service';
+import { getAllTags } from '../../../services/tag-service';
+import { getUserId } from '../../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

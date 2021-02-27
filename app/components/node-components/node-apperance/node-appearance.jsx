@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { addStyle } from '../../redux/graph/graphActions';
+import { addStyle } from '../../../redux/graph/graphActions';
 
 function NodeAppearance(props) {
     

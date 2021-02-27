@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getYoutubeVideoForNode } from '../../services/content-service';
+import { getYoutubeVideoForNode } from '../../../services/content-service';
 
 const NodeLearningTab = (props) => {
   const [youtubeContentData, setYoutubeContentData] = useState(null);
@@ -22,7 +22,7 @@ const NodeLearningTab = (props) => {
 
   return (
     <div>
-
+      
       {youtubeContentData && (
       <iframe
         id="ytplayer"
