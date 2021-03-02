@@ -6,7 +6,9 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import { Link, useHistory } from 'react-router-dom';
 import { login } from '../../services/user-service';
-import { getSession } from '../../utils/authentication';
+import { getSession, getUserId } from '../../utils/authentication';
+import { FETCH_USER_DATA_REQUEST } from '../../redux/user/userTypes';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,12 +38,13 @@ export const LoginForm = () => {
   const onSubmit = (data) => {
     login(data.username, data.password).then((res) => {
       const session = getSession(res.token);
-      if (session) {
+      if (session) {  
         const { username, exp: expires } = session;
         // Set a cookie to expire using the expiry time embedded in the JWT
         Cookies.set('access_token', res.token, { expires });
         localStorage.setItem('username', username);
         history.goBack();
+
       }
     });
   };

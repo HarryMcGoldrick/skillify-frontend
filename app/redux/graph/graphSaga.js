@@ -53,6 +53,7 @@ function* fetchCompletedNodes(action) {
     }
  }
 
+
 function* mySaga() {
     yield takeEvery(FETCH_GRAPH_REQUEST, fetchGraphData);
     yield takeEvery(FETCH_COMPLETED_NODES_REQUEST, fetchCompletedNodes);

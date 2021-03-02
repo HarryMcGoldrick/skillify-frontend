@@ -3,14 +3,14 @@ import {
 } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import NodeDetails from '../node-details/node-details';
-import NodeLearningTab from '../node-learning-tab/node-learning-tab';
-import NodeAppearance from '../node-apperance/node-appearance';
+import NodeDetails from '../../components/node-components/node-details/node-details';
+import NodeLearningTab from '../../components/node-components/node-learning-tab/node-learning-tab';
+import NodeAppearance from '../../components/node-components/node-apperance/node-appearance';
 
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
-    selectedNode, progressMode, viewOnly,
+    selectedNode, progressMode, viewOnly, likedContent
   } = props;
 
 
@@ -33,7 +33,7 @@ const NodeDrawerPanel = (props) => {
             <NodeDetails nodeData={selectedNode} isProgressMode={progressMode} viewOnly={viewOnly} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <NodeLearningTab nodeData={selectedNode} />
+            <NodeLearningTab nodeData={selectedNode} likedContent={likedContent}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <NodeAppearance/>
@@ -47,7 +47,11 @@ const NodeDrawerPanel = (props) => {
 const mapStateToProps = (state) => ({
   selectedNode: state.graph.selectedNode,
   progressMode: state.graph.isProgressMode,
+  likedContent: state.user.likedContent,
 });
+
+
+
 
 export default connect(mapStateToProps)(NodeDrawerPanel);
 

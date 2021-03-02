@@ -13,9 +13,11 @@ export { default as NodeApperance } from './node-components/node-apperance/node-
 export { default as NodeCard } from './node-components/node-card/node-card';
 export { default as NodeDetails } from './node-components/node-details/node-details';
 export { default as NodeDialog } from './node-components/node-dialog/node-dialog';
-export { default as NodeDrawerPanel } from './node-components/node-drawer-panel/node-drawer-panel';
+export { default as NodeDrawerPanel } from '../containers/node-drawer-panel/node-drawer-panel';
 export { default as NodeLearningTab } from './node-components/node-learning-tab/node-learning-tab';
 export { default as NodeObjectives } from './node-components/node-objectives/node-objectives';
+export { default as NodeContentCard } from './node-components/node-content-card/node-content-card';
+
 
 // Misc components
 export { default as LoginForm } from './login-form/login-form';

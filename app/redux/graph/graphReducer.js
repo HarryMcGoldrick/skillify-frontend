@@ -1,8 +1,8 @@
-import { findNodeInElements, addToCompleted, updateCompletedNodes, removeItemFromArray, removeProperty, addToIncompleted } from '../../utils/node-utils';
+import { findNodeInElements, addToCompleted, updateCompletedNodes, removeItemFromArray, addToIncompleted } from '../../utils/node-utils';
 import {
   ADD_NODE, ADD_COMPLETED_NODE, FETCH_GRAPH_SUCCESS, REMOVE_NODE, SELECT_NODE, ADD_STYLE,
   UPDATE_ELEMENTS, TOGGLE_GRAPH_DETAILS, FETCH_COMPLETED_NODES_SUCCESS, UPDATE_PROGRESS_MODE,
-  REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_STYLE_SHEET,
+  REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_STYLE_SHEET, ADD_CONTENT_TO_NODE,
 } from './graphTypes';
 import { initialState } from './initialState';
 
@@ -134,6 +134,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         progressMode: action.payload,
       };
+    }
+    case ADD_CONTENT_TO_NODE: {
+      const newSelectedNode = state.selectedNode;
+      newSelectedNode.content.push(action.payload);
+      return {
+        ...state,
+        selectedNode: newSelectedNode
+      }
     }
     default: return state;
   }

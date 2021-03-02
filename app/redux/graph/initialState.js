@@ -7,5 +7,5 @@ export const initialState = {
   showGraphDetails: false,
   elements: [],
   graphData: {},
-  styleSheet: []
+  styleSheet: [],
 };
