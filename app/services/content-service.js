@@ -9,8 +9,8 @@ export const getYoutubeVideoForNode = async (label) => axios.get(`/content/youtu
 
 export const getDataFromYoutubeId = async (videoId) => axios.get(`${baseUrl}/youtube/${videoId}`).then(res => res.data);
 
-export const getDataFromGoogleBooksId = async (url) => axios.get('/');
+export const addContent = async (nodeId, content) => axios.post(`${baseUrl}`, { nodeId, content }).then((res) => res.data);
 
-export const getExternalIdFromUrl = async (url) => axios.get('/');
+export const getContentForNode = async (nodeId) => axios.get(`${baseUrl}/${nodeId}`).then((res) => res.data);
 
-export const addContentToNode = async (graphId, nodeId, content) => axios.post(`${baseUrl}`, { graphId, nodeId, content }).then((res) => res.data);
+export const removeContent = async (contentId) => axios.delete(`${baseUrl}/${contentId}`).then((res) => res.data);

@@ -14,3 +14,5 @@ export const getUserProgressInfo = (userId, graphId) => axios.post(`${baseUrl}/p
 export const updateNodeObjectives = async (graphId, userId, nodeObjectives) => axios.post(`${baseUrl}/objectives`, { graphId, userId, nodeObjectives }).then((res) => res.data);
 
 export const fetchNodeObjectives = async (graphId, userId, nodeId) => axios.get(`${baseUrl}/objectives/${graphId}/${userId}/${nodeId}`).then((res) => res.data);
+
+export const updateLikedContent = async (userId, contentId) => axios.post(`${baseUrl}/content`, {userId, contentId}).then((res) => res.data);

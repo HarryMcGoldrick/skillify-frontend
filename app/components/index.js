@@ -18,6 +18,9 @@ export { default as NodeLearningTab } from './node-components/node-learning-tab/
 export { default as NodeObjectives } from './node-components/node-objectives/node-objectives';
 export { default as NodeContentCard } from './node-components/node-content-card/node-content-card';
 
+// User components
+export { default as UserData } from './user-components/user-data/user-data';
+
 
 // Misc components
 export { default as LoginForm } from './login-form/login-form';

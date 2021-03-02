@@ -40,7 +40,6 @@ export const findNodeInElements = (elements, nodeId) => {
 
 
 export const updateCompletedNodes = (elements, completedNodeIds) => {
-  console.log(completedNodeIds);
   const updatedElements = elements.map((ele) => {
     if (completedNodeIds.includes(ele.data.id)) {
       return addToCompleted(ele);

@@ -7,9 +7,7 @@ import { FETCH_USER_DATA_REQUEST, FETCH_USER_DATA_FAILED, FETCH_USER_DATA_SUCCES
 
 function* fetchUserData(action) {
    try {
-      console.log(action); 
       const data = yield call(getUserInfo, action.payload);
-      console.log(data);
       yield put({type: FETCH_USER_DATA_SUCCESS, payload: {
         graphsContent: [...data.graphs_created],
         likedContent: [...data.likedContent],

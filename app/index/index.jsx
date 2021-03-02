@@ -14,8 +14,7 @@ import {
 } from '../pages';
 import { PrivateRoute, Navbar } from '../components';
 import store from '../redux/store';
-import { getUserId } from '../utils/authentication';
-import UserData from '../components/user-data/user-data';
+import { UserData } from '../components';
 
 
 const App = () => {

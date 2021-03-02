@@ -1,11 +1,12 @@
 import { Card, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography, useTheme } from '@material-ui/core'
-import { ThumbsUpDown, ThumbUp } from '@material-ui/icons';
+import { Delete, ThumbsUpDown, ThumbUp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import image from '../../../assets/placeholder.png'
 import contentType from '../../../enums/content-type'
-import { addContentToNode, getDataFromYoutubeId } from '../../../services/content-service';
-import { isAuthenticated } from '../../../utils/authentication';
+import { getDataFromYoutubeId, removeContent } from '../../../services/content-service';
+import { updateLikedContent } from '../../../services/user-service';
+import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 function NodeContentCard(props) {
     const classes = useStyles();
-    const { contentData, likedContent } = props
+    const { contentData, likedContent, handleDelete, viewOnly } = props
     const {type, externalId, score, _id: contentId} = contentData
     const {id: graphId} = useParams();
     const [title, setTitle] = useState();
@@ -62,7 +63,7 @@ function NodeContentCard(props) {
         } else if (type === contentType.GOOGLE_BOOKS) {
             // getDataFromGoogleBooksUrl()
         }
-    }, [props])
+    }, [])
 
     const navigateToUrl = () => {
       const win = window.open(navUrl, '_blank');
@@ -72,8 +73,20 @@ function NodeContentCard(props) {
     }
 
     const handleLike = () => {
-      addLikeToContent()
+      if (isAuthenticated()) {
+        updateLikedContent(getUserId(), contentId).then((data) => {
+          if (data && data.type === 'remove') {
+            setContentScore(contentScore - 1)
+            setIsLiked(false);
+          } else if (data && data.type === 'add') {
+            setContentScore(contentScore + 1)
+            setIsLiked(true);
+          }
+        });
+      }
     }
+
+
 
     return (
       <div>
@@ -93,6 +106,11 @@ function NodeContentCard(props) {
                     <IconButton onClick={handleLike}>
                       <ThumbUp></ThumbUp>
                     </IconButton>
+                    {!viewOnly && (
+                      <IconButton onClick={() => handleDelete(contentId)}>
+                      <Delete></Delete>
+                    </IconButton>
+                    )}
                   </span>
                 </Typography>
               </CardActions>

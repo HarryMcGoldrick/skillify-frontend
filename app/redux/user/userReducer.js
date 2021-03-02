@@ -4,7 +4,6 @@ import { initialState } from './initialState';
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_USER_DATA_SUCCESS: {
-      console.log(action.payload)
       return {
         ...state,
         graphsContent: action.payload.graphs_created,
