@@ -4,18 +4,19 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import image from '../../../assets/placeholder.png'
 import contentType from '../../../enums/content-type'
-import { getDataFromYoutubeId, removeContent } from '../../../services/content-service';
+import { getDataFromGoogleBooksId, getDataFromYoutubeId, removeContent } from '../../../services/content-service';
 import { updateLikedContent } from '../../../services/user-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        height: '100%'
       },
       details: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '180px',
+        width: '250px',
       },
       content: {
         flex: '1 0 auto',
@@ -37,6 +38,7 @@ function NodeContentCard(props) {
     const [title, setTitle] = useState();
     const [thumbnailUrl, setThumbnailUrl] = useState();
     const [navUrl, setNavUrl] = useState();
+    const [author, setAuthor] = useState();
     const [contentScore, setContentScore] = useState();
     const [isLiked, setIsLiked] = useState();
 
@@ -61,7 +63,14 @@ function NodeContentCard(props) {
               }
             })
         } else if (type === contentType.GOOGLE_BOOKS) {
-            // getDataFromGoogleBooksUrl()
+            getDataFromGoogleBooksId(externalId).then(res => {
+              const { volumeInfo } = res.response
+              setTitle(`${volumeInfo.title} ${volumeInfo.subtitle || ''}`);
+              setThumbnailUrl(volumeInfo.imageLinks.medium || volumeInfo.imageLinks.smallThumbnail);
+              setNavUrl(volumeInfo.previewLink)
+              setAuthor(volumeInfo.authors[0])
+              setContentScore(score);
+            })
         }
     }, [])
 
@@ -86,6 +95,15 @@ function NodeContentCard(props) {
       }
     }
 
+    function truncateString(phrase, length) {
+      if (phrase.length < length) return phrase
+        else {
+          let trimmed = phrase.slice(0, length)
+          trimmed = trimmed.slice(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')))
+          return trimmed + '…'
+        }
+      }
+
 
 
     return (
@@ -95,7 +113,10 @@ function NodeContentCard(props) {
             <div className={classes.details}>
               <CardContent className={classes.content}>
                 <Typography component="p" variant="subtitle1">
-                  {title}
+                  {truncateString(title, 50)}
+                </Typography>
+                <Typography component="i" variant="subtitle2">
+                  {author}
                 </Typography>
 
               </CardContent>
