@@ -2,7 +2,7 @@ import { Card, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typo
 import { Delete, ThumbsUpDown, ThumbUp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import image from '../../../assets/placeholder.png'
+import placeholder from '../../../assets/placeholder.png'
 import contentType from '../../../enums/content-type'
 import { getDataFromGoogleBooksId, getDataFromYoutubeId, removeContent } from '../../../services/content-service';
 import { updateLikedContent } from '../../../services/user-service';
@@ -30,11 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
   }));
 
-function NodeContentCard(props) {
+function NodeGeneratedContentCard(props) {
     const classes = useStyles();
     const { contentData, likedContent, handleDelete, viewOnly } = props
-    const {type, externalId, score, _id: contentId} = contentData
-    const {id: graphId} = useParams();
     const [title, setTitle] = useState();
     const [thumbnailUrl, setThumbnailUrl] = useState();
     const [navUrl, setNavUrl] = useState();
@@ -44,37 +42,33 @@ function NodeContentCard(props) {
 
 
     useEffect(() => {
+        console.log(contentData)
         if (isAuthenticated()) {
-          if (likedContent && likedContent.includes(contentId)) {
-            setIsLiked(true);
-          } else {
-            setIsLiked(false);
-          }
+        //   if (likedContent && likedContent.includes(contentId)) {
+        //     setIsLiked(true);
+        //   } else {
+        //     setIsLiked(false);
+        //   }
         }
+
+        // If snippet then the data is from youtube
+        const type = contentData.kind === 'youtube#searchResult' ? contentType.YOUTUBE : contentType.GOOGLE_BOOKS
+
         if (type === contentType.YOUTUBE) {
-            getDataFromYoutubeId(externalId).then(res => {
-              if (res.response.items.length > 0) {
-                const item = res.response.items.pop();
-                const snippet = item.snippet;
-                setTitle(snippet.localized.title);
-                setThumbnailUrl(snippet.thumbnails.maxres.url);
-                setNavUrl(`https://www.youtube.com/watch?v=${externalId}`)
-                setContentScore(score);
-              }
-            })
+            const { snippet } = contentData;
+            setTitle(snippet.title);
+            setThumbnailUrl(snippet.thumbnails.high.url);
+            setNavUrl(`https://www.youtube.com/watch?v=${contentData.id.videoId}`)
         } else if (type === contentType.GOOGLE_BOOKS) {
-            getDataFromGoogleBooksId(externalId).then(res => {
-              const { volumeInfo } = res.response
-              setTitle(`${volumeInfo.title} ${volumeInfo.subtitle || ''}`);
-              if (volumeInfo.imageLinks) {
+            const { volumeInfo } = contentData;
+            setTitle(`${volumeInfo.title} ${volumeInfo.subtitle || ''}`);
+            if (volumeInfo.imageLinks) {
                 setThumbnailUrl(volumeInfo.imageLinks.medium || volumeInfo.imageLinks.thumbnail);
-              }
-              setNavUrl(volumeInfo.previewLink)
-              if (volumeInfo.authors) {
-                  setAuthor(volumeInfo.authors[0])
-              }
-              setContentScore(score);
-            })
+            }
+            setNavUrl(volumeInfo.previewLink)
+            if (volumeInfo.authors) {
+                setAuthor(volumeInfo.authors[0])
+            }
         }
     }, [])
 
@@ -126,7 +120,6 @@ function NodeContentCard(props) {
               </CardContent>
               <CardActions className={classes.controls}>
                 <Typography component="h6" variant="h6">
-                {contentScore}
                   <span>
                     <IconButton onClick={handleLike}>
                       <ThumbUp></ThumbUp>
@@ -142,7 +135,7 @@ function NodeContentCard(props) {
             </div>
               <CardMedia
                 className={classes.cover}
-                image={thumbnailUrl || image}
+                image={thumbnailUrl || placeholder}
                 onClick={navigateToUrl}
               />
           </Card>
@@ -151,4 +144,6 @@ function NodeContentCard(props) {
     )
 }
 
-export default NodeContentCard
+export default NodeGeneratedContentCard
+
+

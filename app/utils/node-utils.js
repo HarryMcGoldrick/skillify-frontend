@@ -1,3 +1,5 @@
+import { node } from "prop-types";
+
 export const updateNodeData = (node, data) => {
   Object.entries(data).forEach((entry) => {
     const [key, value] = entry;
@@ -60,5 +62,41 @@ export const checkIsNode = (element) => {
 
 export const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
 
+// ******************** Cytoscape helper methods ********************
 // only to used when having access to cy
+
+// Return node element with a given Id
 export const getNodeWithId = (cy, id) => cy.elements(`node[id = "${id}"]`)[0];
+
+// Given a collection of elements returns an array of node data
+export const getNodesFromElementCollection = (nodes) => {
+  let nodeArray = [];
+  for (let node of nodes) {
+    if(checkIsNode(node.data())) nodeArray.push(node.data());
+  }
+  return nodeArray;
+}
+
+export const cytoscapeBreadthFirstSearch = (cy, startNode, targetNode) => {
+  const bfs = cy.elements().dfs({
+    roots: startNode,
+    visit: (v, e, u, i, depth) => {
+      console.log( 'visit ' + v.data('label') );
+      if(v.data('id') === targetNode.data('id')) {
+        return false
+      }
+    },
+    directed: true
+  })
+  console.log(bfs.path);
+  console.log(bfs.found);
+}
+
+export const cytoscapeAstar = (cy, startNode, targetNode) => {
+  const aStar = cy.elements().aStar({
+    root: startNode,
+    goal: targetNode,
+    directed: true
+  })
+  return aStar;
+}

@@ -8,12 +8,13 @@ import editStyle from './edit-style';
 import { GraphToolbar } from '../../components';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, FETCH_STYLE_SHEET_REQUEST, } from '../../redux/graph/graphTypes';
-import { updateProgressMode, updateStyleSheet } from '../../redux/graph/graphActions';
+import { updateProgressMode, updateStyleSheet, updateSelectedNodePath } from '../../redux/graph/graphActions';
 import viewOnlyStyle from './viewOnly-style';
 import { getNodeWithId } from '../../utils/graph-utils';
+import { cytoscapeAstar, getNodesFromElementCollection } from '../../utils/node-utils';
 
 function GraphContainer(props) {
-  const { elements, viewOnly, selectedNode, updateProgressMode } = props;
+  const { elements, viewOnly, selectedNode, updateProgressMode, updateSelectedNodePath } = props;
   let cyRef = useRef(null);
   const { id: graphId } = useParams();
   const [cy, setCy] = useState(null);
@@ -55,6 +56,8 @@ function GraphContainer(props) {
   }, [cy]);
 
   useEffect(() => {
+    // This useEffect hooks acts as an event handler for selectNode
+    // Handles cytoscape events when node is selected
     if (cy && selectedNode.id) {
       const node = getNodeWithId(cy, selectedNode.id)
       // Unselect all prior nodes to prevent multiple selected nodes
@@ -67,6 +70,9 @@ function GraphContainer(props) {
         zoom: 2
       })
 
+      // Get selected node path and update state
+      const aStar = cytoscapeAstar(cy, getNodeWithId(cy, '4e37f9db-d5e0-4d5f-a90f-d17d25783a28'), node);
+      updateSelectedNodePath(getNodesFromElementCollection(aStar.path))
  
     }
   }, [cy, selectedNode]);
@@ -99,6 +105,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchCompletedNodes: (userId, graphId) => dispatch({type: FETCH_COMPLETED_NODES_REQUEST, payload: {userId, graphId}}),
   updateProgressMode: (mode) => dispatch(updateProgressMode(mode)),
   updateStyleSheet: (styleSheet) => dispatch(updateStyleSheet(styleSheet)),
+  updateSelectedNodePath: (nodes) => dispatch(updateSelectedNodePath(nodes))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);

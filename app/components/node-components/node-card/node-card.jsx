@@ -15,11 +15,11 @@ const useStyles = makeStyles({
 const NodeCard = (props) => {
   const classes = useStyles();
   const { node } = props;
-  const { label, description } = node;
+  const { label, description } = node.data;
   const dispatch = useDispatch()
 
   return (
-    <Card className={classes.root} onClick={() => dispatch(selectNode(node))}>
+    <Card className={classes.root} onClick={() => dispatch(selectNode(node.data))}>
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

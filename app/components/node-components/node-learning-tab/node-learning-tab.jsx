@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { getContentForNode, getYoutubeVideoForNode, removeContent } from '../../../services/content-service';
+import { getContentForNode, getYoutubeVideoForNode, removeContent, getGoogleBooksForNode, addContent } from '../../../services/content-service';
 import { NodeContentCard } from '../..';
 import { ButtonBase, Grid, IconButton, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import booksIcon from '../../../assets/booksIcon.png';
 import youtubeIcon from '../../../assets/youtubeIcon.png';
-import hyperlinkIcon from '../../../assets/hyperlinkIcon.png';
 import contentType from '../../../enums/content-type';
 import { useForm } from 'react-hook-form';
 import { Add } from '@material-ui/icons';
-import { addContent } from '../../../services/content-service';
-import { extractGoogleBooksIdFromUrl, extractYoutubeIdFromUrl } from '../../../utils/content-utils';
-import { useParams } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { extractGoogleBooksIdFromUrl, extractYoutubeIdFromUrl, generateQueryStringFromNodes } from '../../../utils/content-utils';
+import { connect, useDispatch } from 'react-redux';
 import { isAuthenticated } from '../../../utils/authentication';
-import { removeItemFromArray } from '../../../utils/node-utils';
+import NodeGeneratedContentCard from '../node-generated-content-card/node-generated-content-card';
 
 const useStyles = makeStyles((theme) => ({
   imageRow: {
@@ -48,8 +44,9 @@ const NodeLearningTab = (props) => {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [content, setContent] = useState([]);
+  const [generatedContent, setGeneratedContent] = useState([]);
   const dispatch = useDispatch()
-  const { nodeData, likedContent, viewOnly } = props;
+  const { nodeData, likedContent, viewOnly, nodePath } = props;
 
 
   const addContentHandler = (data) => {
@@ -131,6 +128,23 @@ const NodeLearningTab = (props) => {
     return 0;
   }
 
+  const fetchGeneratedContent = async () => {
+    const queryString = generateQueryStringFromNodes(nodePath)
+    let contentToAdd = [];
+
+    await getYoutubeVideoForNode(queryString).then((data) => {
+      contentToAdd = [...contentToAdd, ...data.response.items]
+    })
+  
+    await getGoogleBooksForNode(queryString).then((data) => {
+      contentToAdd = [...contentToAdd, ...data.response.items]
+    })
+
+    console.log(contentToAdd)
+    setGeneratedContent(contentToAdd)
+
+  }
+
   useEffect(() => {
     getContentForNode(nodeData.id).then((data, err)=> {
       if(err) {
@@ -139,6 +153,7 @@ const NodeLearningTab = (props) => {
         setContentWithOrdering(data.content)
       }
     })
+    fetchGeneratedContent();
   }, [props])
 
   return (
@@ -193,11 +208,20 @@ const NodeLearningTab = (props) => {
         </Grid>
       </form>
       )}
-      {content.map((content, index) => {
+      {content.map((content) => {
         if (!content) return;
         return (
           <div className={classes.contentCard} key={content._id}>
             <NodeContentCard  contentData={content} likedContent={likedContent} handleDelete={handleDelete} viewOnly={viewOnly}></NodeContentCard>
+          </div>
+        )
+      })}
+      {generatedContent.map((content) => {
+        console.log(generatedContent);
+        if (!content) return;
+        return (
+          <div className={classes.contentCard} key={content.etag}>
+            <NodeGeneratedContentCard  contentData={content} likedContent={likedContent} handleDelete={handleDelete} viewOnly={viewOnly}></NodeGeneratedContentCard>
           </div>
         )
       })}
@@ -206,4 +230,11 @@ const NodeLearningTab = (props) => {
   );
 };
 
-export default NodeLearningTab;
+const mapStateToProps = (state) => ({
+  nodeData: state.graph.selectedNode,
+  progressMode: state.graph.isProgressMode,
+  nodePath: state.graph.selectedNodePath,
+  likedContent: state.user.likedContent
+});
+
+export default connect(mapStateToProps)(NodeLearningTab);

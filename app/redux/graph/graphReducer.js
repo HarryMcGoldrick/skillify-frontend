@@ -2,7 +2,7 @@ import { findNodeInElements, addToCompleted, updateCompletedNodes, removeItemFro
 import {
   ADD_NODE, ADD_COMPLETED_NODE, FETCH_GRAPH_SUCCESS, REMOVE_NODE, SELECT_NODE, ADD_STYLE,
   UPDATE_ELEMENTS, TOGGLE_GRAPH_DETAILS, FETCH_COMPLETED_NODES_SUCCESS, UPDATE_PROGRESS_MODE,
-  REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_STYLE_SHEET,
+  REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_STYLE_SHEET, UPDATE_SELECTED_NODE_PATH,
 } from './graphTypes';
 import { initialState } from './initialState';
 
@@ -45,6 +45,12 @@ const reducer = (state = initialState, action) => {
           ...elements,
           newNode
         ],
+      }
+    }
+    case UPDATE_SELECTED_NODE_PATH: {
+      return {
+        ...state,
+        selectedNodePath: action.payload
       }
     }
     case ADD_STYLE : {

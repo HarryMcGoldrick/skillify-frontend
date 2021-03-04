@@ -1,5 +1,5 @@
 import {
-  ADD_NODE, ADD_COMPLETED_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS, UPDATE_PROGRESS_MODE, REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_NODE_STYLE, ADD_STYLE, UPDATE_STYLE_SHEET,
+  ADD_NODE, ADD_COMPLETED_NODE, REMOVE_NODE, SELECT_NODE, TOGGLE_GRAPH_DETAILS, UPDATE_ELEMENTS, UPDATE_PROGRESS_MODE, REMOVE_COMPLETED_NODE, UPDATE_NODE, UPDATE_NODE_STYLE, ADD_STYLE, UPDATE_STYLE_SHEET, UPDATE_SELECTED_NODE_PATH,
 } from './graphTypes';
 
 export const selectNode = (node) => ({
@@ -60,5 +60,10 @@ export const addNodeToCompletedNodes = (nodeId) => ({
 export const removeNodeFromCompletedNodes = (nodeId) => ({
   type: REMOVE_COMPLETED_NODE,
   payload: nodeId
+})
+
+export const updateSelectedNodePath = (nodes) => ({
+  type: UPDATE_SELECTED_NODE_PATH,
+  payload: nodes
 })
 

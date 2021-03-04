@@ -33,7 +33,7 @@ const NodeDrawerPanel = (props) => {
             <NodeDetails nodeData={selectedNode} isProgressMode={progressMode} viewOnly={viewOnly} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <NodeLearningTab nodeData={selectedNode} likedContent={likedContent} viewOnly={viewOnly} />
+            <NodeLearningTab viewOnly={viewOnly} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <NodeAppearance/>

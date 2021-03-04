@@ -37,3 +37,17 @@ export const extractYoutubeIdFromUrl = (url) => {
     const matchArray = [...url.matchAll(regex)].pop();
     return matchArray[1];
 }
+
+// Generates a string of node labels from an array of nodes
+// Using the keyword tutorial and appending node labels results in more accurate searches
+export const generateQueryStringFromNodes = (nodes) => {
+  let queryString = 'tutorial+'
+  nodes.forEach((node, index) => {
+    if (index == 0) {
+    queryString += node.label;
+    } else {
+      queryString += '+' + node.label;
+    }
+  })
+  return queryString;
+}

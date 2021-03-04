@@ -5,7 +5,9 @@ const baseUrl = 'http://localhost:3000/content';
 
 
 // eslint-disable-next-line import/prefer-default-export
-export const getYoutubeVideoForNode = async (label) => axios.get(`/content/youtube?label=${label}`);
+export const getYoutubeVideoForNode = async (searchQuery) => axios.get(`/content/youtube?searchQuery=${searchQuery}`).then(res => res.data);
+
+export const getGoogleBooksForNode = async (searchQuery) => axios.get(`/content/googlebooks?searchQuery=${searchQuery}`).then(res => res.data);
 
 export const getDataFromYoutubeId = async (videoId) => axios.get(`${baseUrl}/youtube/${videoId}`).then(res => res.data);
 
