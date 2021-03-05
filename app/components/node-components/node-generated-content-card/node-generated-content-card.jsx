@@ -42,7 +42,6 @@ function NodeGeneratedContentCard(props) {
 
 
     useEffect(() => {
-        console.log(contentData)
         if (isAuthenticated()) {
         //   if (likedContent && likedContent.includes(contentId)) {
         //     setIsLiked(true);

@@ -40,13 +40,19 @@ export const extractYoutubeIdFromUrl = (url) => {
 
 // Generates a string of node labels from an array of nodes
 // Using the keyword tutorial and appending node labels results in more accurate searches
+// Depth is hardcoded to a value gained from experimentation
 export const generateQueryStringFromNodes = (nodes) => {
   let queryString = 'tutorial+'
+  let depth = 2;
+  for(let i = nodes.length; i >= 0; i--) {
+    // Break if depth is reached
+    if (nodes.length - depth === i) break;
+  }
   nodes.forEach((node, index) => {
     if (index == 0) {
     queryString += node.label;
     } else {
-      queryString += '+' + node.label;
+      queryString += '|' + node.label;
     }
   })
   return queryString;

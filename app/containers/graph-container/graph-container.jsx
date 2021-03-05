@@ -70,10 +70,11 @@ function GraphContainer(props) {
         zoom: 2
       })
 
-      // Get selected node path and update state
-      const aStar = cytoscapeAstar(cy, getNodeWithId(cy, '4e37f9db-d5e0-4d5f-a90f-d17d25783a28'), node);
-      updateSelectedNodePath(getNodesFromElementCollection(aStar.path))
- 
+      // Get the predecessors of the selected node and arrange them in top-bottom order
+      const nodePred = node.predecessors('node');
+      nodePred.unshift(node);
+      nodePred.reverse();
+      updateSelectedNodePath(getNodesFromElementCollection(nodePred))
     }
   }, [cy, selectedNode]);
 

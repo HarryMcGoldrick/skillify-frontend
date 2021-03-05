@@ -140,7 +140,6 @@ const NodeLearningTab = (props) => {
       contentToAdd = [...contentToAdd, ...data.response.items]
     })
 
-    console.log(contentToAdd)
     setGeneratedContent(contentToAdd)
 
   }
@@ -217,7 +216,6 @@ const NodeLearningTab = (props) => {
         )
       })}
       {generatedContent.map((content) => {
-        console.log(generatedContent);
         if (!content) return;
         return (
           <div className={classes.contentCard} key={content.etag}>
