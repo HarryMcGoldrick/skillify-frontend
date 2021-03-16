@@ -1,16 +1,27 @@
 import {
-  Card, CardActionArea, CardContent, CardMedia, makeStyles, Typography,
+  Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { getUserInfo } from '../../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 400,
-  },
-  media: {
-    height: 200,
-  },
+      display: 'flex',
+      width: '600px',
+      height: '100%',
+    },
+    details: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '300px'
+    },
+    content: {
+      flex: '1 0 auto',
+    },
+    cover: {
+      width: '100%',
+      height: '150px'
+    },
 }));
 
 const GraphCard = (props) => {
@@ -29,33 +40,43 @@ const GraphCard = (props) => {
     }
   }, []);
 
+  function truncateString(phrase, length) {
+    if (phrase.length < length) return phrase
+      else {
+        let trimmed = phrase.slice(0, length)
+        trimmed = trimmed.slice(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')))
+        return trimmed + '…'
+      }
+    }
+
   return (
-    <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          className={classes.media}
-          image={image || 'no image found'}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {name}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary" component="p">
-            {description}
-            <span style={{ float: 'right' }}>
-              <Typography variant="subtitle2" color="textSecondary" component="span">
+    <div>
+      {name && (
+        <Card className={classes.root}>
+          <div className={classes.details}>
+            <CardContent className={classes.content}>
+              <Typography component="h6" variant="h6">
+                {truncateString(name, 50)}
+              </Typography>
+              <Typography component="i" variant="subtitle2">
+                {description}
+              </Typography>
+              <Typography variant="subtitle2" color="textSecondary" component="p" style={{marginTop: '16px'}}>
                 Created by:
                 {' '}
                 {userInfo.username}
               </Typography>
-            </span>
-          </Typography>
 
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
+            </CardContent>
+          </div>
+            <CardMedia
+              className={classes.cover}
+              image={image || 'no image found'}
+            />
+        </Card>
+      )}
+  </div>
+  )
 };
 
 export default GraphCard;

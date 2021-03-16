@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime';
 import axios from '../utils/axios';
+import qs from 'qs';
 
 const baseUrl = 'http://localhost:3000/graph';
 
@@ -18,7 +19,10 @@ export const fetchGraphStyle = async (id) => axios.get(`${baseUrl}/${id}/style`)
 
 export const sendGraphDataForImage = async (id, elements) => axios.post(`${baseUrl}/${id}/image`, { elements }).then((res) => res.data);
 
-export const getGraphViews = async () => axios.get(`${baseUrl}/views`).then((res) => res.data);
+export const getGraphViews = async (name, tags, page, pageSize) => axios.get(`${baseUrl}/views`, { params: {name, tags, page, pageSize},
+  paramsSerializer: params => {
+    return qs.stringify(params, {indices: false, arrayFormat: 'brackets'})
+}}).then((res) => res.data);
 
 export const addGraphToGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress`, { graphId, userId }).then((res) => res.data);
 
@@ -27,4 +31,3 @@ export const addNodeToGraphProgress = async (nodeId, graphId, userId) => axios.p
 export const removeGraphFromGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress/remove`, { graphId, userId }).then((res) => res.data);
 
 export const removeNodeFromGraphProgress = async (nodeId, graphId, userId) => axios.post(`${baseUrl}/progress/node/remove`, { graphId, userId, nodeId }).then((res) => res.data);
-
