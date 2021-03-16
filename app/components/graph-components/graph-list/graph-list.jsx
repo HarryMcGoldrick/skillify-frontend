@@ -31,29 +31,43 @@ const GraphList = () => {
   const [graphViews, setGraphViews] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [page, setPage] = useState(1);
+  const [graphAmount, setGraphAmount] = useState()
   const pageSize = 5;
 
+  const updateGraphList = (formData) => {
+    if (formData) {
+      getGraphViews(formData.search, selectedTags, page, pageSize).then((data) => {
+        setGraphViews(data.graphViews);
+        setGraphAmount(data.graphAmount);
+      });
+    } else {
+      getGraphViews(null, selectedTags, page, pageSize).then((data) => {
+        setGraphViews(data.graphViews);
+        setGraphAmount(data.graphAmount);
+      });
+    }
+  }
+  
   useEffect(() => {
     getAllTags().then((data) => {
       setTags(data.tags);
     })
 
     // Returns a list of graphIds and graphNames
-    getGraphViews(null, null, 1, pageSize).then((graphs) => {
-      setGraphViews(graphs);
-    });
+    updateGraphList();
   }, []);
+
+  useEffect(() => {
+    updateGraphList();
+  }, [page])
 
   // Creates a linkable ListItem
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
 
-  const updateGraphList = (data) => {
-    getGraphViews(data.search, selectedTags, 1, pageSize).then((graphs) => {
-      setGraphViews(graphs);
-    });
-  }
+
 
   return (
     <Grid
@@ -73,7 +87,6 @@ const GraphList = () => {
           style={{ margin: 8, width: 800 }}
           placeholder="Search for a map"
           margin="normal"
-          type="search"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -83,7 +96,7 @@ const GraphList = () => {
           }}
           variant="outlined"
         />
-        <Grid container row>
+        <Grid container direction="row">
         <Grid item xs={8}>
           <Autocomplete
             name="tags"
@@ -132,7 +145,9 @@ const GraphList = () => {
         </Paper>
       </Grid>
       <Grid item xs={3}>
-        <Pagination count={10} />
+        <Pagination count={Math.ceil(graphAmount / pageSize)}  onChange={(event, page) => {
+          setPage(page);
+          }}/>
       </Grid>
     </Grid>
 

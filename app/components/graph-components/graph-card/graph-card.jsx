@@ -32,13 +32,13 @@ const GraphCard = (props) => {
     name, description, createdById: userId, image,
   } = graph;
 
-  useEffect(() => {
-    if (userId) {
-      getUserInfo(userId).then((res) => {
-        setUserInfo(res);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userId) {
+  //     getUserInfo(userId).then((res) => {
+  //       setUserInfo(res);
+  //     });
+  //   }
+  // }, [userId]);
 
   function truncateString(phrase, length) {
     if (phrase.length < length) return phrase
@@ -61,11 +61,11 @@ const GraphCard = (props) => {
               <Typography component="i" variant="subtitle2">
                 {description}
               </Typography>
-              <Typography variant="subtitle2" color="textSecondary" component="p" style={{marginTop: '16px'}}>
+              {/* <Typography variant="subtitle2" color="textSecondary" component="p" style={{marginTop: '16px'}}>
                 Created by:
                 {' '}
                 {userInfo.username}
-              </Typography>
+              </Typography> */}
 
             </CardContent>
           </div>
