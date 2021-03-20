@@ -6,11 +6,11 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../../services/graph-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../../redux/graph/graphActions';
-import { connect } from 'react-redux';
-import { NodeObjectives } from '../../../components';
+import { NodeObjectives } from '../..';
 
 const useStyles = makeStyles((theme) => ({
   formInput: {
@@ -28,7 +28,7 @@ const NodeDetails = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const {
-    cy, nodeData, progressMode, viewOnly, selectedNode, completedNodes
+    cy, nodeData, progressMode, viewOnly, selectedNode, completedNodes,
   } = props;
   const { id: graphId } = useParams();
 
@@ -36,8 +36,8 @@ const NodeDetails = (props) => {
     setEditMode(false);
     props.updateNode({
       ...selectedNode,
-      ...data
-    })
+      ...data,
+    });
   };
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const NodeDetails = (props) => {
   const removeNodeFromProgress = () => {
     removeNodeFromGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
       if (data.res) {
-        props.removeNodeFromCompletedNodes(selectedNode.id)
+        props.removeNodeFromCompletedNodes(selectedNode.id);
         setIsComplete(false);
       }
     });
@@ -129,22 +129,21 @@ const NodeDetails = (props) => {
           </Grid>
         </form>
       )}
-      {isAuthenticated() && (<NodeObjectives nodeData={nodeData}></NodeObjectives>)}
-      </>
+      {isAuthenticated() && (<NodeObjectives nodeData={nodeData} />)}
+    </>
   );
 };
 
 const mapStateToProps = (state) => ({
   selectedNode: state.graph.selectedNode,
   progressMode: state.graph.progressMode,
-  completedNodes: state.graph.completedNodes
-})
+  completedNodes: state.graph.completedNodes,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   addNodeToCompletedNodes: (nodeId) => dispatch(addNodeToCompletedNodes(nodeId)),
   removeNodeFromCompletedNodes: (nodeId) => dispatch(removeNodeFromCompletedNodes(nodeId)),
   updateNode: (node) => dispatch(updateNode(node)),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(NodeDetails);
-

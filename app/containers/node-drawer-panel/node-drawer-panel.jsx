@@ -10,9 +10,8 @@ import NodeAppearance from '../../components/node-components/node-apperance/node
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
-    selectedNode, progressMode, viewOnly, likedContent
+    selectedNode, progressMode, viewOnly, likedContent,
   } = props;
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -36,7 +35,7 @@ const NodeDrawerPanel = (props) => {
             <NodeLearningTab viewOnly={viewOnly} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <NodeAppearance/>
+            <NodeAppearance />
           </TabPanel>
         </div>
       )}
@@ -49,9 +48,6 @@ const mapStateToProps = (state) => ({
   progressMode: state.graph.isProgressMode,
   likedContent: state.user.likedContent,
 });
-
-
-
 
 export default connect(mapStateToProps)(NodeDrawerPanel);
 

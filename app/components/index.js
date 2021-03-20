@@ -7,9 +7,8 @@ export { default as GraphList } from './graph-components/graph-list/graph-list';
 export { default as GraphToolbar } from './graph-components/graph-toolbar/graph-toolbar';
 export { default as GraphCard } from './graph-components/graph-card/graph-card';
 
-
 // Node components
-export { default as NodeApperance } from './node-components/node-apperance/node-appearance'
+export { default as NodeApperance } from './node-components/node-apperance/node-appearance';
 export { default as NodeCard } from './node-components/node-card/node-card';
 export { default as NodeDetails } from './node-components/node-details/node-details';
 export { default as NodeDialog } from './node-components/node-dialog/node-dialog';
@@ -20,7 +19,9 @@ export { default as NodeContentCard } from './node-components/node-content-card/
 
 // User components
 export { default as UserData } from './user-components/user-data/user-data';
-
+export { default as UserProfileData } from './user-components/user-profile-details/user-profile-details';
+export { default as UserGraphDetails } from './user-components/user-graph-details/user-graph-details';
+export { default as UserRewardsDetails } from './user-components/user-rewards-details/user-rewards-details';
 
 // Misc components
 export { default as LoginForm } from './login-form/login-form';

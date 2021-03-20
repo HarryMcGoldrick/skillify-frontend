@@ -5,3 +5,4 @@ export { default as ViewGraph } from './view-graph/view-graph';
 export { default as ViewList } from './view-list/view-list';
 export { default as Welcome } from './welcome/welcome';
 export { default as Register } from './register/register';
+export { default as UserProfile } from './user-profile/user-profile';
