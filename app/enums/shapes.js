@@ -1,0 +1,28 @@
+const shapes = {
+  ELLIPSE: 'ellipse',
+  TRIANGLE: 'triangle',
+  ROUND_TRIANGLE: 'round-triangle',
+  RECTANGLE: 'rectangle',
+  ROUND_RECTANGLE: 'round-rectangle',
+  BOTTOM_ROUND_RECTANGLE: 'bottom-round-rectangle',
+  CUT_RECTANGLE: 'cut-rectangle',
+  BARREL: 'barrel',
+  RHOMBOID: 'rhomboid',
+  DIAMOND: 'diamond',
+  ROUND_DIAMOND: 'round-diamond',
+  PENTAGON: 'pentagon',
+  ROUND_PENTAGON: 'round-pentagon',
+  HEXAGON: 'hexagon',
+  ROUND_HEXAGON: 'round-hexagon',
+  CONCAVE_HEXAGON: 'concave-hexagon',
+  HEPTAGON: 'heptagon',
+  ROUND_HEPTAGON: 'round-heptagon',
+  OCTAGON: 'octagon',
+  ROUND_OCTAGON: 'round-octagon',
+  STAR: 'star',
+  TAG: 'tag',
+  ROUND_TAG: 'round-tag',
+  VEE: 'vee',
+};
+
+export default shapes;

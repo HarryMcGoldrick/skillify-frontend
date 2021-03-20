@@ -1,37 +1,37 @@
 const style = [
-    {
-      selector: 'node[label]',
-      style: {
-        content: 'data(label)',
-      },
+  {
+    selector: 'node[label]',
+    style: {
+      content: 'data(label)',
     },
-    {
-      selector: ':selected',
-      style: {
-        'background-color': 'blue',
-      },
+  },
+  {
+    selector: ':selected',
+    style: {
+      'border-width': '2',
+      'border-color': 'red',
     },
-    {
-      selector: 'edge',
-      style: {
-        width: 3,
-        'curve-style': 'bezier',
-        'target-arrow-shape': 'triangle',
-      },
+  },
+  {
+    selector: 'edge',
+    style: {
+      width: 3,
+      'curve-style': 'bezier',
+      'target-arrow-shape': 'triangle',
     },
-    {
-      selector: '.completed',
-      style: {
-        'background-color': 'red',
-      },
+  },
+  {
+    selector: '.completed',
+    style: {
+      'background-color': 'red',
     },
-    {
-      selector: '.incomplete',
-      style: {
-        // TODO add style in here for incomplete nodes
-      },
+  },
+  {
+    selector: '.incomplete',
+    style: {
+      // TODO add style in here for incomplete nodes
     },
-  ];
-  
-  export default style;
-  
+  },
+];
+
+export default style;

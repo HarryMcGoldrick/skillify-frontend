@@ -8,12 +8,6 @@ const style = [
     },
   },
   {
-    selector: ':selected',
-    style: {
-      'background-color': 'blue',
-    },
-  },
-  {
     selector: 'edge',
     style: {
       width: 3,
@@ -30,7 +24,7 @@ const style = [
   {
     selector: '.triangle',
     style: {
-      'shape': 'triangle',
+      shape: 'triangle',
     },
   },
 
@@ -84,6 +78,13 @@ const style = [
     selector: '.eh-ghost-edge.eh-preview-active',
     style: {
       opacity: 0,
+    },
+  },
+  {
+    selector: ':selected',
+    style: {
+      'border-width': '2',
+      'border-color': 'black',
     },
   },
 ];

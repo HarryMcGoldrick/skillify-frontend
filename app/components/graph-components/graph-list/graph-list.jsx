@@ -5,12 +5,12 @@ import {
   ListItem, makeStyles, Paper, TextField,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getGraphViews } from '../../../services/graph-service';
-import {GraphCard} from '../../../components';
 import { Autocomplete, Pagination } from '@material-ui/lab';
 import { Search } from '@material-ui/icons';
-import { getAllTags } from '../../../services/tag-service';
 import { useForm } from 'react-hook-form';
+import { getGraphViews } from '../../../services/graph-service';
+import { GraphCard } from '../..';
+import { getAllTags } from '../../../services/tag-service';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,7 +32,7 @@ const GraphList = () => {
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [page, setPage] = useState(1);
-  const [graphAmount, setGraphAmount] = useState()
+  const [graphAmount, setGraphAmount] = useState();
   const pageSize = 5;
 
   const updateGraphList = (formData) => {
@@ -47,12 +47,12 @@ const GraphList = () => {
         setGraphAmount(data.graphAmount);
       });
     }
-  }
-  
+  };
+
   useEffect(() => {
     getAllTags().then((data) => {
       setTags(data.tags);
-    })
+    });
 
     // Returns a list of graphIds and graphNames
     updateGraphList();
@@ -60,14 +60,12 @@ const GraphList = () => {
 
   useEffect(() => {
     updateGraphList();
-  }, [page])
+  }, [page]);
 
   // Creates a linkable ListItem
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-
-
 
   return (
     <Grid
@@ -97,32 +95,31 @@ const GraphList = () => {
           variant="outlined"
         />
         <Grid container direction="row">
-        <Grid item xs={8}>
-          <Autocomplete
-            name="tags"
-            multiple
-            id="tags-standard"
-            options={tags}
-            style={{ margin: 8 }}
-            getOptionLabel={(option) => option}
-            onChange={(event, value) => setSelectedTags(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                label="Tag"
-                placeholder="Add Tags"
-              />
+          <Grid item xs={8}>
+            <Autocomplete
+              name="tags"
+              multiple
+              id="tags-standard"
+              options={tags}
+              style={{ margin: 8 }}
+              getOptionLabel={(option) => option}
+              onChange={(event, value) => setSelectedTags(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label="Tag"
+                  placeholder="Add Tags"
+                />
               )}
-          />
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Button type="submit" fullWidth variant="contained" style={{ marginTop: 16 }}>Search</Button>
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Button type="submit" fullWidth variant="contained" style={{marginTop: 16}}>Search</Button>
-        </Grid>
-        </Grid>
-      
-      
-      </form >
+
+      </form>
 
       <Grid item xs={8}>
         <Paper elevation={3} className={classes.paper}>
@@ -145,9 +142,12 @@ const GraphList = () => {
         </Paper>
       </Grid>
       <Grid item xs={3}>
-        <Pagination count={Math.ceil(graphAmount / pageSize)}  onChange={(event, page) => {
-          setPage(page);
-          }}/>
+        <Pagination
+          count={Math.ceil(graphAmount / pageSize)}
+          onChange={(event, page) => {
+            setPage(page);
+          }}
+        />
       </Grid>
     </Grid>
 

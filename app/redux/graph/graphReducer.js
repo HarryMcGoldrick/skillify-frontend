@@ -1,4 +1,6 @@
-import { findNodeInElements, addToCompleted, updateCompletedNodes, removeItemFromArray, addToIncompleted } from '../../utils/node-utils';
+import {
+  findNodeInElements, addToCompleted, updateCompletedNodes, removeItemFromArray, addToIncompleted,
+} from '../../utils/node-utils';
 import {
   ADD_NODE, ADD_COMPLETED_NODE, FETCH_GRAPH_SUCCESS, REMOVE_NODE, SELECT_NODE, ADD_STYLE,
   UPDATE_ELEMENTS, TOGGLE_GRAPH_DETAILS, FETCH_COMPLETED_NODES_SUCCESS, UPDATE_PROGRESS_MODE,
@@ -32,41 +34,42 @@ const reducer = (state = initialState, action) => {
         ],
       };
     }
-    case UPDATE_NODE : {
+    case UPDATE_NODE: {
       const elements = state.elements.filter((ele) => ele.data.id !== action.payload.id);
       const newNode = {
         data: {
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
       return {
         ...state,
         elements: [
           ...elements,
-          newNode
+          newNode,
         ],
-      }
+      };
     }
     case UPDATE_SELECTED_NODE_PATH: {
       return {
         ...state,
-        selectedNodePath: action.payload
-      }
+        selectedNodePath: action.payload,
+      };
     }
-    case ADD_STYLE : {
+    case ADD_STYLE: {
+      const newStyleSheet = state.styleSheet.filter((style) => style.selector.toString() !== action.payload.selector.toString());
       return {
         ...state,
         styleSheet: [
           action.payload,
-          ...state.styleSheet,
-        ]
-      }
+          ...newStyleSheet,
+        ],
+      };
     }
-    case UPDATE_STYLE_SHEET : {
+    case UPDATE_STYLE_SHEET: {
       return {
         ...state,
-        styleSheet: action.payload
-      }
+        styleSheet: action.payload,
+      };
     }
     case UPDATE_ELEMENTS: {
       return {
@@ -82,7 +85,7 @@ const reducer = (state = initialState, action) => {
       };
     }
     case ADD_COMPLETED_NODE: {
-      const node = findNodeInElements(state.elements, action.payload)
+      const node = findNodeInElements(state.elements, action.payload);
       const newElements = state.elements.filter((ele) => ele.data.id !== action.payload);
       const completedNode = addToCompleted(node);
 
@@ -90,7 +93,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         elements: [
           ...newElements,
-          completedNode
+          completedNode,
         ],
         completedNodes: [
           ...state.completedNodes,
@@ -102,11 +105,10 @@ const reducer = (state = initialState, action) => {
       const newElements = state.elements.map((ele) => {
         if (ele.data.id === action.payload) {
           return addToIncompleted(ele);
-        } else {
-          return ele;
         }
+        return ele;
       });
-      const updatedCompletedNodes = removeItemFromArray(state.completedNodes, action.payload)
+      const updatedCompletedNodes = removeItemFromArray(state.completedNodes, action.payload);
 
       return {
         ...state,
@@ -114,12 +116,12 @@ const reducer = (state = initialState, action) => {
           ...newElements,
         ],
         completedNodes: [
-          ...updatedCompletedNodes
+          ...updatedCompletedNodes,
         ],
       };
     }
     case FETCH_COMPLETED_NODES_SUCCESS: {
-      const updatedElements = updateCompletedNodes(state.elements, action.payload.completedNodes)
+      const updatedElements = updateCompletedNodes(state.elements, action.payload.completedNodes);
       return {
         ...state,
         elements: [...updatedElements],
