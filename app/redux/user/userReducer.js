@@ -6,9 +6,13 @@ const reducer = (state = initialState, action) => {
     case FETCH_USER_DATA_SUCCESS: {
       return {
         ...state,
-        graphsContent: action.payload.graphs_created,
+        graphsCreated: action.payload.graphs_created,
+        graphsProgressing: action.payload.graphs_progressing,
         likedContent: action.payload.likedContent,
         username: action.payload.username,
+        achievements: action.payload.achievements,
+        badges: action.payload.badges,
+        completedNodeCount: action.payload.completedNodeCount,
       };
     }
 

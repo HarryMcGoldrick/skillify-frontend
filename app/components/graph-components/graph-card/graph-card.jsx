@@ -6,22 +6,22 @@ import { getUserInfo } from '../../../services/user-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-      display: 'flex',
-      width: '600px',
-      height: '100%',
-    },
-    details: {
-      display: 'flex',
-      flexDirection: 'column',
-      width: '300px'
-    },
-    content: {
-      flex: '1 0 auto',
-    },
-    cover: {
-      width: '100%',
-      height: '150px'
-    },
+    display: 'flex',
+    width: '600px',
+    height: '100%',
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '300px',
+  },
+  content: {
+    flex: '1 0 auto',
+  },
+  cover: {
+    width: '100%',
+    height: '150px',
+  },
 }));
 
 const GraphCard = (props) => {
@@ -41,13 +41,12 @@ const GraphCard = (props) => {
   // }, [userId]);
 
   function truncateString(phrase, length) {
-    if (phrase.length < length) return phrase
-      else {
-        let trimmed = phrase.slice(0, length)
-        trimmed = trimmed.slice(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')))
-        return trimmed + '…'
-      }
-    }
+    if (phrase.length < length) return phrase;
+
+    let trimmed = phrase.slice(0, length);
+    trimmed = trimmed.slice(0, Math.min(trimmed.length, trimmed.lastIndexOf(' ')));
+    return `${trimmed}…`;
+  }
 
   return (
     <div>
@@ -69,14 +68,14 @@ const GraphCard = (props) => {
 
             </CardContent>
           </div>
-            <CardMedia
-              className={classes.cover}
-              image={image || 'no image found'}
-            />
+          <CardMedia
+            className={classes.cover}
+            image={image || 'no image found'}
+          />
         </Card>
       )}
-  </div>
-  )
+    </div>
+  );
 };
 
 export default GraphCard;

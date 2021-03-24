@@ -1,4 +1,8 @@
 export const initialState = {
-    username: '',
-    likedContent: [],
-}
+  username: '',
+  likedContent: [],
+  achievements: [],
+  graphsCreated: [],
+  badges: [],
+  completedNodeCount: 0,
+};

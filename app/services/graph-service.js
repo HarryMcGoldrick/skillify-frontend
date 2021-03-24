@@ -1,10 +1,12 @@
 import 'regenerator-runtime/runtime';
-import axios from '../utils/axios';
 import qs from 'qs';
+import axios from '../utils/axios';
 
 const baseUrl = 'http://localhost:3000/graph';
 
-export const createNewGraph = (name, description, userId, tags) => axios.post(`${baseUrl}/create`, { name, description, userId, tags }).then((res) => res.data);
+export const createNewGraph = (name, description, userId, tags) => axios.post(`${baseUrl}/create`, {
+  name, description, userId, tags,
+}).then((res) => res.data);
 
 export const loadGraphElements = async (id) => axios.get(`${baseUrl}/${id}`).then((res) => res.data);
 
@@ -19,10 +21,14 @@ export const fetchGraphStyle = async (id) => axios.get(`${baseUrl}/${id}/style`)
 
 export const sendGraphDataForImage = async (id, elements) => axios.post(`${baseUrl}/${id}/image`, { elements }).then((res) => res.data);
 
-export const getGraphViews = async (name, tags, page, pageSize) => axios.get(`${baseUrl}/views`, { params: {name, tags, page, pageSize},
-  paramsSerializer: params => {
-    return qs.stringify(params, {indices: false, arrayFormat: 'brackets'})
-}}).then((res) => res.data);
+export const getGraphViews = async (name, tags, page, pageSize) => axios.get(`${baseUrl}/views`, {
+  params: {
+    name, tags, page, pageSize,
+  },
+  paramsSerializer: (params) => qs.stringify(params, { indices: false, arrayFormat: 'brackets' }),
+}).then((res) => res.data);
+
+export const getMultipleGraphViews = async (graphIds) => axios.post(`${baseUrl}/views`, { graphIds }).then((res) => res.data);
 
 export const addGraphToGraphProgress = async (graphId, userId) => axios.post(`${baseUrl}/progress`, { graphId, userId }).then((res) => res.data);
 

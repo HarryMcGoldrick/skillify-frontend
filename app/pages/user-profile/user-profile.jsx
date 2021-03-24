@@ -9,7 +9,7 @@ function UserProfile() {
       container
       direction="row"
       justify="center"
-      style={{ marginLeft: '700px', marginTop: '50px' }}
+      style={{ marginLeft: '600px', marginTop: '50px' }}
       spacing={8}
     >
       <Grid item xs={2}>

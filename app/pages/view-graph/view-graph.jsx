@@ -5,7 +5,7 @@ const ViewGraph = (props) => {
   const viewOnly = true;
 
   return (
-   <GraphPage viewOnly={viewOnly}></GraphPage>
+    <GraphPage viewOnly={viewOnly} />
   );
 };
 

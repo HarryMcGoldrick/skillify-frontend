@@ -3,15 +3,14 @@ import axios from '../utils/axios';
 
 const baseUrl = 'http://localhost:3000/content';
 
-
 // eslint-disable-next-line import/prefer-default-export
-export const getYoutubeVideoForNode = async (searchQuery) => axios.get(`/content/youtube?searchQuery=${searchQuery}`).then(res => res.data);
+export const getYoutubeVideoForNode = async (searchQuery) => axios.get(`/content/youtube?searchQuery=${searchQuery}`).then((res) => res.data);
 
-export const getGoogleBooksForNode = async (searchQuery) => axios.get(`/content/googlebooks?searchQuery=${searchQuery}`).then(res => res.data);
+export const getGoogleBooksForNode = async (searchQuery) => axios.get(`/content/googlebooks?searchQuery=${searchQuery}`).then((res) => res.data);
 
-export const getDataFromYoutubeId = async (videoId) => axios.get(`${baseUrl}/youtube/${videoId}`).then(res => res.data);
+export const getDataFromYoutubeId = async (videoId) => axios.get(`${baseUrl}/youtube/${videoId}`).then((res) => res.data);
 
-export const getDataFromGoogleBooksId = async (volumeId) => axios.get(`${baseUrl}/googlebooks/${volumeId}`).then(res => res.data);
+export const getDataFromGoogleBooksId = async (volumeId) => axios.get(`${baseUrl}/googlebooks/${volumeId}`).then((res) => res.data);
 
 export const addContent = async (nodeId, content) => axios.post(`${baseUrl}`, { nodeId, content }).then((res) => res.data);
 

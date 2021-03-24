@@ -60,7 +60,6 @@ function NodeAppearance(props) {
       } else {
         convertToDataURLviaCanvas(URL.createObjectURL(img), (base64Img) => {
           setImage(base64Img);
-          console.log(base64Img);
         });
       }
     }

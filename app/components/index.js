@@ -22,6 +22,7 @@ export { default as UserData } from './user-components/user-data/user-data';
 export { default as UserProfileData } from './user-components/user-profile-details/user-profile-details';
 export { default as UserGraphDetails } from './user-components/user-graph-details/user-graph-details';
 export { default as UserRewardsDetails } from './user-components/user-rewards-details/user-rewards-details';
+export { default as UserAchievements } from './user-components/user-achievements/user-achievements';
 
 // Misc components
 export { default as LoginForm } from './login-form/login-form';

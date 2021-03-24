@@ -1,7 +1,10 @@
 import {
-  Grid, makeStyles, Paper, Typography,
+  Grid, ListItem, makeStyles, Paper, Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import GraphCard from '../../graph-components/graph-card/graph-card';
+import { getMultipleGraphViews } from '../../../services/graph-service';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -13,9 +16,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function UserGraphDetails() {
+function UserGraphDetails(props) {
   const classes = useStyles();
+  const { graphsCreated, graphsProgressing } = props;
+  const [graphCreatedList, setGraphCreatedList] = useState([]);
+  const [graphProgressingList, setGraphProgressingList] = useState([]);
 
+  useEffect(() => {
+    if (graphsCreated && graphsProgressing) {
+      getMultipleGraphViews(graphsCreated).then((data) => {
+        if (data.graphViews) {
+          setGraphCreatedList(data.graphViews);
+        }
+      });
+
+      getMultipleGraphViews([...graphsProgressing.map((graph) => graph._id)]).then((data) => {
+        setGraphProgressingList(data.graphViews);
+      });
+    }
+  }, [props]);
   return (
     <Paper className={classes.paper}>
       <Grid container>
@@ -29,16 +48,22 @@ function UserGraphDetails() {
           direction="row"
           justify="center"
           alignItems="center"
+          align="center"
         >
-          <Grid item xs={4}>
-            <img className={classes.img} />
-          </Grid>
-          <Grid item xs={4}>
-            <img className={classes.img} />
-          </Grid>
-          <Grid item xs={3}>
-            <img className={classes.img} />
-          </Grid>
+          {graphCreatedList.map((graph) => {
+            if (!graph.id || !graph.name) {
+              return undefined;
+            }
+            const { id } = graph;
+            return (
+
+              <ListItemLink key={id} href={`/view/${id}`}>
+                <Grid item xs={12}>
+                  <GraphCard graph={graph} />
+                </Grid>
+              </ListItemLink>
+            );
+          })}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" component="h5">
@@ -50,20 +75,36 @@ function UserGraphDetails() {
           direction="row"
           justify="center"
           alignItems="center"
+          align="center"
         >
-          <Grid item xs={4}>
-            <img className={classes.img} />
-          </Grid>
-          <Grid item xs={4}>
-            <img className={classes.img} />
-          </Grid>
-          <Grid item xs={3}>
-            <img className={classes.img} />
-          </Grid>
+          {graphProgressingList.map((graph) => {
+            if (!graph.id || !graph.name) {
+              return undefined;
+            }
+            const { id } = graph;
+            return (
+
+              <ListItemLink key={id} href={`/view/${id}`}>
+                <Grid item xs={12}>
+                  <GraphCard graph={graph} />
+                </Grid>
+              </ListItemLink>
+            );
+          })}
         </Grid>
       </Grid>
     </Paper>
   );
 }
 
-export default UserGraphDetails;
+// Creates a linkable ListItem
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
+
+const mapStateToProps = (state) => ({
+  graphsCreated: state.user.graphsCreated,
+  graphsProgressing: state.user.graphsProgressing,
+});
+
+export default connect(mapStateToProps)(UserGraphDetails);

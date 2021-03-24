@@ -1,8 +1,11 @@
 import {
-  Avatar, Chip, Grid, IconButton, makeStyles, Paper, Typography,
+  Avatar, Button, Chip, Grid, IconButton, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { getUserImage, uploadUserImage } from '../../../services/user-service';
+import { getUserId } from '../../../utils/authentication';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -23,21 +26,96 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function UserProfileDetails() {
+function UserProfileDetails(props) {
   const classes = useStyles();
+  const {
+    username, achievements, badges, graphsCreated, completedNodeCount,
+  } = props;
+
+  const [userImage, setUserImage] = useState();
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState(undefined);
+
+  useEffect(() => {
+    getUserImage(getUserId()).then((data) => {
+      if (data.image) {
+        setUserImage(data.image);
+      }
+    });
+  }, []);
+
+  function convertToDataURLviaCanvas(url, callback, outputFormat) {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function () {
+      let canvas = document.createElement('CANVAS');
+      const ctx = canvas.getContext('2d');
+      let dataURL;
+      canvas.height = 200;
+      canvas.width = 200;
+      ctx.drawImage(this, 0, 0);
+      dataURL = canvas.toDataURL(outputFormat);
+      callback(dataURL);
+      canvas = null;
+    };
+    img.src = url;
+  }
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const img = event.target.files[0];
+      const fileType = img.type;
+      const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+      if (!validImageTypes.includes(fileType)) {
+        setUserImage(null);
+      } else {
+        setIsUploading(true);
+        convertToDataURLviaCanvas(URL.createObjectURL(img), (base64Img) => {
+          setUserImage(base64Img);
+        });
+      }
+    }
+  };
+
+  const uploadImage = () => {
+    uploadUserImage(getUserId(), userImage).then((data) => {
+      if (data.success) {
+        setUploadStatus('Successful');
+      } else {
+        setUploadStatus('unSuccessful');
+      }
+      setTimeout(() => {
+        setUploadStatus(undefined);
+      }, 2000);
+      setIsUploading(false);
+    });
+  };
+
   return (
     <Paper>
       <Grid container direction="column" alignItems="center">
         <Grid item xs={12}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.avatar} />
+          <Avatar alt="Remy Sharp" src={userImage} className={classes.avatar} style={{ objectFit: 'fill' }} />
         </Grid>
         <Grid item xs={12}>
-          <IconButton>
-            <Publish />
-          </IconButton>
+          {uploadStatus && (
+          <p>{uploadStatus}</p>
+          )}
+          <input accept="image/*" id="icon-button-file" type="file" hidden onChange={onImageChange} />
+          <label htmlFor="icon-button-file">
+            Upload Image
+            <IconButton color="primary" className={classes.button} component="span">
+              <Publish />
+            </IconButton>
+          </label>
+          {isUploading && (
+          <Button onClick={uploadImage}>
+            Confirm
+          </Button>
+          )}
         </Grid>
-        <Grid item xs={12}>
-          <Chip label="Basic" variant="outlined" />
+        <Grid item xs={8}>
+          {badges.map((badge) => <Chip label={badge.name} key={badge._id} variant="outlined" style={{ backgroundColor: badge.color, color: 'white' }} />)}
         </Grid>
       </Grid>
       <Grid container direction="column">
@@ -52,12 +130,9 @@ function UserProfileDetails() {
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            User Name
-          </Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.details}>
-          <Typography component="h6" variant="h6">
-            Account age
+            Username:
+            {' '}
+            {username}
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.hr}>
@@ -71,17 +146,22 @@ function UserProfileDetails() {
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            Maps Completed
+            {/* TODO */}
+            Maps Completed: 0
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            Nodes Completed
+            Nodes Completed:
+            {' '}
+            {completedNodeCount}
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            Maps Created
+            Maps Created:
+            {' '}
+            {graphsCreated.length}
           </Typography>
           <br />
         </Grid>
@@ -96,12 +176,16 @@ function UserProfileDetails() {
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            Achievements Completed
+            Achievements Completed:
+            {' '}
+            {achievements.length}
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.details}>
           <Typography component="h6" variant="h6">
-            Badges Earned
+            Badges Earned:
+            {' '}
+            {badges.length}
           </Typography>
           <br />
         </Grid>
@@ -110,4 +194,12 @@ function UserProfileDetails() {
   );
 }
 
-export default UserProfileDetails;
+const mapStateToProps = (state) => ({
+  username: state.user.username,
+  achievements: state.user.achievements,
+  badges: state.user.badges,
+  graphsCreated: state.user.graphsCreated,
+  completedNodeCount: state.user.completedNodeCount,
+});
+
+export default connect(mapStateToProps)(UserProfileDetails);

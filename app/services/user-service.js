@@ -12,3 +12,7 @@ export const getUserInfo = (userId) => axios.get(`${baseUrl}/${userId}/userinfo`
 export const getUserProgressInfo = (userId, graphId) => axios.post(`${baseUrl}/progress`, { userId, graphId }).then((res) => res.data);
 
 export const updateLikedContent = async (userId, contentId) => axios.post(`${baseUrl}/content`, { userId, contentId }).then((res) => res.data);
+
+export const uploadUserImage = async (userId, image) => axios.post(`${baseUrl}/image`, { userId, image }).then((res) => res.data);
+
+export const getUserImage = async (userId) => axios.get(`${baseUrl}/${userId}/image`).then((res) => res.data);

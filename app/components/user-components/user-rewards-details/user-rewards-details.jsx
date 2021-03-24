@@ -1,20 +1,34 @@
 import {
   Avatar, Grid, makeStyles, Paper, Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fab from '@material-ui/core/Fab';
+import { getAchievementObjects } from '../../../services/achievement-service';
 
 const useStyles = makeStyles(() => ({
   paper: {
     padding: 16,
   },
   avatar: {
-    width: 200,
-    height: 200,
+    width: 80,
+    height: 80,
   },
 }));
 
-function UserRewardsDetails() {
+function UserRewardsDetails(props) {
   const classes = useStyles();
+  const { achievements } = props;
+  const [achievementObjs, setAchievementObjs] = useState([]);
+
+  useEffect(() => {
+    getAchievementObjects(achievements).then((data) => {
+      if (data.length > 0) {
+        setAchievementObjs(data);
+      }
+    });
+  }, [props]);
 
   return (
     <Paper className={classes.paper}>
@@ -28,28 +42,26 @@ function UserRewardsDetails() {
         direction="row"
         justify="center"
         alignItems="center"
+        align="center"
+        style={{ marginTop: 25 }}
       >
-        <Grid item xs={4}>
-          <img className={classes.avatar} />
-        </Grid>
-        <Grid item xs={4}>
-          <img className={classes.avatar} />
-        </Grid>
-        <Grid item xs={3}>
-          <img className={classes.avatar} />
-        </Grid>
-        <Grid item xs={4}>
-          <img className={classes.avatar} />
-        </Grid>
-        <Grid item xs={4}>
-          <img className={classes.avatar} />
-        </Grid>
-        <Grid item xs={3}>
-          <img className={classes.avatar} />
-        </Grid>
+
+        {achievementObjs.map((obj, index) => (
+          <Grid item xs={4} key={obj._id}>
+            <Tooltip title={<span style={{ fontSize: 16 }}>{obj.name}</span>} arrow>
+              <Fab color="primary">
+                <img className={classes.avatar} alt="achievement" src={obj.image} />
+              </Fab>
+            </Tooltip>
+          </Grid>
+        ))}
       </Grid>
     </Paper>
   );
 }
 
-export default UserRewardsDetails;
+const mapStateToProps = (state) => ({
+  achievements: state.user.achievements,
+});
+
+export default connect(mapStateToProps)(UserRewardsDetails);
