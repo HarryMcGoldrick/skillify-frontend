@@ -11,17 +11,21 @@ import {
 } from '@material-ui/core';
 import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router-dom';
+import dagre from 'cytoscape-dagre';
+import cytoscape from 'cytoscape';
+import { connect } from 'react-redux';
+import { useSnackbar } from 'notistack';
 import { tools } from '../../../enums/tools';
 import { layouts } from '../../../enums/layouts';
 import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../../services/graph-service';
 import extractDiagramDataFromGraphData from '../../../utils/graph-data';
 import { getUserInfo } from '../../../services/user-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
-import dagre from 'cytoscape-dagre';
-import cytoscape from 'cytoscape';
-import { connect } from 'react-redux';
-import { addNode, removeNode, selectNode, toggleGraphDetails, updateElements } from '../../../redux/graph/graphActions';
-
+import {
+  addNode, removeNode, selectNode, toggleGraphDetails, updateElements,
+} from '../../../redux/graph/graphActions';
+import { nodeType } from '../../../enums/nodeTypes';
+import { checkValidAddTarget, checkValidDeleteTarget } from '../../../utils/node-utils';
 
 // Displays icons to select the relevant graph tool
 
@@ -33,30 +37,31 @@ const useStyles = makeStyles((theme) => ({
 
 const GraphToolbar = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [addAnchorEl, setAddAnchorEl] = useState(null);
   const [selectedLayout, setSelectedLayout] = useState({});
   const [isUserCreatedMap, setIsUserCreatedMap] = useState(false);
   const {
-    cy, viewOnly, addNode, selectNode, removeNode, toggleGraphDetails, updateElements
+    cy, viewOnly, addNode, selectNode, removeNode, toggleGraphDetails, updateElements,
   } = props;
 
   const classes = useStyles();
   const history = useHistory();
   const { id: graphId } = useParams();
-
+  const { enqueueSnackbar } = useSnackbar();
 
   const initLayouts = () => {
-    cytoscape.use(dagre)
-  }
+    cytoscape.use(dagre);
+  };
 
   const runLayout = () => {
     if (selectedLayout) {
       const layout = cy.layout({ name: selectedLayout });
       // Ensure element state is set before layout so it can be undone
-      updateElements(cy.json(true).elements)
+      updateElements(cy.json(true).elements);
       layout.run();
       layout.one('layoutstop', () => {
-        updateElements(cy.json(true).elements)
-        });
+        updateElements(cy.json(true).elements);
+      });
       cy.fit();
     }
   };
@@ -89,10 +94,15 @@ const GraphToolbar = (props) => {
   };
 
   // Adds a node onto the graph
-  const addNodeTool = () => {
+  const addNodeTool = (nodeType) => {
     cy.on('tap', (event) => {
       if (event.target === cy) {
-        addNode(event.position);
+        const validAdd = checkValidAddTarget(cy, nodeType);
+        if (validAdd === true) {
+          addNode(event.position, nodeType);
+        } else {
+          enqueueSnackbar(validAdd.error);
+        }
       }
     });
   };
@@ -101,13 +111,18 @@ const GraphToolbar = (props) => {
   const deleteNodeAndEdgeTool = () => {
     cy.on('tap', (event) => {
       if (event.target !== cy) {
-        removeNode(event.target.data().id);
+        const validDelete = checkValidDeleteTarget(cy, event.target.data());
+        if (validDelete === true) {
+          removeNode(event.target.data().id);
+        } else {
+          enqueueSnackbar(validDelete.error);
+        }
       }
     });
   };
 
   // Used to remove listeners and switch tools
-  const switchTool = (tool) => {
+  const switchTool = (tool, nodeType) => {
     // Remove previous tools
     removeListeners();
 
@@ -116,7 +131,7 @@ const GraphToolbar = (props) => {
         selectNodeTool();
         break;
       case tools.ADD:
-        addNodeTool();
+        addNodeTool(nodeType);
         break;
       case tools.DELETE:
         deleteNodeAndEdgeTool();
@@ -126,10 +141,19 @@ const GraphToolbar = (props) => {
     }
   };
 
+  const addHandleClick = (event) => {
+    setAddAnchorEl(event.currentTarget);
+  };
+
+  const addHandleClose = (nodeType) => {
+    setAddAnchorEl(null);
+    switchTool(tools.ADD, nodeType);
+  };
+
   // Saves the changes made to a graph
   const updateData = () => {
     updateGraphElements(graphId, extractDiagramDataFromGraphData(cy.json()));
-    updateGraphStyle(graphId, cy.json().style)
+    updateGraphStyle(graphId, cy.json().style);
     sendGraphDataForImage(graphId, cy.json());
   };
 
@@ -205,15 +229,21 @@ const GraphToolbar = (props) => {
           >
             Select
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            startIcon={<AddCircleIcon />}
-            onClick={() => switchTool(tools.ADD)}
-          >
-            Add
+          <Button variant="contained" color="primary" aria-haspopup="true" onClick={addHandleClick} startIcon={<ExpandMore />}>
+            Nodes
           </Button>
+          <Menu
+            anchorEl={addAnchorEl}
+            keepMounted
+            open={Boolean(addAnchorEl)}
+            onClose={handleClose}
+            color="primary"
+          >
+            <MenuItem onClick={() => addHandleClose(nodeType.STANDARD)}>Standard Node</MenuItem>
+            <MenuItem onClick={() => addHandleClose(nodeType.ROOT)}>Start Node</MenuItem>
+            <MenuItem onClick={() => addHandleClose(nodeType.COLLECTION)}>Collection</MenuItem>
+
+          </Menu>
           <Button
             variant="contained"
             color="primary"
@@ -253,15 +283,11 @@ const GraphToolbar = (props) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  addNode: (pos) => dispatch(addNode(pos)),
+  addNode: (pos, type) => dispatch(addNode(pos, type)),
   removeNode: (id) => dispatch(removeNode(id)),
   toggleGraphDetails: () => dispatch(toggleGraphDetails()),
   selectNode: (node) => dispatch(selectNode(node)),
   updateElements: (elements) => dispatch(updateElements(elements)),
-})
-
-
+});
 
 export default connect(null, mapDispatchToProps)(GraphToolbar);
-
-

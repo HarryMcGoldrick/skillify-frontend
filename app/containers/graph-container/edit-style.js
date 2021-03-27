@@ -2,6 +2,32 @@
 
 const style = [
   {
+    selector: 'node[type = "ROOT"]',
+    style: {
+      content: 'data(label)',
+      'border-width': '2',
+      'border-color': 'green',
+    },
+  },
+  {
+    selector: '.completed',
+    style: {
+      'background-color': 'red',
+    },
+  },
+  {
+    selector: '.locked',
+    style: {
+      'background-blacken': 0.7,
+    },
+  },
+  {
+    selector: '.unlocked',
+    style: {
+      'background-blacken': 0.3,
+    },
+  },
+  {
     selector: 'node[label]',
     style: {
       content: 'data(label)',
@@ -15,19 +41,6 @@ const style = [
       'target-arrow-shape': 'triangle',
     },
   },
-  {
-    selector: '.completed',
-    style: {
-      'background-color': 'red',
-    },
-  },
-  {
-    selector: '.triangle',
-    style: {
-      shape: 'triangle',
-    },
-  },
-
   {
     selector: '.eh-handle',
     style: {

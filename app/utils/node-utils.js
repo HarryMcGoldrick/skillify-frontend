@@ -1,4 +1,4 @@
-import { node } from "prop-types";
+import { nodeType } from '../enums/nodeTypes';
 
 export const updateNodeData = (node, data) => {
   Object.entries(data).forEach((entry) => {
@@ -7,29 +7,32 @@ export const updateNodeData = (node, data) => {
   });
 };
 
-export const addToCompleted = (node) => {
-  return {
-    ...node,
-    classes: 'completed'
+export const addToCompleted = (node) => ({
+  ...node,
+  classes: 'completed',
+});
+
+export const addToIncompleted = (node) => ({
+  ...node,
+  classes: 'incomplete',
+});
+
+export const addToUnlocked = (node) => ({
+  ...node,
+  classes: 'unlocked',
+});
+
+export const addToLocked = (node) => ({
+  ...node,
+  classes: 'locked',
+});
+
+export const removeProperty = (objToRemoveFrom, property) => Object.keys(objToRemoveFrom).reduce((object, key) => {
+  if (key !== property) {
+    object[key] = objToRemoveFrom[key];
   }
-};
-
-export const addToIncompleted = (node) => {
-  return {
-    ...node,
-    classes: 'incomplete'
-  }
-};
-
-
-export const removeProperty = (objToRemoveFrom, property) => {
-  return Object.keys(objToRemoveFrom).reduce((object, key) => {
-    if (key !== property) {
-      object[key] = objToRemoveFrom[key]
-    }
-    return object
-  }, {})
-}
+  return object;
+}, {});
 
 export const findNodeInElements = (elements, nodeId) => {
   const node = elements.filter((element) => {
@@ -38,65 +41,74 @@ export const findNodeInElements = (elements, nodeId) => {
     }
   }).pop();
   return node;
-}
-
+};
 
 export const updateCompletedNodes = (elements, completedNodeIds) => {
   const updatedElements = elements.map((ele) => {
     if (completedNodeIds.includes(ele.data.id)) {
       return addToCompleted(ele);
-    } else {
-      return ele;
     }
-  })
+    return ele;
+  });
   return updatedElements;
-}
+};
 
 export const checkIsNode = (element) => {
-  if (!element.source) {
-    return true;
-  } else {
+  if (element.data) {
+    if (!element.data.source) {
+      return true;
+    }
     return false;
   }
-}
+  return false;
+};
 
 export const removeItemFromArray = (array, item) => array.filter((f) => f !== item);
 
 // ******************** Cytoscape helper methods ********************
 // only to used when having access to cy
 
+export const checkValidDeleteTarget = (cy, nodeData) => {
+  if (nodeData.type === nodeType.ROOT) {
+    const rootedNodes = cy.elements(`node[type = "${nodeType.ROOT}"]`);
+    if (rootedNodes.length > 1) {
+      return true;
+    }
+    return { error: 'Map needs to have 1 start node.' };
+  }
+  return true;
+};
+
+export const checkValidAddTarget = (cy, type) => {
+  if (type === nodeType.ROOT) {
+    const rootedNodes = cy.elements(`node[type = "${nodeType.ROOT}"]`);
+    if (rootedNodes.length >= 1) {
+      return { error: 'Map may only have 1 start node' };
+    }
+    return true;
+  }
+  return true;
+};
+
 // Return node element with a given Id
 export const getNodeWithId = (cy, id) => cy.elements(`node[id = "${id}"]`)[0];
 
+export const getStartNode = (cy) => cy.elements('node[type = "ROOT"]')[0];
+
 // Given a collection of elements returns an array of node data
 export const getNodesFromElementCollection = (nodes) => {
-  let nodeArray = [];
-  for (let node of nodes) {
-    if(checkIsNode(node.data())) nodeArray.push(node.data());
+  const nodeArray = [];
+  for (const node of nodes) {
+    if (checkIsNode(node)) nodeArray.push(node.data());
   }
   return nodeArray;
-}
-
-export const cytoscapeBreadthFirstSearch = (cy, startNode, targetNode) => {
-  const bfs = cy.elements().dfs({
-    roots: startNode,
-    visit: (v, e, u, i, depth) => {
-      console.log( 'visit ' + v.data('label') );
-      if(v.data('id') === targetNode.data('id')) {
-        return false
-      }
-    },
-    directed: true
-  })
-  console.log(bfs.path);
-  console.log(bfs.found);
-}
+};
 
 export const cytoscapeAstar = (cy, startNode, targetNode) => {
   const aStar = cy.elements().aStar({
     root: startNode,
     goal: targetNode,
-    directed: true
-  })
+    directed: true,
+  });
   return aStar;
-}
+};

@@ -4,20 +4,28 @@ import cytoscape from 'cytoscape';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import edgehandles from 'cytoscape-edgehandles';
+import { useSnackbar } from 'notistack';
 import editStyle from './edit-style';
 import { GraphToolbar } from '../../components';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
-import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, FETCH_STYLE_SHEET_REQUEST, } from '../../redux/graph/graphTypes';
-import { updateProgressMode, updateStyleSheet, updateSelectedNodePath } from '../../redux/graph/graphActions';
+import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, FETCH_STYLE_SHEET_REQUEST } from '../../redux/graph/graphTypes';
+import {
+  updateProgressMode, updateStyleSheet, updateSelectedNodePath, selectNode, updateNode,
+} from '../../redux/graph/graphActions';
 import viewOnlyStyle from './viewOnly-style';
-import { getNodeWithId } from '../../utils/graph-utils';
-import { cytoscapeAstar, getNodesFromElementCollection } from '../../utils/node-utils';
+import { getNodeWithId, updateProgressModeNodeClasses } from '../../utils/graph-utils';
+import { getNodesFromElementCollection, getStartNode } from '../../utils/node-utils';
 
 function GraphContainer(props) {
-  const { elements, viewOnly, selectedNode, updateProgressMode, updateSelectedNodePath } = props;
+  const {
+    elements, viewOnly, selectedNode, updateProgressMode,
+    updateSelectedNodePath, completedNodes, progressMode, selectNode,
+    updateNode,
+  } = props;
   let cyRef = useRef(null);
   const { id: graphId } = useParams();
   const [cy, setCy] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const initEditMode = () => {
     updateProgressMode(false);
@@ -34,7 +42,6 @@ function GraphContainer(props) {
     props.updateStyleSheet(viewOnlyStyle);
   };
 
-
   useEffect(() => {
     props.fetchGraphData(graphId);
     props.fetchStyleSheet(graphId);
@@ -50,8 +57,14 @@ function GraphContainer(props) {
 
   useEffect(() => {
     if (cy) {
-      // Enable configuration based on view mode 
-      viewOnly ? initViewMode() : initEditMode();
+      // Enable configuration based on view mode
+      if (progressMode) {
+        initViewMode();
+      } else if (!viewOnly) {
+        initEditMode();
+      } else {
+        initViewMode();
+      }
     }
   }, [cy]);
 
@@ -59,24 +72,36 @@ function GraphContainer(props) {
     // This useEffect hooks acts as an event handler for selectNode
     // Handles cytoscape events when node is selected
     if (cy && selectedNode.id) {
-      const node = getNodeWithId(cy, selectedNode.id)
+      const node = getNodeWithId(cy, selectedNode.id);
       // Unselect all prior nodes to prevent multiple selected nodes
-      cy.nodes().unselect()
+      cy.nodes().unselect();
       // Select current node to highlight it
-      node.select()
+      node.select();
       // Animate a smooth transition to center on that node
       cy.animate({
-        center: {eles: node},
-        zoom: 2
-      })
+        center: { eles: node },
+        zoom: progressMode ? 3 : 2,
+      });
 
       // Get the predecessors of the selected node and arrange them in top-bottom order
       const nodePred = node.predecessors('node');
       nodePred.unshift(node);
       nodePred.reverse();
-      updateSelectedNodePath(getNodesFromElementCollection(nodePred))
+      updateSelectedNodePath(getNodesFromElementCollection(nodePred));
     }
   }, [cy, selectedNode]);
+
+  useEffect(() => {
+    if (cy && props.progressMode) {
+      if (completedNodes.length === 0) {
+        // Select starting node.
+        enqueueSnackbar('Progress mode initiated');
+        selectNode(getStartNode(cy).data());
+      }
+      console.log('updating node classes');
+      updateProgressModeNodeClasses(cy, completedNodes, updateNode);
+    }
+  }, [cy, completedNodes, progressMode]);
 
   return (
     <div>
@@ -98,15 +123,19 @@ const mapStateToProps = (state) => ({
   selectedNode: state.graph.selectedNode,
   progressMode: state.graph.progressMode,
   styleSheet: state.graph.styleSheet,
+  completedNodes: state.graph.completedNodes,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchGraphData: (graphId) => dispatch({type: FETCH_GRAPH_REQUEST, payload: {graphId}}),
-  fetchStyleSheet: (graphId) => dispatch({type: FETCH_STYLE_SHEET_REQUEST, payload: {graphId}}),
-  fetchCompletedNodes: (userId, graphId) => dispatch({type: FETCH_COMPLETED_NODES_REQUEST, payload: {userId, graphId}}),
+  fetchGraphData: (graphId) => dispatch({ type: FETCH_GRAPH_REQUEST, payload: { graphId } }),
+  fetchStyleSheet: (graphId) => dispatch({ type: FETCH_STYLE_SHEET_REQUEST, payload: { graphId } }),
+  fetchCompletedNodes: (userId, graphId) => dispatch({ type: FETCH_COMPLETED_NODES_REQUEST, payload: { userId, graphId } }),
   updateProgressMode: (mode) => dispatch(updateProgressMode(mode)),
   updateStyleSheet: (styleSheet) => dispatch(updateStyleSheet(styleSheet)),
-  updateSelectedNodePath: (nodes) => dispatch(updateSelectedNodePath(nodes))
+  updateSelectedNodePath: (nodes) => dispatch(updateSelectedNodePath(nodes)),
+  selectNode: (node) => dispatch(selectNode(node)),
+  updateNode: (node) => dispatch(updateNode(node)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);

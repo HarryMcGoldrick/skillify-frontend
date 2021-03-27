@@ -7,9 +7,12 @@ export const selectNode = (node) => ({
   payload: node,
 });
 
-export const addNode = (pos) => {
+export const addNode = (pos, type) => {
   const newNode = {
-    data: {},
+    data: {
+      type,
+      label: 'New Node',
+    },
     position: pos,
   };
   return {
@@ -30,12 +33,12 @@ export const updateNode = (node) => ({
 
 export const addStyle = (styleElement) => ({
   type: ADD_STYLE,
-  payload: styleElement
+  payload: styleElement,
 });
 
 export const updateStyleSheet = (styleSheet) => ({
   type: UPDATE_STYLE_SHEET,
-  payload: styleSheet
+  payload: styleSheet,
 });
 
 export const updateElements = (elements) => ({
@@ -54,16 +57,15 @@ export const updateProgressMode = (mode) => ({
 
 export const addNodeToCompletedNodes = (nodeId) => ({
   type: ADD_COMPLETED_NODE,
-  payload: nodeId
-})
+  payload: nodeId,
+});
 
 export const removeNodeFromCompletedNodes = (nodeId) => ({
   type: REMOVE_COMPLETED_NODE,
-  payload: nodeId
-})
+  payload: nodeId,
+});
 
 export const updateSelectedNodePath = (nodes) => ({
   type: UPDATE_SELECTED_NODE_PATH,
-  payload: nodes
-})
-
+  payload: nodes,
+});
