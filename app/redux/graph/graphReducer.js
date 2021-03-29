@@ -35,11 +35,19 @@ const reducer = (state = initialState, action) => {
       };
     }
     case UPDATE_NODE: {
-      const elements = state.elements.filter((ele) => ele.data.id !== action.payload.id);
+      let node;
+      const elements = state.elements.filter((ele) => {
+        if (ele.data.id === action.payload.data.id) {
+          node = ele;
+        }
+        return ele.data.id !== action.payload.data.id;
+      });
       const newNode = {
         data: {
-          ...action.payload,
+          ...action.payload.data,
         },
+        classes: action.payload.classes,
+        position: node.position,
       };
       return {
         ...state,
@@ -87,7 +95,7 @@ const reducer = (state = initialState, action) => {
     case ADD_COMPLETED_NODE: {
       const node = findNodeInElements(state.elements, action.payload);
       const newElements = state.elements.filter((ele) => ele.data.id !== action.payload);
-      const completedNode = addToCompleted(node);
+      const completedNode = addToCompleted(node.data);
 
       return {
         ...state,
@@ -104,7 +112,7 @@ const reducer = (state = initialState, action) => {
     case REMOVE_COMPLETED_NODE: {
       const newElements = state.elements.map((ele) => {
         if (ele.data.id === action.payload) {
-          return addToIncompleted(ele);
+          return addToIncompleted(ele.data);
         }
         return ele;
       });

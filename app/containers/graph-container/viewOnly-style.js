@@ -16,7 +16,9 @@ const style = [
   {
     selector: '.completed',
     style: {
-      'background-color': 'red',
+      'background-color': 'green',
+      'line-color': 'green',
+      'target-arrow-color': 'green',
     },
   },
   {
@@ -29,6 +31,8 @@ const style = [
     selector: '.unlocked',
     style: {
       'background-blacken': 0.3,
+      'line-color': 'blue',
+      'target-arrow-color': 'blue',
     },
   },
   {

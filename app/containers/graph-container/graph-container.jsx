@@ -98,7 +98,6 @@ function GraphContainer(props) {
         enqueueSnackbar('Progress mode initiated');
         selectNode(getStartNode(cy).data());
       }
-      console.log('updating node classes');
       updateProgressModeNodeClasses(cy, completedNodes, updateNode);
     }
   }, [cy, completedNodes, progressMode]);

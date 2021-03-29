@@ -58,9 +58,14 @@ const GraphDetails = (props) => {
         )}
       </div>
       <ul className={classes.nodeList}>
-        {elements.map((ele, index) => {
+        {elements.map((ele) => {
           if (checkIsNode(ele)) {
-            return <NodeCard node={ele} key={ele.data.id} />;
+            if (progressMode && ele.classes === 'unlocked') {
+              return <NodeCard node={ele} key={ele.data.id} />;
+            }
+            if (!progressMode) {
+              return <NodeCard node={ele} key={ele.data.id} />;
+            }
           }
           return null;
         })}

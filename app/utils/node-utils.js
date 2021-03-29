@@ -8,22 +8,30 @@ export const updateNodeData = (node, data) => {
 };
 
 export const addToCompleted = (node) => ({
-  ...node,
+  data: {
+    ...node,
+  },
   classes: 'completed',
 });
 
 export const addToIncompleted = (node) => ({
-  ...node,
+  data: {
+    ...node,
+  },
   classes: 'incomplete',
 });
 
 export const addToUnlocked = (node) => ({
-  ...node,
+  data: {
+    ...node,
+  },
   classes: 'unlocked',
 });
 
 export const addToLocked = (node) => ({
-  ...node,
+  data: {
+    ...node,
+  },
   classes: 'locked',
 });
 
@@ -46,7 +54,7 @@ export const findNodeInElements = (elements, nodeId) => {
 export const updateCompletedNodes = (elements, completedNodeIds) => {
   const updatedElements = elements.map((ele) => {
     if (completedNodeIds.includes(ele.data.id)) {
-      return addToCompleted(ele);
+      return addToCompleted(ele.data);
     }
     return ele;
   });

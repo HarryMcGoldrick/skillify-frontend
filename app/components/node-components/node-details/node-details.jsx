@@ -35,8 +35,10 @@ const NodeDetails = (props) => {
   const onSubmit = (data) => {
     setEditMode(false);
     props.updateNode({
-      ...selectedNode,
-      ...data,
+      data: {
+        ...selectedNode,
+        ...data,
+      },
     });
   };
 

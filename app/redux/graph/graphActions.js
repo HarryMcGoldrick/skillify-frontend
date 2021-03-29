@@ -28,7 +28,10 @@ export const removeNode = (id) => ({
 
 export const updateNode = (node) => ({
   type: UPDATE_NODE,
-  payload: node,
+  payload: {
+    data: node.data,
+    classes: node.classes,
+  },
 });
 
 export const addStyle = (styleElement) => ({
