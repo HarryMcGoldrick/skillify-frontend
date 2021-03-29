@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { connect } from 'react-redux';
-import { BlockPicker } from 'react-color';
+import { BlockPicker, CirclePicker, CompactPicker } from 'react-color';
 import { Autocomplete } from '@material-ui/lab';
-import { Button, TextField, Typography } from '@material-ui/core';
+import {
+  Button, Grid, makeStyles, TextField, Typography,
+} from '@material-ui/core';
 import { addStyle } from '../../../redux/graph/graphActions';
 import shape from '../../../enums/shapes';
 
+const useStyles = makeStyles((theme) => ({
+  columnItem: {
+    margin: 16,
+    width: 400,
+  },
+}));
+
 function NodeAppearance(props) {
+  const classes = useStyles();
+
   const { register, handleSubmit } = useForm();
   const [currentColor, setCurrentColor] = useState('#fff');
   const [selectedShape, setSelectedShape] = useState();
@@ -66,47 +77,66 @@ function NodeAppearance(props) {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(updateShape)}>
-        <BlockPicker
-          color={currentColor}
-          onChangeComplete={handleChangeComplete}
-          width="100%"
-        />
-        <Autocomplete
-          name="shapes"
-          id="shapes"
-          options={Object.values(shape)}
-          style={{ margin: 8 }}
-          getOptionLabel={(option) => option}
-          onChange={(event, value) => setSelectedShape(value)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Shape"
-              placeholder="Select Shape"
-            />
-          )}
-        />
-        <Button
-          variant="contained"
-          component="label"
-        >
-          Upload File
-          <input
-            accept="image/*"
-            type="file"
-            hidden
-            onChange={onImageChange}
+    <form onSubmit={handleSubmit(updateShape)}>
+      <Grid container direction="column" align="center" alignItems="center">
+        <Grid item xs={12}>
+          <CirclePicker
+            color={currentColor}
+            circleSize={40}
+            className={classes.columnItem}
+            onChangeComplete={handleChangeComplete}
           />
-        </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Autocomplete
+            name="shapes"
+            id="shapes"
+            options={Object.values(shape)}
+            style={{ margin: 8 }}
+            getOptionLabel={(option) => option}
+            onChange={(event, value) => setSelectedShape(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="Shape"
+                placeholder="Select Shape"
+              />
+            )}
+            className={classes.columnItem}
+          />
+        </Grid>
         {imageName && (
           <Typography component="span" style={{ marginLeft: '16px' }}>{imageName}</Typography>
         )}
-        <Button type="submit" fullWidth variant="contained" style={{ marginTop: 16 }}>Update Apperance</Button>
-      </form>
-    </div>
+        <Grid item xs={12}>
+
+          <Button
+            variant="contained"
+            component="label"
+            className={classes.columnItem}
+          >
+            Upload File
+            <input
+              accept="image/*"
+              type="file"
+              hidden
+              onChange={onImageChange}
+            />
+          </Button>
+        </Grid>
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          className={classes.columnItem}
+        >
+          Update Apperance
+
+        </Button>
+      </Grid>
+    </form>
   );
 }
 

@@ -21,11 +21,10 @@ const NodeDrawerPanel = (props) => {
     <div>
       {selectedNode.id && (
         <div>
-          <AppBar position="static" color="transparent">
-            <Tabs value={value} onChange={handleChange}>
+          <AppBar position="static" color="transparent" style={{ width: 500 }}>
+            <Tabs value={value} onChange={handleChange} variant="fullWidth">
               <Tab label="Details" />
               <Tab label="Learning" />
-              <Tab label="Appearance" />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
@@ -33,9 +32,6 @@ const NodeDrawerPanel = (props) => {
           </TabPanel>
           <TabPanel value={value} index={1}>
             <NodeLearningTab viewOnly={viewOnly} />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <NodeAppearance />
           </TabPanel>
         </div>
       )}

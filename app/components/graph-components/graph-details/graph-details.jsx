@@ -1,4 +1,4 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
@@ -6,7 +6,7 @@ import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { addGraphToGraphProgress } from '../../../services/graph-service';
 import { updateProgressMode } from '../../../redux/graph/graphActions';
 import { checkIsNode } from '../../../utils/node-utils';
-import { NodeCard } from '../..';
+import { NodeCard, NodeList } from '../..';
 
 const useStyles = makeStyles({
   container: {
@@ -15,9 +15,18 @@ const useStyles = makeStyles({
   },
   title: {
     textAlign: 'center',
+    marginTop: 16,
+  },
+  description: {
+    textOverflow: 'wrap',
+    margin: 16,
   },
   nodeList: {
     padding: 0,
+  },
+  listTitle: {
+    textAlign: 'center',
+    margin: 8,
   },
 });
 
@@ -41,10 +50,10 @@ const GraphDetails = (props) => {
   return (
     <>
       <div className={classes.container}>
-        <h3 className={classes.title}>
+        <Typography component="h4" variant="h4" className={classes.title}>
           {` ${name || ''}`}
-        </h3>
-        <p style={{ textOverflow: 'wrap' }}>{` ${description || ''}`}</p>
+        </Typography>
+        <Typography component="h5" variant="h5" className={classes.description}>{` ${description || ''}`}</Typography>
         <hr />
         {viewOnly && !progressMode && isAuthenticated() && (
         <Button
@@ -57,19 +66,16 @@ const GraphDetails = (props) => {
         </Button>
         )}
       </div>
-      <ul className={classes.nodeList}>
-        {elements.map((ele) => {
-          if (checkIsNode(ele)) {
-            if (progressMode && ele.classes === 'unlocked') {
-              return <NodeCard node={ele} key={ele.data.id} />;
-            }
-            if (!progressMode) {
-              return <NodeCard node={ele} key={ele.data.id} />;
-            }
-          }
-          return null;
-        })}
-      </ul>
+      {progressMode ? (
+        <Typography component="h6" variant="h6" className={classes.listTitle}>
+          Unlocked Nodes 🔓
+        </Typography>
+      ) : (
+        <Typography component="h6" variant="h6" className={classes.listTitle}>
+          Node List
+        </Typography>
+      )}
+      <NodeList elements={elements} progressMode={progressMode} />
       <div />
     </>
   );

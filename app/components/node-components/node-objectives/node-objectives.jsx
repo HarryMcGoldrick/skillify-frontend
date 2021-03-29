@@ -1,5 +1,5 @@
 import {
-  Checkbox, FormControlLabel, FormGroup, IconButton, TextField,
+  Checkbox, FormControlLabel, FormGroup, Grid, IconButton, makeStyles, TextField,
 } from '@material-ui/core';
 import { Add, Delete } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
@@ -7,8 +7,22 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { fetchObjectives, updateObjectives } from '../../../services/objective-service';
+import { NodeApperance, NodeLearningTab } from '../..';
+import nodeLearningTab from '../node-learning-tab/node-learning-tab';
+
+const useStyles = makeStyles((theme) => ({
+  emptyTask: {
+    margin: 8,
+  },
+  task: {
+    margin: 8,
+    fontSize: '32px !important',
+  },
+}));
 
 function NodeObjectives(props) {
+  const classes = useStyles();
+
   const { nodeData } = props;
   const [itemList, setItemList] = useState([]);
   const { register, handleSubmit } = useForm();
@@ -80,6 +94,7 @@ function NodeObjectives(props) {
               <FormControlLabel
                 control={<Checkbox checked={item.checked} onChange={toggleCheckBox} name={item.id.toString()} />}
                 label={item.label}
+                className={classes.task}
               />
               <IconButton color="primary" onClick={() => removeItem(item.id)} component="span">
                 <Delete />
@@ -88,11 +103,18 @@ function NodeObjectives(props) {
           ))
       }
       <form>
-        <IconButton color="primary" onClick={handleSubmit(addItem)} component="span">
-          <Add />
-        </IconButton>
-        <TextField name="itemLabel" placeholder="New Task" inputRef={register({ required: true })} />
+        <Grid container>
+          <Grid item xs={1}>
+            <IconButton color="primary" onClick={handleSubmit(addItem)} component="span">
+              <Add />
+            </IconButton>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField name="itemLabel" placeholder="New Task" inputRef={register({ required: true })} fullWidth className={classes.emptyTask} size="medium" />
+          </Grid>
+        </Grid>
       </form>
+
     </FormGroup>
   );
 }

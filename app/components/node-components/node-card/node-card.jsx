@@ -8,7 +8,7 @@ import { selectNode } from '../../../redux/graph/graphActions';
 const useStyles = makeStyles({
   root: {
     width: 350,
-    margin: 0
+    margin: 16,
   },
 });
 
@@ -16,7 +16,7 @@ const NodeCard = (props) => {
   const classes = useStyles();
   const { node } = props;
   const { label, description } = node.data;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <Card className={classes.root} onClick={() => dispatch(selectNode(node.data))}>

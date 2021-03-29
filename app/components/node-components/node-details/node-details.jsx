@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import {
-  Button, Grid, IconButton, makeStyles, TextField,
+  Button, Grid, IconButton, makeStyles, TextField, Typography,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useParams } from 'react-router-dom';
@@ -10,9 +10,22 @@ import { connect } from 'react-redux';
 import { addNodeToGraphProgress, removeNodeFromGraphProgress } from '../../../services/graph-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { addNodeToCompletedNodes, removeNodeFromCompletedNodes, updateNode } from '../../../redux/graph/graphActions';
-import { NodeObjectives } from '../..';
+import { NodeApperance, NodeList, NodeObjectives } from '../..';
+import lockedNode from '../../../assets/lockedNode.png';
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    textAlign: 'center',
+    margin: 8,
+  },
+  subtitle: {
+    marginLeft: 16,
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  description: {
+
+  },
   formInput: {
     padding: theme.spacing(1),
   },
@@ -28,7 +41,7 @@ const NodeDetails = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const {
-    cy, nodeData, progressMode, viewOnly, selectedNode, completedNodes,
+    nodeData, progressMode, viewOnly, selectedNode, completedNodes,
   } = props;
   const { id: graphId } = useParams();
 
@@ -76,63 +89,99 @@ const NodeDetails = (props) => {
 
   return (
     <>
-      {!viewOnly && (
-      <IconButton onClick={handleEdit} style={{ float: 'right' }}>
-        <CreateIcon />
-      </IconButton>
-      )}
-      {!editMode ? (
+      {!(progressMode && nodeData.classes && nodeData.classes === 'locked') ? (
         <>
-          {selectedNode.label && (
-          <p>
-            Name:
-            {' '}
-            {selectedNode.label}
-          </p>
+          {!viewOnly && (
+          <IconButton onClick={handleEdit} style={{ float: 'right' }}>
+            <CreateIcon />
+          </IconButton>
           )}
-          {selectedNode.description && (
-          <p>
-            Description:
-            {' '}
-            {selectedNode.description}
-          </p>
+          {!editMode ? (
+            <>
+              {selectedNode.label && (
+              <Typography variant="h4" component="h4" className={classes.title}>
+                {selectedNode.label}
+              </Typography>
+              )}
+              {selectedNode.description && (
+              <Typography variant="h5" component="h5">
+                {selectedNode.description}
+              </Typography>
+              )}
+              {!isComplete && progressMode && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => addNodeToProgress()}
+              >
+                Complete
+              </Button>
+              )}
+              {isComplete && progressMode && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => removeNodeFromProgress()}
+              >
+                Incomplete
+              </Button>
+              )}
+            </>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid item xs={12} className={classes.formInput}>
+                <TextField name="label" type="text" label="label" inputRef={register} />
+              </Grid>
+              <Grid item xs={12} className={classes.formInput}>
+                <TextField multiline type="text" name="description" label="description" inputRef={register} />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" className={classes.formSubmit}>Comfirm</Button>
+              </Grid>
+            </form>
           )}
-          {!isComplete && progressMode && (
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => addNodeToProgress()}
-            >
-              Complete
-            </Button>
-          )}
-          {isComplete && progressMode && (
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => removeNodeFromProgress()}
-            >
-              Incomplete
-            </Button>
+          {isAuthenticated() && (
+            <div>
+              <Typography variant="h5" component="h5" className={classes.subtitle}>
+                Objectives
+              </Typography>
+              <NodeObjectives nodeData={nodeData} />
+              <br />
+              <hr />
+            </div>
           )}
         </>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} className={classes.formInput}>
-            <TextField name="label" type="text" label="label" inputRef={register} />
-          </Grid>
-          <Grid item xs={12} className={classes.formInput}>
-            <TextField multiline type="text" name="description" label="description" inputRef={register} />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" className={classes.formSubmit}>Comfirm</Button>
-          </Grid>
-        </form>
+        <>
+          <img src={lockedNode} style={{ width: 400, height: 400 }} />
+          {progressMode && !isComplete && (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => addNodeToProgress()}
+          >
+            Complete Anyways?
+          </Button>
+          )}
+        </>
       )}
-      {isAuthenticated() && (<NodeObjectives nodeData={nodeData} />)}
+      <Typography variant="h5" component="h5" className={classes.subtitle}>
+        Appearance
+      </Typography>
+      {isAuthenticated() && (<NodeApperance />)}
+      {props.connectedNodes.length > 0 && (
+        <div>
+          <Typography variant="h5" component="h5" className={classes.subtitle}>
+            Connected Nodes
+          </Typography>
+          <NodeList elements={props.connectedNodes} progressMode={progressMode} isNodeData />
+        </div>
+      )}
     </>
+
   );
 };
 
@@ -140,6 +189,7 @@ const mapStateToProps = (state) => ({
   selectedNode: state.graph.selectedNode,
   progressMode: state.graph.progressMode,
   completedNodes: state.graph.completedNodes,
+  connectedNodes: state.graph.connectedNodes,
 });
 
 const mapDispatchToProps = (dispatch) => ({

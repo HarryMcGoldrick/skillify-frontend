@@ -8,4 +8,5 @@ export const initialState = {
   elements: [],
   graphData: {},
   styleSheet: [],
+  connectedNodes: [],
 };

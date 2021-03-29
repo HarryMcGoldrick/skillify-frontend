@@ -16,6 +16,7 @@ export { default as NodeDrawerPanel } from '../containers/node-drawer-panel/node
 export { default as NodeLearningTab } from './node-components/node-learning-tab/node-learning-tab';
 export { default as NodeObjectives } from './node-components/node-objectives/node-objectives';
 export { default as NodeContentCard } from './node-components/node-content-card/node-content-card';
+export { default as NodeList } from './node-components/node-list/node-list';
 
 // User components
 export { default as UserData } from './user-components/user-data/user-data';

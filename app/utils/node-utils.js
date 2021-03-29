@@ -10,6 +10,7 @@ export const updateNodeData = (node, data) => {
 export const addToCompleted = (node) => ({
   data: {
     ...node,
+    classes: 'completed',
   },
   classes: 'completed',
 });
@@ -17,6 +18,7 @@ export const addToCompleted = (node) => ({
 export const addToIncompleted = (node) => ({
   data: {
     ...node,
+    classes: 'incomplete',
   },
   classes: 'incomplete',
 });
@@ -24,6 +26,8 @@ export const addToIncompleted = (node) => ({
 export const addToUnlocked = (node) => ({
   data: {
     ...node,
+    classes: 'unlocked',
+
   },
   classes: 'unlocked',
 });
@@ -31,6 +35,7 @@ export const addToUnlocked = (node) => ({
 export const addToLocked = (node) => ({
   data: {
     ...node,
+    classes: 'locked',
   },
   classes: 'locked',
 });

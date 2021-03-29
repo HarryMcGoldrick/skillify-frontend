@@ -7,6 +7,24 @@ export const getNodeWithId = (cy, id) => cy.elements(`node[id = "${id}"]`)[0];
 
 export const getSelectedNode = (cy) => cy.nodes(':selected');
 
+export const getConnectedNodes = (cy, nodeData) => {
+  const nodes = [];
+  const dfs = cy.elements().dfs({
+    roots: getNodeWithId(cy, nodeData.id),
+    visit: (v, e, u, i, depth) => {
+      if (depth == 2) {
+        return false;
+      }
+
+      if (!(v.data('id') === nodeData.id)) {
+        nodes.push(v.data());
+      }
+    },
+    directed: true,
+  });
+  return nodes;
+};
+
 export const updateProgressModeNodeClasses = (cy, completedNodes, updateNodeFunc) => {
   // naive approach
   // all nodes -> if complete pass -> if connected node is complete -> unlocked -> if no complete nodes connected -> locked

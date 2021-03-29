@@ -10,10 +10,10 @@ import { GraphToolbar } from '../../components';
 import { getUserId, isAuthenticated } from '../../utils/authentication';
 import { FETCH_COMPLETED_NODES_REQUEST, FETCH_GRAPH_REQUEST, FETCH_STYLE_SHEET_REQUEST } from '../../redux/graph/graphTypes';
 import {
-  updateProgressMode, updateStyleSheet, updateSelectedNodePath, selectNode, updateNode,
+  updateProgressMode, updateStyleSheet, updateSelectedNodePath, selectNode, updateNode, updateConnectedNodes,
 } from '../../redux/graph/graphActions';
 import viewOnlyStyle from './viewOnly-style';
-import { getNodeWithId, updateProgressModeNodeClasses } from '../../utils/graph-utils';
+import { getConnectedNodes, getNodeWithId, updateProgressModeNodeClasses } from '../../utils/graph-utils';
 import { getNodesFromElementCollection, getStartNode } from '../../utils/node-utils';
 
 function GraphContainer(props) {
@@ -88,6 +88,10 @@ function GraphContainer(props) {
       nodePred.unshift(node);
       nodePred.reverse();
       updateSelectedNodePath(getNodesFromElementCollection(nodePred));
+
+      // Get connected Nodes
+      const connectedNodes = getConnectedNodes(cy, selectedNode);
+      props.updateConnectedNodes(connectedNodes);
     }
   }, [cy, selectedNode]);
 
@@ -134,6 +138,7 @@ const mapDispatchToProps = (dispatch) => ({
   updateSelectedNodePath: (nodes) => dispatch(updateSelectedNodePath(nodes)),
   selectNode: (node) => dispatch(selectNode(node)),
   updateNode: (node) => dispatch(updateNode(node)),
+  updateConnectedNodes: (nodes) => dispatch(updateConnectedNodes(nodes)),
 
 });
 
