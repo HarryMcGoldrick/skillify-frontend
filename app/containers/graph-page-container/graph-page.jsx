@@ -53,9 +53,9 @@ const GraphPage = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  elements: state.graph.elements,
-  selectedNode: state.graph.selectedNode,
-  showGraphDetails: state.graph.showGraphDetails,
+  elements: state.graph.present.elements,
+  selectedNode: state.graph.present.selectedNode,
+  showGraphDetails: state.graph.present.showGraphDetails,
 });
 
 export default connect(mapStateToProps)(GraphPage);

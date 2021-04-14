@@ -186,10 +186,10 @@ const NodeDetails = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  selectedNode: state.graph.selectedNode,
-  progressMode: state.graph.progressMode,
-  completedNodes: state.graph.completedNodes,
-  connectedNodes: state.graph.connectedNodes,
+  selectedNode: state.graph.present.selectedNode,
+  progressMode: state.graph.present.progressMode,
+  completedNodes: state.graph.present.completedNodes,
+  connectedNodes: state.graph.present.connectedNodes,
 });
 
 const mapDispatchToProps = (dispatch) => ({

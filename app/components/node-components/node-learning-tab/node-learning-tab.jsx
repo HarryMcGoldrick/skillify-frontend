@@ -237,9 +237,9 @@ const NodeLearningTab = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  nodeData: state.graph.selectedNode,
-  progressMode: state.graph.isProgressMode,
-  nodePath: state.graph.selectedNodePath,
+  nodeData: state.graph.present.selectedNode,
+  progressMode: state.graph.present.isProgressMode,
+  nodePath: state.graph.present.selectedNodePath,
   likedContent: state.user.likedContent,
 });
 

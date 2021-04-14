@@ -122,11 +122,11 @@ function GraphContainer(props) {
 }
 
 const mapStateToProps = (state) => ({
-  elements: state.graph.elements,
-  selectedNode: state.graph.selectedNode,
-  progressMode: state.graph.progressMode,
-  styleSheet: state.graph.styleSheet,
-  completedNodes: state.graph.completedNodes,
+  elements: state.graph.present.elements,
+  selectedNode: state.graph.present.selectedNode,
+  progressMode: state.graph.present.progressMode,
+  styleSheet: state.graph.present.styleSheet,
+  completedNodes: state.graph.present.completedNodes,
 });
 
 const mapDispatchToProps = (dispatch) => ({

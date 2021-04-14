@@ -40,8 +40,8 @@ const NodeDrawerPanel = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  selectedNode: state.graph.selectedNode,
-  progressMode: state.graph.isProgressMode,
+  selectedNode: state.graph.present.selectedNode,
+  progressMode: state.graph.present.isProgressMode,
   likedContent: state.user.likedContent,
 });
 

@@ -82,10 +82,10 @@ const GraphDetails = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  elements: state.graph.elements,
-  showGraphDetails: state.graph.showGraphDetails,
-  graphData: state.graph.graphData,
-  progressMode: state.graph.progressMode,
+  elements: state.graph.present.elements,
+  showGraphDetails: state.graph.present.showGraphDetails,
+  graphData: state.graph.present.graphData,
+  progressMode: state.graph.present.progressMode,
 });
 
 const mapDispatchToProps = (dispatch) => ({

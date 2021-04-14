@@ -141,7 +141,7 @@ function NodeAppearance(props) {
 }
 
 const mapStateToProps = (state) => ({
-  selectedNode: state.graph.selectedNode,
+  selectedNode: state.graph.present.selectedNode,
 });
 
 const mapDispatchToProps = (dispatch) => ({

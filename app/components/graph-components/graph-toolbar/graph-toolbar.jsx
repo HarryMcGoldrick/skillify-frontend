@@ -7,14 +7,17 @@ import InfoIcon from '@material-ui/icons/Info';
 import CreateIcon from '@material-ui/icons/Create';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import {
-  Button, Grid, makeStyles, Menu, MenuItem,
+  Button, Grid, IconButton, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
-import { ExpandMore, PlayCircleFilled } from '@material-ui/icons';
+import {
+  ExpandMore, PlayCircleFilled, Redo, Undo,
+} from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router-dom';
 import dagre from 'cytoscape-dagre';
 import cytoscape from 'cytoscape';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import { tools } from '../../../enums/tools';
 import { layouts } from '../../../enums/layouts';
 import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../../services/graph-service';
@@ -276,6 +279,12 @@ const GraphToolbar = (props) => {
             <MenuItem onClick={() => handleClose('')}>None</MenuItem>
 
           </Menu>
+          <IconButton onClick={props.onUndo}>
+            <Undo />
+          </IconButton>
+          <IconButton onClick={props.onRedo}>
+            <Redo />
+          </IconButton>
         </>
       )}
     </Grid>
@@ -288,6 +297,8 @@ const mapDispatchToProps = (dispatch) => ({
   toggleGraphDetails: () => dispatch(toggleGraphDetails()),
   selectNode: (node) => dispatch(selectNode(node)),
   updateElements: (elements) => dispatch(updateElements(elements)),
+  onUndo: () => dispatch(UndoActionCreators.undo()),
+  onRedo: () => dispatch(UndoActionCreators.redo()),
 });
 
 export default connect(null, mapDispatchToProps)(GraphToolbar);
