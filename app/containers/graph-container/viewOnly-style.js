@@ -30,7 +30,7 @@ const style = [
   {
     selector: '.unlocked',
     style: {
-      'background-blacken': 0.3,
+      'background-color': 'blue',
       'line-color': 'blue',
       'target-arrow-color': 'blue',
     },

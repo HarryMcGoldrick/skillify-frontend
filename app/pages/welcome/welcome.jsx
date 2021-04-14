@@ -1,17 +1,21 @@
 import {
-  Button, Grid, makeStyles,
+  Button, Grid, makeStyles, Typography,
 } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: {
+  },
   button: {
     margin: '1rem',
   },
   title: {
     textAlign: 'center',
     fontSize: '40px',
+  },
+  caption: {
+    marginTop: '100px',
   },
 }));
 
@@ -22,32 +26,29 @@ const Welcome = () => {
       <Grid
         container
         spacing={0}
-        direction="column"
+        direction="row"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '60vh' }}
       >
-        <Grid item xs={3}>
-          <h1 className={classes.title}>Skillify</h1>
-          <Link to="/view">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              View
-            </Button>
-          </Link>
-          <Link to="/create">
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-            >
-              Create
-            </Button>
-          </Link>
+
+        <Grid item xs={4} className={classes.caption}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h1" component="h1">
+                Create your journery
+              </Typography>
+            </Grid>
+            <Typography variant="h4" component="h4">
+              Navigate your learning
+            </Typography>
+          </Grid>
+
         </Grid>
+
+        <Grid item xs={8}>
+          <img />
+        </Grid>
+
       </Grid>
     </div>
   );

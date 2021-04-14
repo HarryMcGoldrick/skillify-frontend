@@ -9,7 +9,7 @@ import 'fontsource-roboto';
 import './index.css';
 import { Provider, useDispatch } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
-import { Collapse } from '@material-ui/core';
+import { Collapse, createMuiTheme } from '@material-ui/core';
 import {
   Welcome, Edit, Login, ViewList, Create, ViewGraph, Register, UserProfile,
 } from '../pages';

@@ -57,7 +57,7 @@ export const Navbar = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="sticky">
+      <AppBar position="sticky" style={{ paddingLeft: 200, paddingRight: 200 }}>
         <Toolbar position="fixed">
           <Typography variant="h5">
             <Link href="/" color="inherit">
