@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
-import { addGraphToGraphProgress } from '../../../services/graph-service';
+import { addGraphToGraphProgress, updateGraphPrivacy } from '../../../services/graph-service';
 import { updateProgressMode } from '../../../redux/graph/graphActions';
 import { checkIsNode } from '../../../utils/node-utils';
-import { NodeCard, NodeList } from '../..';
+import { NodeCard, NodeList, PrivacyToggle } from '../..';
 
 const useStyles = makeStyles({
   container: {
@@ -27,6 +27,9 @@ const useStyles = makeStyles({
   listTitle: {
     textAlign: 'center',
     margin: 8,
+  },
+  privacyToggle: {
+    marginLeft: 16,
   },
 });
 
@@ -66,6 +69,11 @@ const GraphDetails = (props) => {
         </Button>
         )}
       </div>
+      {!viewOnly && isAuthenticated() && (
+        <div className={classes.privacyToggle}>
+          <PrivacyToggle id={graphId} updatePrivacy={updateGraphPrivacy} initialStatus={graphData.private} />
+        </div>
+      )}
       {progressMode ? (
         <Typography component="h6" variant="h6" className={classes.listTitle}>
           Unlocked Nodes 🔓

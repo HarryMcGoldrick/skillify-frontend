@@ -102,9 +102,4 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-const mapStateToProps = (state) => ({
-  graphsCreated: state.user.graphsCreated,
-  graphsProgressing: state.user.graphsProgressing,
-});
-
-export default connect(mapStateToProps)(UserGraphDetails);
+export default UserGraphDetails;

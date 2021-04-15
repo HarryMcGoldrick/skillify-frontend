@@ -125,7 +125,7 @@ const GraphList = () => {
         <Paper elevation={3} className={classes.paper}>
           <ul className={classes.list}>
             {graphViews.map((graph) => {
-              if (!graph.id || !graph.name) {
+              if (!graph.id || !graph.name || graph.private) {
                 return undefined;
               }
               const { id } = graph;

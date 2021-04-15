@@ -15,7 +15,7 @@ function* fetchGraphData(action) {
       type: FETCH_GRAPH_SUCCESS,
       payload: {
         elements: [...data.graph.nodes, ...data.graph.edges],
-        graphData: { name: data.graph.name, description: data.graph.description },
+        graphData: { name: data.graph.name, description: data.graph.description, private: data.graph.private },
       },
     });
   } catch (e) {

@@ -29,3 +29,4 @@ export { default as UserAchievements } from './user-components/user-achievements
 export { default as LoginForm } from './login-form/login-form';
 export { default as Navbar } from './navbar/navbar';
 export { default as PrivateRoute } from './private-route/private-route';
+export { default as PrivacyToggle } from './privacy-toggle/privacy-toggle';

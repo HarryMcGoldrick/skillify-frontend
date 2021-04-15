@@ -60,8 +60,4 @@ function UserRewardsDetails(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  achievements: state.user.achievements,
-});
-
-export default connect(mapStateToProps)(UserRewardsDetails);
+export default UserRewardsDetails;
