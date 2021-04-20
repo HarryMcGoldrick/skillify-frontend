@@ -33,7 +33,7 @@ const GraphList = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [page, setPage] = useState(1);
   const [graphAmount, setGraphAmount] = useState();
-  const pageSize = 5;
+  const pageSize = 4;
 
   const updateGraphList = (formData) => {
     if (formData) {
@@ -61,11 +61,6 @@ const GraphList = () => {
   useEffect(() => {
     updateGraphList();
   }, [page]);
-
-  // Creates a linkable ListItem
-  function ListItemLink(props) {
-    return <ListItem button component="a" {...props} />;
-  }
 
   return (
     <Grid
@@ -128,14 +123,12 @@ const GraphList = () => {
               if (!graph.id || !graph.name || graph.private) {
                 return undefined;
               }
-              const { id } = graph;
               return (
-
-                <ListItemLink key={id} href={`/view/${id}`} alignItems="flex-start">
+                <ListItem alignItems="flex-start" key={graph.id}>
                   <Grid item xs={12}>
                     <GraphCard graph={graph} />
                   </Grid>
-                </ListItemLink>
+                </ListItem>
               );
             })}
           </ul>

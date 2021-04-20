@@ -131,7 +131,7 @@ function NodeContentCard(props) {
               {contentScore}
               <span>
                 <IconButton onClick={handleLike}>
-                  <ThumbUp />
+                  <ThumbUp color={isLiked ? 'primary' : 'inherit'} />
                 </IconButton>
                 {!viewOnly && (
                 <IconButton onClick={() => handleDelete(contentId)}>

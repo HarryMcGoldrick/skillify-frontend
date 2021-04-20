@@ -13,7 +13,9 @@ export const getUserInfoByUsername = (username) => axios.post(`${baseUrl}/userin
 
 export const getUserProgressInfo = (userId, graphId) => axios.post(`${baseUrl}/progress`, { userId, graphId }).then((res) => res.data);
 
-export const updateLikedContent = async (userId, contentId) => axios.post(`${baseUrl}/content`, { userId, contentId }).then((res) => res.data);
+export const updateLikedContent = async (userId, contentId) => axios.post(`${baseUrl}/like/content`, { userId, contentId }).then((res) => res.data);
+
+export const updateLikedGraph = async (userId, graphId) => axios.post(`${baseUrl}/like/graph`, { userId, graphId }).then((res) => res.data);
 
 export const uploadUserImage = async (username, image) => axios.post(`${baseUrl}/image`, { username, image }).then((res) => res.data);
 

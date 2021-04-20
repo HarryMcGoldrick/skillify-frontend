@@ -3,7 +3,6 @@ import {
 } from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { PrivacyToggle } from '../..';
 import { getUserImage, updateUserPrivacy, uploadUserImage } from '../../../services/user-service';
 import { getUserId } from '../../../utils/authentication';

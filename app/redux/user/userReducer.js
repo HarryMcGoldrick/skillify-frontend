@@ -13,6 +13,7 @@ const reducer = (state = initialState, action) => {
         achievements: action.payload.achievements,
         badges: action.payload.badges,
         completedNodeCount: action.payload.completedNodeCount,
+        likedGraphs: action.payload.likedGraphs,
       };
     }
 
