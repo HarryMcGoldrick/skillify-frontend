@@ -31,7 +31,7 @@ const RegisterForm = () => {
   const history = useHistory();
   const classes = useStyles();
   const [error, setError] = useState('');
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
     registerUser(data.username, data.password).then((res) => {
       if (res.error) {
@@ -73,7 +73,15 @@ const RegisterForm = () => {
               <TextField name="username" label="username" variant="outlined" inputRef={register({ required: true })} className={classes.textField} />
             </Grid>
             <Grid item xs={12} className={classes.formInput}>
-              <TextField type="password" name="password" label="password" variant="outlined" inputRef={register({ required: true })} className={classes.textField} />
+              {errors.password && <p style={{ color: 'red', textOverflow: 'wrap' }}>{errors.password.message}</p>}
+              <TextField
+                type="password"
+                name="password"
+                label="password"
+                variant="outlined"
+                inputRef={register({ required: true, pattern: { value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, message: 'Minimum 8 characters 1 letter and 1 number are required' } })}
+                className={classes.textField}
+              />
             </Grid>
             <Grid item xs={12} className={classes.submit}>
               <Button type="submit" fullWidth variant="contained">Register</Button>

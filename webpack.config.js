@@ -25,6 +25,10 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf|png|jpe?g|gif)$/,
         use: ['file-loader'],
       },
+      {
+        test: /\.mp4$/,
+        use: 'file-loader?name=videos/[name].[ext]',
+      },
     ],
   },
   mode: 'development',
