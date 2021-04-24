@@ -110,7 +110,7 @@ const GraphList = () => {
             />
           </Grid>
           <Grid item xs={4}>
-            <Button type="submit" fullWidth variant="contained" style={{ marginTop: 16 }}>Search</Button>
+            <Button type="submit" color="primary" fullWidth variant="contained" style={{ marginTop: 16 }}>Search</Button>
           </Grid>
         </Grid>
 

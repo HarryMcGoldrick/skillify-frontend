@@ -11,7 +11,7 @@ import { getUserId, isAuthenticated } from '../../../utils/authentication';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    width: '600px',
+    width: '740px',
     height: '100%',
   },
   details: {

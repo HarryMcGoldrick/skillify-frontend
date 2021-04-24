@@ -5,9 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Button, IconButton, Link, Menu, MenuItem, Typography,
 } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
+import { AccountCircle, AddCircle, Visibility } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { getExistingSession, isAuthenticated, logOut } from '../../utils/authentication';
+import icon from '../../assets/icon.png';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,6 +25,13 @@ const useStyles = makeStyles(() => ({
   },
   seperator: {
     marginLeft: '3rem',
+  },
+  icon: {
+    width: 40,
+    height: 40,
+  },
+  button: {
+    fontSize: '1.2rem',
   },
 }));
 
@@ -59,6 +67,9 @@ export const Navbar = () => {
     <div className={classes.root}>
       <AppBar position="sticky" style={{ paddingLeft: 200, paddingRight: 200 }}>
         <Toolbar position="fixed">
+          <img src={icon} className={classes.icon} />
+          <span className={classes.seperator} />
+
           <Typography variant="h5">
             <Link href="/" color="inherit">
               Skillify
@@ -67,12 +78,34 @@ export const Navbar = () => {
           <span className={classes.seperator} />
           <Typography variant="h6" className={classes.link}>
             <Link href="/view" color="inherit">
-              View
+              <Button
+                disableElevation
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<Visibility fontSize="large" />}
+              >
+                {' '}
+                View
+                {' '}
+
+              </Button>
             </Link>
           </Typography>
           <Typography variant="h6" className={classes.link}>
             <Link href="/create" color="inherit">
-              Create
+              <Button
+                disableElevation
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<AddCircle fontSize="large" />}
+              >
+                {' '}
+                Create
+                {' '}
+
+              </Button>
             </Link>
           </Typography>
           <span className={classes.linkSeperator} />
@@ -85,7 +118,7 @@ export const Navbar = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                startIcon={<AccountCircle />}
+                startIcon={<AccountCircle fontSize="large" />}
                 onClick={handleMenu}
               >
                 {username}

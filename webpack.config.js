@@ -34,6 +34,7 @@ module.exports = {
   mode: 'development',
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: 'app/assets/favicon.png',
       template: 'app/index/index.html',
       options: {
         historyApiFallback: {
