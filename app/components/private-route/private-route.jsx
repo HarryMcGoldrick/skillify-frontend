@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../../utils/authentication';
 
-// This component checks if a user isLoggedIn and proceeds if so, else navigates to login
+// This component checks if a user is Logged in and proceeds, else navigates to login
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const isLoggedIn = isAuthenticated();
 

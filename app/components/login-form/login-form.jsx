@@ -6,9 +6,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import { Link, useHistory } from 'react-router-dom';
 import { login } from '../../services/user-service';
-import { getSession, getUserId } from '../../utils/authentication';
-import { FETCH_USER_DATA_REQUEST } from '../../redux/user/userTypes';
-import { useDispatch } from 'react-redux';
+import { getSession } from '../../utils/authentication';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,21 +28,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+  LoginForm is used by users to authenticate to the system.
+*/
 export const LoginForm = () => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
   const history = useHistory();
 
   const onSubmit = (data) => {
+    // Trigger a login request to the server on form submission
     login(data.username, data.password).then((res) => {
       const session = getSession(res.token);
-      if (session) {  
+      // If jwt is returned then assume information is valid
+      if (session) {
         const { username, exp: expires } = session;
         // Set a cookie to expire using the expiry time embedded in the JWT
         Cookies.set('access_token', res.token, { expires });
         localStorage.setItem('username', username);
         history.goBack();
-
       }
     });
   };

@@ -35,6 +35,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/*
+  Navigation bar that is displayed at the top of every page.
+  Used to navigate to the View and Create pages.
+*/
+
 export const Navbar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,6 +64,7 @@ export const Navbar = () => {
   const handleLogout = () => {
     logOut();
     handleClose();
+    // Force page to refresh
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   };

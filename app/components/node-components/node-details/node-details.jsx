@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import {
   Button, Grid, IconButton, makeStyles, TextField, Typography,
@@ -23,18 +22,22 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 24,
     marginBottom: 24,
   },
-  description: {
-
-  },
   formInput: {
     padding: theme.spacing(1),
   },
   formSubmit: {
-    marginTop: '20px',
-    margin: '10px',
+    marginTop: 20,
+    margin: 10,
+  },
+  button: {
+    margin: 10,
+    padding: 8,
   },
 }));
 
+/*
+  Contains the information about the selected node including objectives, apperance and completion.
+*/
 const NodeDetails = (props) => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
@@ -45,6 +48,7 @@ const NodeDetails = (props) => {
   } = props;
   const { id: graphId } = useParams();
 
+  // Update the current node information after form submission
   const onSubmit = (data) => {
     setEditMode(false);
     props.updateNode({
@@ -55,6 +59,7 @@ const NodeDetails = (props) => {
     });
   };
 
+  // Set current node status
   useEffect(() => {
     const isEmptyNodeAndEditMode = !nodeData.label && !nodeData.description && !editMode && !viewOnly;
     if (isEmptyNodeAndEditMode) {
@@ -65,10 +70,12 @@ const NodeDetails = (props) => {
     setIsComplete(Boolean(completedNodes.includes(nodeData.id)));
   }, [props]);
 
+  // Update if the user is editing node information
   const handleEdit = () => {
     setEditMode(!editMode);
   };
 
+  // Add node to progress, effectively completing it
   const addNodeToProgress = () => {
     addNodeToGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
       if (data.res) {
@@ -78,6 +85,7 @@ const NodeDetails = (props) => {
     });
   };
 
+  // Remove node from progress, effectively uncompleteing it
   const removeNodeFromProgress = () => {
     removeNodeFromGraphProgress(selectedNode.id, graphId, getUserId()).then((data) => {
       if (data.res) {
@@ -107,16 +115,6 @@ const NodeDetails = (props) => {
               <Typography variant="h5" component="h5">
                 {selectedNode.description}
               </Typography>
-              )}
-              {!isComplete && progressMode && (
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => addNodeToProgress()}
-              >
-                Complete
-              </Button>
               )}
               {isComplete && progressMode && (
               <Button
@@ -168,10 +166,15 @@ const NodeDetails = (props) => {
           )}
         </>
       )}
-      <Typography variant="h5" component="h5" className={classes.subtitle}>
-        Appearance
-      </Typography>
-      {isAuthenticated() && (<NodeApperance />)}
+
+      {isAuthenticated() && !viewOnly && (
+        <div>
+          <Typography variant="h5" component="h5" className={classes.subtitle}>
+            Appearance
+          </Typography>
+          <NodeApperance />
+        </div>
+      )}
       {props.connectedNodes.length > 0 && (
         <div>
           <Typography variant="h5" component="h5" className={classes.subtitle}>
@@ -179,6 +182,17 @@ const NodeDetails = (props) => {
           </Typography>
           <NodeList elements={props.connectedNodes} progressMode={progressMode} isNodeData />
         </div>
+      )}
+      {!isComplete && progressMode && (
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        className={classes.button}
+        onClick={() => addNodeToProgress()}
+      >
+        Complete
+      </Button>
       )}
     </>
 

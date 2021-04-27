@@ -10,6 +10,10 @@ const useStyles = makeStyles({
 
 });
 
+/*
+  Displays a list of NodeCards from an array of elements
+*/
+
 function NodeList(props) {
   const classes = useStyles();
 

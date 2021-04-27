@@ -1,16 +1,13 @@
 import {
-  Card, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography, useTheme,
+  Card, CardContent, CardMedia, makeStyles, Typography,
 } from '@material-ui/core';
-import { Delete, ThumbsUpDown, ThumbUp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import placeholder from '../../../assets/placeholder.png';
 import contentType from '../../../enums/content-type';
-import { getDataFromGoogleBooksId, getDataFromYoutubeId, removeContent } from '../../../services/content-service';
 import { updateLikedContent } from '../../../services/user-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     height: '100%',
@@ -31,28 +28,22 @@ const useStyles = makeStyles((theme) => ({
   },
 
 }));
+/*
+  Displays the generated content for a node.
+  A generated card cannot be liked as it is not stored in the server.
+*/
 
 function NodeGeneratedContentCard(props) {
   const classes = useStyles();
   const {
-    contentData, likedContent, handleDelete, viewOnly,
+    contentData,
   } = props;
   const [title, setTitle] = useState();
   const [thumbnailUrl, setThumbnailUrl] = useState();
   const [navUrl, setNavUrl] = useState();
   const [author, setAuthor] = useState();
-  const [contentScore, setContentScore] = useState();
-  const [isLiked, setIsLiked] = useState();
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      //   if (likedContent && likedContent.includes(contentId)) {
-      //     setIsLiked(true);
-      //   } else {
-      //     setIsLiked(false);
-      //   }
-    }
-
     // If snippet then the data is from youtube
     const type = contentData.kind === 'youtube#searchResult' ? contentType.YOUTUBE : contentType.GOOGLE_BOOKS;
 
@@ -81,20 +72,6 @@ function NodeGeneratedContentCard(props) {
     }
   };
 
-  const handleLike = () => {
-    if (isAuthenticated()) {
-      updateLikedContent(getUserId(), contentId).then((data) => {
-        if (data && data.type === 'remove') {
-          setContentScore(contentScore - 1);
-          setIsLiked(false);
-        } else if (data && data.type === 'add') {
-          setContentScore(contentScore + 1);
-          setIsLiked(true);
-        }
-      });
-    }
-  };
-
   function truncateString(phrase, length) {
     if (phrase.length < length) return phrase;
 
@@ -117,20 +94,6 @@ function NodeGeneratedContentCard(props) {
             </Typography>
 
           </CardContent>
-          {/* <CardActions className={classes.controls}>
-            <Typography component="h6" variant="h6">
-              <span>
-                <IconButton onClick={handleLike}>
-                  <ThumbUp />
-                </IconButton>
-                {!viewOnly && (
-                <IconButton onClick={() => handleDelete(contentId)}>
-                  <Delete />
-                </IconButton>
-                )}
-              </span>
-            </Typography>
-          </CardActions> */}
         </div>
         <CardMedia
           className={classes.cover}

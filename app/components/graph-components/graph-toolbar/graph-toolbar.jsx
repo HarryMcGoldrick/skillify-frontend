@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import SaveIcon from '@material-ui/icons/Save';
@@ -38,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+  Controls the graph interaction tools for the cytoscape graph.
+*/
 const GraphToolbar = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [addAnchorEl, setAddAnchorEl] = useState(null);
@@ -144,10 +146,12 @@ const GraphToolbar = (props) => {
     }
   };
 
+  // Update the add dropdown menu onClick
   const addHandleClick = (event) => {
     setAddAnchorEl(event.currentTarget);
   };
 
+  // Close the add dropdown menu
   const addHandleClose = (nodeType) => {
     setAddAnchorEl(null);
     switchTool(tools.ADD, nodeType);
@@ -160,15 +164,18 @@ const GraphToolbar = (props) => {
     sendGraphDataForImage(graphId, cy.json());
   };
 
+  // Navigate to the edit page
   const goToEditPage = () => {
     history.push(`/edit/${graphId}`);
   };
 
+  // Navigate to the view page
   const goToViewPage = () => {
     history.push(`/view/${graphId}`);
   };
 
   useEffect(() => {
+    // After cytoscape has been initialised -> set default tool to select and determine if graph is made by current user
     if (cy) {
       switchTool(tools.SELECT);
       if (isAuthenticated()) {

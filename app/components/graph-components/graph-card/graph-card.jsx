@@ -1,14 +1,14 @@
 import {
   Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography,
 } from '@material-ui/core';
-import { Delete, ThumbUp } from '@material-ui/icons';
+import { ThumbUp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getUserInfo, updateLikedGraph } from '../../../services/user-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     width: '740px',
@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+  GraphCard displays graph infomration recieved from props.
+*/
+
 const GraphCard = (props) => {
   const classes = useStyles();
   const [userInfo, setUserInfo] = useState({});
@@ -40,11 +44,13 @@ const GraphCard = (props) => {
 
   useEffect(() => {
     if (userId) {
+      // Get the user information from whoever created the graph
       getUserInfo(userId).then((res) => {
         setUserInfo(res);
       });
     }
     if (isAuthenticated()) {
+      // If graph has been liked by current user then display it
       if (likedGraphs && likedGraphs.includes(graphId)) {
         setIsLiked(true);
       } else {
@@ -57,6 +63,8 @@ const GraphCard = (props) => {
     setGraphScore(score);
   }, [props]);
 
+  // Truncates a string at the word closest to the length provided
+  // Prevents overflow from graph description or name
   const truncateString = (phrase, length) => {
     if (phrase.length < length) return phrase;
 
@@ -65,6 +73,8 @@ const GraphCard = (props) => {
     return `${trimmed}…`;
   };
 
+  // Send an update to the server when a graph is liked or unliked
+  // Update the local score depending on like status
   const handleLike = () => {
     if (isAuthenticated()) {
       updateLikedGraph(getUserId(), graphId).then((data) => {
@@ -85,7 +95,7 @@ const GraphCard = (props) => {
         <Card className={classes.root}>
           <div className={classes.details}>
             <CardContent className={classes.content}>
-              <Link to={`/edit/${graphId}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/view/${graphId}`} style={{ textDecoration: 'none' }}>
                 <Typography component="h6" variant="h6">
                   {truncateString(name, 50)}
                 </Typography>
@@ -114,7 +124,7 @@ const GraphCard = (props) => {
             </CardContent>
           </div>
           <CardActionArea>
-            <Link to={`/edit/${graphId}`}>
+            <Link to={`/view/${graphId}`}>
               <CardMedia
                 className={classes.cover}
                 image={image || 'no image found'}

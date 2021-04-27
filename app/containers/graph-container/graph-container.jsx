@@ -16,6 +16,12 @@ import viewOnlyStyle from './viewOnly-style';
 import { getConnectedNodes, getNodeWithId, updateProgressModeNodeClasses } from '../../utils/graph-utils';
 import { getNodesFromElementCollection, getStartNode } from '../../utils/node-utils';
 
+/*
+  Wraps the cytoscapeJS graph and recieves the api reference using a useRef hook,
+  passes the cy api reference to the graph page.
+  All cytoscape api specific calls should be made here.
+*/
+
 function GraphContainer(props) {
   const {
     elements, viewOnly, selectedNode, updateProgressMode,
@@ -27,6 +33,7 @@ function GraphContainer(props) {
   const [cy, setCy] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
 
+  // Handles setup for edit mode
   const initEditMode = () => {
     updateProgressMode(false);
     if (!cy.edgehandles) {
@@ -37,11 +44,13 @@ function GraphContainer(props) {
     }
   };
 
+  // Handles setup for view mode
   const initViewMode = () => {
     cy.autolock(true);
     props.updateStyleSheet(viewOnlyStyle);
   };
 
+  // Fetches the current graph data and sets the cytoscape reference
   useEffect(() => {
     props.fetchGraphData(graphId);
     props.fetchStyleSheet(graphId);
@@ -139,7 +148,6 @@ const mapDispatchToProps = (dispatch) => ({
   selectNode: (node) => dispatch(selectNode(node)),
   updateNode: (node) => dispatch(updateNode(node)),
   updateConnectedNodes: (nodes) => dispatch(updateConnectedNodes(nodes)),
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);

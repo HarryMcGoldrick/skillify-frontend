@@ -26,6 +26,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/*
+  Displays the users profile details, avatar and badges.
+*/
+
 function UserProfileDetails(props) {
   const classes = useStyles();
   const { userInfo } = props;
@@ -37,6 +41,7 @@ function UserProfileDetails(props) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(undefined);
 
+  // Set the current user image dataURL
   useEffect(() => {
     getUserImage(username).then((data) => {
       if (data.image) {
@@ -45,6 +50,7 @@ function UserProfileDetails(props) {
     });
   }, []);
 
+  // Converts image files to a data URL for easy storage in the server
   function convertToDataURLviaCanvas(url, callback, outputFormat) {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -157,7 +163,6 @@ function UserProfileDetails(props) {
           </Grid>
           <Grid item xs={12} className={classes.details}>
             <Typography component="h6" variant="h6">
-              {/* TODO */}
               Maps Completed: 0
             </Typography>
           </Grid>

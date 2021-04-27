@@ -12,6 +12,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
 import NodeDetails from '../node-details/node-details';
 
+// Component for handling the tabs atop the node panel
 function TabPanel(props) {
   const {
     children, value, index, ...other
@@ -48,7 +49,6 @@ export default function NodeDialog(props) {
   const [editMode, setEditMode] = React.useState(false);
   const classes = useStyles();
   const { nodeData, cy } = props;
-  const { label, description } = nodeData;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -2,7 +2,6 @@ import {
   Grid, ListItem, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import GraphCard from '../../graph-components/graph-card/graph-card';
 import { getMultipleGraphViews } from '../../../services/graph-service';
 
@@ -16,6 +15,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/*
+  Displays the users created graphs and participating graphs using GraphCard
+*/
 function UserGraphDetails(props) {
   const classes = useStyles();
   const { graphsCreated, graphsProgressing } = props;
@@ -24,12 +26,14 @@ function UserGraphDetails(props) {
 
   useEffect(() => {
     if (graphsCreated && graphsProgressing) {
+      // Get the graph summary data for user created graphs
       getMultipleGraphViews(graphsCreated).then((data) => {
         if (data.graphViews) {
           setGraphCreatedList(data.graphViews);
         }
       });
 
+      // Get the graph summary data for participating graphs
       getMultipleGraphViews([...graphsProgressing.map((graph) => graph._id)]).then((data) => {
         setGraphProgressingList(data.graphViews);
       });
@@ -38,60 +42,70 @@ function UserGraphDetails(props) {
   return (
     <Paper className={classes.paper}>
       <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h5" component="h5">
-            Created Maps
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          align="center"
-        >
-          {graphCreatedList.map((graph) => {
-            if (!graph.id || !graph.name) {
-              return undefined;
-            }
-            const { id } = graph;
-            return (
+        {graphCreatedList.length > 0 && (
+        <div>
+          <Grid item xs={12}>
+            <Typography variant="h5" component="h5">
+              Created Maps
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            align="center"
+          >
+            {graphCreatedList.map((graph) => {
+              if (!graph.id || !graph.name) {
+                return undefined;
+              }
+              const { id } = graph;
+              return (
 
-              <ListItemLink key={id} href={`/view/${id}`}>
-                <Grid item xs={12}>
-                  <GraphCard graph={graph} />
-                </Grid>
-              </ListItemLink>
-            );
-          })}
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" component="h5">
-            Active Maps
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          align="center"
-        >
-          {graphProgressingList.map((graph) => {
-            if (!graph.id || !graph.name) {
-              return undefined;
-            }
-            const { id } = graph;
-            return (
+                <ListItemLink key={id} href={`/view/${id}`}>
+                  <Grid item xs={12}>
+                    <GraphCard graph={graph} />
+                  </Grid>
+                </ListItemLink>
+              );
+            })}
+          </Grid>
+        </div>
+        )}
 
-              <ListItemLink key={id} href={`/view/${id}`}>
-                <Grid item xs={12}>
-                  <GraphCard graph={graph} />
-                </Grid>
-              </ListItemLink>
-            );
-          })}
-        </Grid>
+        {graphProgressingList.length > 0 && (
+        <div>
+          <Grid item xs={12}>
+            <Typography variant="h5" component="h5">
+              Active Maps
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            align="center"
+          >
+            {graphProgressingList.map((graph) => {
+              if (!graph.id || !graph.name) {
+                return undefined;
+              }
+              const { id } = graph;
+              return (
+
+                <ListItemLink key={id} href={`/view/${id}`}>
+                  <Grid item xs={12}>
+                    <GraphCard graph={graph} />
+                  </Grid>
+                </ListItemLink>
+              );
+            })}
+          </Grid>
+        </div>
+        )}
+
       </Grid>
     </Paper>
   );

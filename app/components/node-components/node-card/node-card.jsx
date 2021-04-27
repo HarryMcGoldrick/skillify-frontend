@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   },
 });
 
+/*
+  NodeCard Displays the supplied nodes information in the form of a card
+*/
 const NodeCard = (props) => {
   const classes = useStyles();
   const { node } = props;

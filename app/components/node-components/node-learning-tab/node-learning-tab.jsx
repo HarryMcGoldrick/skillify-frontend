@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+  Component for displaying, adding and updating content suggestions for a node
+*/
+
 const NodeLearningTab = (props) => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
@@ -49,13 +53,13 @@ const NodeLearningTab = (props) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [content, setContent] = useState([]);
   const [generatedContent, setGeneratedContent] = useState([]);
-  const dispatch = useDispatch();
   const {
     nodeData, likedContent, viewOnly, nodePath,
   } = props;
 
   const addContentHandler = (data) => {
     let externalId = '';
+    // Extract the correct external id from a user added content
     if (currentType === contentType.GOOGLE_BOOKS) {
       externalId = extractGoogleBooksIdFromUrl(data.url);
     } else if (currentType === contentType.YOUTUBE) {
@@ -75,6 +79,7 @@ const NodeLearningTab = (props) => {
       score: 0,
     };
 
+    // Add content to server if successfuly trigger message
     addContent(nodeData.id, newContent).then((data) => {
       if (data.response) {
         const contentWithId = {
@@ -89,6 +94,7 @@ const NodeLearningTab = (props) => {
     setFormToggle(false);
   };
 
+  // Toggle a success message which disappears after 1 second
   const toggleSuccess = (bool) => {
     setIsSuccess(bool);
     setTimeout(() => {
@@ -101,6 +107,7 @@ const NodeLearningTab = (props) => {
     setFormToggle(true);
   };
 
+  // Delete a user added content
   const handleDelete = (contentId) => {
     if (isAuthenticated()) {
       removeContent(contentId).then((data) => {
@@ -145,6 +152,7 @@ const NodeLearningTab = (props) => {
   };
 
   useEffect(() => {
+    // Get all user created content suggestions
     getContentForNode(nodeData.id).then((data, err) => {
       if (err) {
         console.log(err);
@@ -152,69 +160,75 @@ const NodeLearningTab = (props) => {
         setContentWithOrdering(data.content);
       }
     });
+    // Retrieve a list of generated content
     fetchGeneratedContent();
   }, [props]);
 
   return (
     <div>
-      <Typography variant="h6" style={{ textAlign: 'center' }}>
-        Add Content
-      </Typography>
-      <Paper elevation={1}>
-        <div className={classes.imageRow}>
-          <ButtonBase
-            className={classes.imageButton}
-            focusRipple
-            style={{
-              width: '64px',
-            }}
-          >
-            <img src={youtubeIcon} className={classes.image} onClick={() => toggleForm(contentType.YOUTUBE)} />
-          </ButtonBase>
-          <ButtonBase
-            className={classes.imageButton}
-            focusRipple
-            style={{
-              width: '64px',
-            }}
-          >
-            <img src={booksIcon} className={classes.image} onClick={() => toggleForm(contentType.GOOGLE_BOOKS)} />
-          </ButtonBase>
+      {isAuthenticated() && (
+        <div>
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            Add Content
+          </Typography>
+          <Paper elevation={1}>
+            <div className={classes.imageRow}>
+              <ButtonBase
+                className={classes.imageButton}
+                focusRipple
+                style={{
+                  width: '64px',
+                }}
+              >
+                <img src={youtubeIcon} className={classes.image} onClick={() => toggleForm(contentType.YOUTUBE)} />
+              </ButtonBase>
+              <ButtonBase
+                className={classes.imageButton}
+                focusRipple
+                style={{
+                  width: '64px',
+                }}
+              >
+                <img src={booksIcon} className={classes.image} onClick={() => toggleForm(contentType.GOOGLE_BOOKS)} />
+              </ButtonBase>
+            </div>
+          </Paper>
+          <span style={{ margin: '16px' }} />
+          {isError && (
+          <p style={{ color: 'red' }}>Invalid Url</p>
+          )}
+          {isSuccess && (
+          <p style={{ color: 'green' }}>Success!</p>
+          )}
+          {formToggle && (
+          <form>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="center"
+            >
+              <Grid item xs={11} className={classes.formInput}>
+                <TextField
+                  type="url"
+                  name="url"
+                  label={currentType === contentType.YOUTUBE ? 'Youtube Url' : 'Google Books Url'}
+                  variant="outlined"
+                  inputRef={register({ required: true })}
+                  className={classes.textField}
+                />
+              </Grid>
+              <Grid item xs={1} className={classes.formInput}>
+                <IconButton color="primary" onClick={handleSubmit(addContentHandler)} component="span">
+                  <Add />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </form>
+          )}
         </div>
-      </Paper>
-      <span style={{ margin: '16px' }} />
-      {isError && (
-        <p style={{ color: 'red' }}>Invalid Url</p>
       )}
-      {isSuccess && (
-        <p style={{ color: 'green' }}>Success!</p>
-      )}
-      {formToggle && (
-      <form>
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-        >
-          <Grid item xs={11} className={classes.formInput}>
-            <TextField
-              type="url"
-              name="url"
-              label={currentType === contentType.YOUTUBE ? 'Youtube Url' : 'Google Books Url'}
-              variant="outlined"
-              inputRef={register({ required: true })}
-              className={classes.textField}
-            />
-          </Grid>
-          <Grid item xs={1} className={classes.formInput}>
-            <IconButton color="primary" onClick={handleSubmit(addContentHandler)} component="span">
-              <Add />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </form>
-      )}
+
       {content.map((content) => {
         if (!content) return;
         return (

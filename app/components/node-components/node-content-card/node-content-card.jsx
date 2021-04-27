@@ -1,16 +1,15 @@
 import {
-  Card, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography, useTheme,
+  Card, CardActions, CardContent, CardMedia, IconButton, makeStyles, Typography,
 } from '@material-ui/core';
-import { Delete, ThumbsUpDown, ThumbUp } from '@material-ui/icons';
+import { Delete, ThumbUp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import image from '../../../assets/placeholder.png';
 import contentType from '../../../enums/content-type';
-import { getDataFromGoogleBooksId, getDataFromYoutubeId, removeContent } from '../../../services/content-service';
+import { getDataFromGoogleBooksId, getDataFromYoutubeId } from '../../../services/content-service';
 import { updateLikedContent } from '../../../services/user-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     height: '100%',
@@ -32,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+/*
+  Displays an appropriate content card using the externalID provided
+*/
 function NodeContentCard(props) {
   const classes = useStyles();
   const {
@@ -40,7 +42,6 @@ function NodeContentCard(props) {
   const {
     type, externalId, score, _id: contentId,
   } = contentData;
-  const { id: graphId } = useParams();
   const [title, setTitle] = useState();
   const [thumbnailUrl, setThumbnailUrl] = useState();
   const [navUrl, setNavUrl] = useState();
@@ -49,6 +50,7 @@ function NodeContentCard(props) {
   const [isLiked, setIsLiked] = useState();
 
   useEffect(() => {
+    // Update current like status
     if (isAuthenticated()) {
       if (likedContent && likedContent.includes(contentId)) {
         setIsLiked(true);
@@ -56,6 +58,7 @@ function NodeContentCard(props) {
         setIsLiked(false);
       }
     }
+    // Update the card information and thumbnail for each content type
     if (type === contentType.YOUTUBE) {
       getDataFromYoutubeId(externalId).then((res) => {
         if (res.response.items.length > 0) {
@@ -83,6 +86,7 @@ function NodeContentCard(props) {
     }
   }, []);
 
+  // Hacky solution for navigating to an external URL without causing issues
   const navigateToUrl = () => {
     const win = window.open(navUrl, '_blank');
     if (win != null) {
@@ -90,6 +94,7 @@ function NodeContentCard(props) {
     }
   };
 
+  // Send updates to the server for like status and update client side with respective score
   const handleLike = () => {
     if (isAuthenticated()) {
       updateLikedContent(getUserId(), contentId).then((data) => {
@@ -104,6 +109,7 @@ function NodeContentCard(props) {
     }
   };
 
+  // Truncate a string at the word closest to the maximum lenght provided
   function truncateString(phrase, length) {
     if (phrase.length < length) return phrase;
 

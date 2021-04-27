@@ -1,11 +1,14 @@
 import { Drawer, Grid } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Prompt } from 'react-router';
 import { GraphDetails, NodeDrawerPanel } from '../../components';
 import GraphContainer from '../graph-container/graph-container';
 import './graph-page.css';
-import { Prompt } from 'react-router';
 
+/*
+  Groups the graph page components together and sets their viewOnly props
+*/
 const GraphPage = (props) => {
   const {
     selectedNode, showGraphDetails, viewOnly,

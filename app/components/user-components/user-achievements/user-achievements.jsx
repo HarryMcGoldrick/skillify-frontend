@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { pollAchievements } from '../../../services/achievement-service';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
+/*
+  Polls for new achievements that the user has unlocked on page refresh,
+  if new achievements are returned then display them using the snackbar hook.
+*/
 function UserAchievements() {
   const { enqueueSnackbar } = useSnackbar();
 

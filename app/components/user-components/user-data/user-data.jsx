@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 import { FETCH_USER_DATA_REQUEST } from '../../../redux/user/userTypes';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 
+/*
+  Fetches the user data on each page refresh.
+*/
 function UserData() {
   const dispatch = useDispatch();
 

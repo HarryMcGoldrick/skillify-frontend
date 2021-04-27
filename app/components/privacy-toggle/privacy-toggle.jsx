@@ -5,10 +5,12 @@ function PrivacyToggle(props) {
   const { initialStatus, updatePrivacy, id } = props;
   const [checked, setChecked] = useState(false);
 
+  // Set the state of the toggle to the initial state from props
   useEffect(() => {
     setChecked(initialStatus);
   }, [props]);
 
+  // Update the privacy using the updatePrivacy props
   const handleUpdate = () => {
     updatePrivacy(id, !checked).then((data) => {
       if (data.success) {

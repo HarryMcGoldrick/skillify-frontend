@@ -1,8 +1,7 @@
 import {
-  Avatar, Grid, makeStyles, Paper, Typography,
+  Grid, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import { getAchievementObjects } from '../../../services/achievement-service';
@@ -16,6 +15,10 @@ const useStyles = makeStyles(() => ({
     height: 80,
   },
 }));
+
+/*
+ Displays the achievements that a user has earned
+*/
 
 function UserRewardsDetails(props) {
   const classes = useStyles();

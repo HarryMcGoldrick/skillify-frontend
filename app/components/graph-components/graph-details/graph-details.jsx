@@ -1,12 +1,11 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { addGraphToGraphProgress, updateGraphPrivacy } from '../../../services/graph-service';
 import { updateProgressMode } from '../../../redux/graph/graphActions';
-import { checkIsNode } from '../../../utils/node-utils';
-import { NodeCard, NodeList, PrivacyToggle } from '../..';
+import { NodeList, PrivacyToggle } from '../..';
 
 const useStyles = makeStyles({
   container: {
@@ -31,9 +30,15 @@ const useStyles = makeStyles({
   privacyToggle: {
     marginLeft: 16,
   },
+  button: {
+    margin: 16,
+  },
 });
 
-// Used to display the details of the graph
+/*
+  Used to display the details of the current graph.
+  Depending on current mode shows, all nodes or unlocked nodes in a list.
+*/
 const GraphDetails = (props) => {
   const classes = useStyles();
   const { id: graphId } = useParams();
@@ -43,6 +48,7 @@ const GraphDetails = (props) => {
 
   const { name, description } = graphData;
 
+  // Update the graph mode in server
   const addGraphToProgress = async () => {
     const initGraph = await addGraphToGraphProgress(graphId, getUserId());
     if (initGraph.res) {
@@ -64,6 +70,7 @@ const GraphDetails = (props) => {
           color="primary"
           className={classes.button}
           onClick={addGraphToProgress}
+          fullWidth
         >
           Begin tracking
         </Button>
@@ -75,11 +82,11 @@ const GraphDetails = (props) => {
         </div>
       )}
       {progressMode ? (
-        <Typography component="h6" variant="h6" className={classes.listTitle}>
+        <Typography component="h5" variant="h5" className={classes.listTitle}>
           Unlocked Nodes 🔓
         </Typography>
       ) : (
-        <Typography component="h6" variant="h6" className={classes.listTitle}>
+        <Typography component="h4" variant="h4" className={classes.listTitle}>
           Node List
         </Typography>
       )}

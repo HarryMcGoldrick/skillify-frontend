@@ -50,12 +50,6 @@ const style = [
       'target-arrow-shape': 'triangle',
     },
   },
-  {
-    selector: '.incomplete',
-    style: {
-      // TODO add style in here for incomplete nodes
-    },
-  },
 ];
 
 export default style;

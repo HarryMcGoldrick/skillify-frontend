@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+  Allows the user to register to the application,
+  usernames are unique and cannot be reused
+*/
 const RegisterForm = () => {
   const history = useHistory();
   const classes = useStyles();

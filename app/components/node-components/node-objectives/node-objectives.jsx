@@ -4,13 +4,10 @@ import {
 import { Add, Delete } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router';
 import { getUserId, isAuthenticated } from '../../../utils/authentication';
 import { fetchObjectives, updateObjectives } from '../../../services/objective-service';
-import { NodeApperance, NodeLearningTab } from '../..';
-import nodeLearningTab from '../node-learning-tab/node-learning-tab';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   emptyTask: {
     margin: 8,
   },
@@ -22,12 +19,11 @@ const useStyles = makeStyles((theme) => ({
 
 function NodeObjectives(props) {
   const classes = useStyles();
-
   const { nodeData } = props;
   const [itemList, setItemList] = useState([]);
   const { register, handleSubmit } = useForm();
-  const { id: graphId } = useParams();
 
+  // Update the objectives in the server
   const updateItemsInBackend = () => {
     const { id: nodeId } = nodeData;
     if (isAuthenticated() && nodeId) {
@@ -35,6 +31,7 @@ function NodeObjectives(props) {
     }
   };
 
+  // Update the checkbox and trigger call to update in server
   const toggleCheckBox = (event) => {
     const id = event.target.name;
     const updatedItems = itemList.map((el) => {
@@ -48,6 +45,7 @@ function NodeObjectives(props) {
     updateItemsInBackend();
   };
 
+  // Adds a new task and updates in server
   const addItem = (event) => {
     if (event.itemLabel) {
       // Create the item object and add it to the state
@@ -60,6 +58,7 @@ function NodeObjectives(props) {
     }
   };
 
+  // Removes a task for a given Id and updates in server
   const removeItem = (id) => {
     // Id is equal to index of itemList
     let filteredItems = [];
@@ -69,6 +68,7 @@ function NodeObjectives(props) {
     setItemList(filteredItems);
   };
 
+  // Fetch objectives for current node
   useEffect(() => {
     const { id: nodeId } = nodeData;
     if (isAuthenticated()) {

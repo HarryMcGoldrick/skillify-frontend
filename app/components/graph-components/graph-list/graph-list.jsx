@@ -12,7 +12,7 @@ import { getGraphViews } from '../../../services/graph-service';
 import { GraphCard } from '../..';
 import { getAllTags } from '../../../services/tag-service';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     minHeight: '100vh',
   },
@@ -35,6 +35,7 @@ const GraphList = () => {
   const [graphAmount, setGraphAmount] = useState();
   const pageSize = 4;
 
+  // Updates the current paginated graph list with the current search query
   const updateGraphList = (formData) => {
     if (formData) {
       getGraphViews(formData.search, selectedTags, page, pageSize).then((data) => {
@@ -49,6 +50,7 @@ const GraphList = () => {
     }
   };
 
+  // Recieve a list of tags from the server
   useEffect(() => {
     getAllTags().then((data) => {
       setTags(data.tags);
@@ -58,6 +60,7 @@ const GraphList = () => {
     updateGraphList();
   }, []);
 
+  // When the page is changed recieve a new list of graphs
   useEffect(() => {
     updateGraphList();
   }, [page]);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { connect } from 'react-redux';
-import { BlockPicker, CirclePicker, CompactPicker } from 'react-color';
+import { CirclePicker } from 'react-color';
 import { Autocomplete } from '@material-ui/lab';
 import {
   Button, Grid, makeStyles, TextField, Typography,
@@ -9,22 +9,26 @@ import {
 import { addStyle } from '../../../redux/graph/graphActions';
 import shape from '../../../enums/shapes';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   columnItem: {
     margin: 16,
     width: 400,
   },
 }));
 
+/*
+  NodeApperance Updates the selected nodes styling
+*/
+
 function NodeAppearance(props) {
   const classes = useStyles();
-
-  const { register, handleSubmit } = useForm();
+  const { handleSubmit } = useForm();
   const [currentColor, setCurrentColor] = useState('#fff');
   const [selectedShape, setSelectedShape] = useState();
   const [image, setImage] = useState();
   const [imageName, setImageName] = useState();
 
+  // Update the cytoscape style sheet with custom styling from the user
   const updateShape = () => {
     const styleElement = {
       selector: `node[id = "${props.selectedNode.id}"]`,
@@ -43,6 +47,7 @@ function NodeAppearance(props) {
     setCurrentColor(color.hex);
   };
 
+  // Converts selected background image to a dataURL for storage.
   function convertToDataURLviaCanvas(url, callback, outputFormat) {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -60,6 +65,7 @@ function NodeAppearance(props) {
     img.src = url;
   }
 
+  // On image selection covert image to dataURL
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       const img = event.target.files[0];

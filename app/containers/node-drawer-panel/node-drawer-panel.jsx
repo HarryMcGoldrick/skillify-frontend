@@ -5,8 +5,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import NodeDetails from '../../components/node-components/node-details/node-details';
 import NodeLearningTab from '../../components/node-components/node-learning-tab/node-learning-tab';
-import NodeAppearance from '../../components/node-components/node-apperance/node-appearance';
 
+/*
+Container for the node panel components,
+When a node is selected the panel is displays information
+directly related to that node.
+  */
 const NodeDrawerPanel = (props) => {
   const [value, setValue] = React.useState(0);
   const {
