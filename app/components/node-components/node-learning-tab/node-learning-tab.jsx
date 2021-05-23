@@ -38,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
   contentCard: {
     margin: '8px',
   },
+  listTitle: {
+    textAlign: 'center',
+    margin: 8,
+    padding: 8,
+  },
 }));
 
 /*
@@ -228,7 +233,11 @@ const NodeLearningTab = (props) => {
           )}
         </div>
       )}
-
+      {content.length > 0 && (
+      <Typography component="h5" variant="h5" className={classes.listTitle}>
+        User added suggestions
+      </Typography>
+      )}
       {content.map((content) => {
         if (!content) return;
         return (
@@ -237,6 +246,11 @@ const NodeLearningTab = (props) => {
           </div>
         );
       })}
+      {generatedContent.length > 0 && (
+      <Typography component="h5" variant="h5" className={classes.listTitle}>
+        Generated suggestions
+      </Typography>
+      )}
       {generatedContent.map((content) => {
         if (!content) return;
         return (

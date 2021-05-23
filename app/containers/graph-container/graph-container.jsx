@@ -99,7 +99,7 @@ function GraphContainer(props) {
       updateSelectedNodePath(getNodesFromElementCollection(nodePred));
 
       // Get connected Nodes
-      const connectedNodes = getConnectedNodes(cy, selectedNode);
+      const connectedNodes = getConnectedNodes(cy, node);
       props.updateConnectedNodes(connectedNodes);
     }
   }, [cy, selectedNode]);

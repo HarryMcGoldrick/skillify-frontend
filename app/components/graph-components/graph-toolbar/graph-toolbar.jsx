@@ -17,6 +17,7 @@ import cytoscape from 'cytoscape';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
+import klay from 'cytoscape-klay';
 import { tools } from '../../../enums/tools';
 import { layouts } from '../../../enums/layouts';
 import { sendGraphDataForImage, updateGraphElements, updateGraphStyle } from '../../../services/graph-service';
@@ -27,7 +28,7 @@ import {
   addNode, removeNode, selectNode, toggleGraphDetails, updateElements,
 } from '../../../redux/graph/graphActions';
 import { nodeType } from '../../../enums/nodeTypes';
-import { checkValidAddTarget, checkValidDeleteTarget } from '../../../utils/node-utils';
+import { checkValidAddTarget, checkValidDeleteTarget, getStartNode } from '../../../utils/node-utils';
 
 // Displays icons to select the relevant graph tool
 
@@ -56,13 +57,15 @@ const GraphToolbar = (props) => {
 
   const initLayouts = () => {
     cytoscape.use(dagre);
+    cytoscape.use(klay);
   };
 
   const runLayout = () => {
     if (selectedLayout) {
-      const layout = cy.layout({ name: selectedLayout });
+      const layout = cy.elements().not('.eh-handle', 'eh-source', 'eh-ghost-node').layout({ name: selectedLayout, ROOT: getStartNode(cy) });
       // Ensure element state is set before layout so it can be undone
-      updateElements(cy.json(true).elements);
+
+      updateElements(cy.elements().not('.eh-handle', 'eh-source', 'eh-ghost-node').jsons(true));
       layout.run();
       layout.one('layoutstop', () => {
         updateElements(cy.json(true).elements);
@@ -283,6 +286,12 @@ const GraphToolbar = (props) => {
             color="primary"
           >
             <MenuItem onClick={() => handleClose(layouts.DAGRE)}>Dagre</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.GRID)}>Grid</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.CIRCLE)}>Circle</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.CONCENTRIC)}>Concentric</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.BREADTH_FIRST)}>BreadthFirst</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.COSE)}>Cose</MenuItem>
+            <MenuItem onClick={() => handleClose(layouts.KLAY)}>Klay</MenuItem>
             <MenuItem onClick={() => handleClose('')}>None</MenuItem>
 
           </Menu>

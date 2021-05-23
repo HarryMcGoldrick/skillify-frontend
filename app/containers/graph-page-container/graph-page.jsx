@@ -16,6 +16,7 @@ const GraphPage = (props) => {
 
   useEffect(() => {
     if (!viewOnly) {
+      // Triggers the prompt before unloading the page
       window.onbeforeunload = () => true;
     }
   }, []);

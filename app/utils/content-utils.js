@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 // Example books URL: https://www.google.co.uk/books/edition/The_The_HTML_and_CSS_Workshop/gVjBDwAAQBAJ?hl=en&gbpv=0
 // Last path param is the ID
 export const extractGoogleBooksIdFromUrl = (url) => {
@@ -48,7 +49,7 @@ export const generateQueryStringFromNodes = (nodes) => {
     if (nodes.length - depth === i) break;
   }
   nodes.forEach((node, index) => {
-    if (index == 0) {
+    if (index === 0) {
       queryString += node.label;
     } else {
       queryString += `+${node.label}`;
