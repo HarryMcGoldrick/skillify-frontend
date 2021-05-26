@@ -83,7 +83,7 @@ const RegisterForm = () => {
                 name="password"
                 label="password"
                 variant="outlined"
-                inputRef={register({ required: true, pattern: { value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, message: 'Minimum 8 characters 1 letter and 1 number are required' } })}
+                inputRef={register({ required: true, pattern: { value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, message: '8 characters 1 letter and 1 number required' } })}
                 className={classes.textField}
               />
             </Grid>

@@ -14,14 +14,6 @@ const style = [
     },
   },
   {
-    selector: '.completed',
-    style: {
-      'background-color': 'green',
-      'line-color': 'green',
-      'target-arrow-color': 'green',
-    },
-  },
-  {
     selector: '.locked',
     style: {
       'background-blacken': 0.7,
@@ -33,6 +25,14 @@ const style = [
       'background-color': 'blue',
       'line-color': 'blue',
       'target-arrow-color': 'blue',
+    },
+  },
+  {
+    selector: '.completed',
+    style: {
+      'background-color': 'green',
+      'line-color': 'green',
+      'target-arrow-color': 'green',
     },
   },
   {

@@ -10,21 +10,27 @@ const style = [
     },
   },
   {
-    selector: '.completed',
-    style: {
-      'background-color': 'red',
-    },
-  },
-  {
     selector: '.locked',
     style: {
       'background-blacken': 0.7,
+      'line-color': 'black',
+      'target-arrow-color': 'black',
     },
   },
   {
     selector: '.unlocked',
     style: {
-      'background-blacken': 0.3,
+      'background-color': 'blue',
+      'line-color': 'blue',
+      'target-arrow-color': 'blue',
+    },
+  },
+  {
+    selector: '.completed',
+    style: {
+      'background-color': 'green',
+      'line-color': 'green',
+      'target-arrow-color': 'green',
     },
   },
   {

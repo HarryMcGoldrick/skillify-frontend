@@ -5,4 +5,5 @@ export const initialState = {
   graphsCreated: [],
   badges: [],
   completedNodeCount: 0,
+  completedGraphs: 0,
 };

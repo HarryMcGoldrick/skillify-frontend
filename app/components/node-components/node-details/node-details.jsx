@@ -116,16 +116,6 @@ const NodeDetails = (props) => {
                 {selectedNode.description}
               </Typography>
               )}
-              {isComplete && progressMode && (
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => removeNodeFromProgress()}
-              >
-                Incomplete
-              </Button>
-              )}
             </>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -150,14 +140,42 @@ const NodeDetails = (props) => {
               <hr />
             </div>
           )}
+          {isAuthenticated() && !viewOnly && (
+          <div>
+            <Typography variant="h5" component="h5" className={classes.subtitle}>
+              Appearance
+            </Typography>
+            <NodeApperance />
+          </div>
+          )}
+          {props.connectedNodes.length > 0 && (
+          <div>
+            <Typography variant="h5" component="h5" className={classes.subtitle}>
+              Connected Nodes
+            </Typography>
+            <NodeList elements={props.connectedNodes} progressMode={progressMode} isNodeData />
+          </div>
+          )}
+          {progressMode && (
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            className={classes.button}
+            onClick={isComplete ? () => removeNodeFromProgress() : () => addNodeToProgress()}
+          >
+            {isComplete ? 'Incomplete' : 'Complete'}
+          </Button>
+          )}
         </>
       ) : (
         <>
-          <img src={lockedNode} style={{ width: 400, height: 400 }} />
+          <img src={lockedNode} style={{ width: 250, height: 250 }} />
           {progressMode && !isComplete && (
           <Button
             variant="contained"
             color="primary"
+            fullWidth
             className={classes.button}
             onClick={() => addNodeToProgress()}
           >
@@ -167,33 +185,6 @@ const NodeDetails = (props) => {
         </>
       )}
 
-      {isAuthenticated() && !viewOnly && (
-        <div>
-          <Typography variant="h5" component="h5" className={classes.subtitle}>
-            Appearance
-          </Typography>
-          <NodeApperance />
-        </div>
-      )}
-      {props.connectedNodes.length > 0 && (
-        <div>
-          <Typography variant="h5" component="h5" className={classes.subtitle}>
-            Connected Nodes
-          </Typography>
-          <NodeList elements={props.connectedNodes} progressMode={progressMode} isNodeData />
-        </div>
-      )}
-      {!isComplete && progressMode && (
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        className={classes.button}
-        onClick={() => addNodeToProgress()}
-      >
-        Complete
-      </Button>
-      )}
     </>
 
   );

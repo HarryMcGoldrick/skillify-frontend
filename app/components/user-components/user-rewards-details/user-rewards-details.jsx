@@ -1,10 +1,12 @@
 import {
+  Button,
   Grid, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import { getAchievementObjects } from '../../../services/achievement-service';
+import { AchievementShowcase } from '../..';
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -34,32 +36,36 @@ function UserRewardsDetails(props) {
   }, [props]);
 
   return (
-    <Paper className={classes.paper}>
-      <Grid item xs={12}>
-        <Typography variant="h5" component="h5">
-          Achievements
-        </Typography>
-      </Grid>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        align="center"
-        style={{ marginTop: 25 }}
-      >
+    <>
+      <Paper className={classes.paper}>
+        <Grid item xs={12}>
+          <Typography variant="h5" component="h5">
+            Achievements
+            <span style={{ float: 'right' }}>
+              <AchievementShowcase achievements={achievements} />
 
-        {achievementObjs.map((obj, index) => (
-          <Grid item xs={4} key={obj._id}>
-            <Tooltip title={<span style={{ fontSize: 16 }}>{obj.name}</span>} arrow>
-              <Fab color="primary">
-                <img className={classes.avatar} alt="achievement" src={obj.image} />
-              </Fab>
-            </Tooltip>
-          </Grid>
-        ))}
-      </Grid>
-    </Paper>
+            </span>
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          align="center"
+        >
+
+          {achievementObjs.map((obj, index) => (
+            <Grid item xs={4} key={obj._id} style={index <= 2 ? { marginTop: 25 } : { marginTop: 50 }}>
+              <Tooltip title={<span style={{ fontSize: 16 }}>{obj.name}</span>} arrow>
+                <Fab color="primary">
+                  <img className={classes.avatar} alt="achievement" src={obj.image} />
+                </Fab>
+              </Tooltip>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </>
   );
 }
 

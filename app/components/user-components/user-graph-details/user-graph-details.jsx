@@ -61,13 +61,13 @@ function UserGraphDetails(props) {
                 return undefined;
               }
               const { id } = graph;
-              return (
 
-                <ListItemLink key={id} href={`/view/${id}`}>
+              return (
+                <ListItem alignItems="flex-start" key={graph.id}>
                   <Grid item xs={12}>
                     <GraphCard graph={graph} />
                   </Grid>
-                </ListItemLink>
+                </ListItem>
               );
             })}
           </Grid>
@@ -94,12 +94,11 @@ function UserGraphDetails(props) {
               }
               const { id } = graph;
               return (
-
-                <ListItemLink key={id} href={`/view/${id}`}>
+                <ListItem alignItems="flex-start" key={graph.id}>
                   <Grid item xs={12}>
                     <GraphCard graph={graph} />
                   </Grid>
-                </ListItemLink>
+                </ListItem>
               );
             })}
           </Grid>

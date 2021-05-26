@@ -16,36 +16,55 @@ export const updateProgressModeNodeClasses = (cy, completedNodes, updateNodeFunc
   // naive approach
   // all nodes -> if complete pass -> if connected node is complete -> unlocked -> if no complete nodes connected -> locked
   const nodes = getNodesFromElementCollection(cy.nodes());
-  nodes.forEach((node) => {
-    const dfs = cy.elements().dfs({
-      roots: getNodeWithId(cy, node.id),
-      visit: (v, e, u, i, depth) => {
-        if (depth === 3) {
-          return false;
-        }
+  for (const u of cy.nodes()) {
+    const neighbor = u.outgoers();
+    for (const v of neighbor) {
+      const isUnlocked = u.classes().includes('completed') && !(v.classes().includes('completed'));
+      const isLocked = !(u.classes().includes('completed')) && !(v.classes().includes('completed'));
 
-        if (u) {
-          const isUnlocked = u.classes().includes('completed') && !(v.classes().includes('completed'));
-          const isLocked = !(u.classes().includes('completed')) && !(v.classes().includes('completed'));
+      if (isUnlocked) {
+        updateNodeFunc(addToUnlocked(v.data()));
+        v.addClass('unlocked');
+      } else if (isLocked) {
+        updateNodeFunc(addToLocked(v.data()));
+        v.addClass('locked');
+      }
+    }
+  }
 
-          if (u.classes().includes('completed')) {
-            updateNodeFunc(addToCompleted(e.data()));
-          }
+  // nodes.forEach((node) => {
+  //   const dfs = cy.elements().dfs({
+  //     roots: getNodeWithId(cy, node.id),
+  //     visit: (v, e, u, i, depth) => {
+  //       if (depth === 3) {
+  //         return false;
+  //       }
+  //       console.log(v.data());
 
-          if (isUnlocked) {
-            updateNodeFunc(addToUnlocked(e.data()));
-            updateNodeFunc(addToUnlocked(v.data()));
-            v.addClass('unlocked');
-          } else if (isLocked) {
-            updateNodeFunc(addToLocked(e.data()));
-            updateNodeFunc(addToLocked(v.data()));
-            v.addClass('locked');
-          }
-        }
-      },
-      directed: true,
-    });
-  });
+  //       // from start node -> get connected nodes -> if connected nodes have
+
+  //       if (u) {
+  //         const isUnlocked = u.classes().includes('completed') && !(v.classes().includes('completed'));
+  //         const isLocked = !(u.classes().includes('completed')) && !(v.classes().includes('completed'));
+
+  //         if (u.classes().includes('completed')) {
+  //           updateNodeFunc(addToCompleted(e.data()));
+  //         }
+
+  //         if (isUnlocked) {
+  //           updateNodeFunc(addToUnlocked(e.data()));
+  //           updateNodeFunc(addToUnlocked(v.data()));
+  //           v.addClass('unlocked');
+  //         } else if (isLocked) {
+  //           updateNodeFunc(addToLocked(e.data()));
+  //           updateNodeFunc(addToLocked(v.data()));
+  //           v.addClass('locked');
+  //         }
+  //       }
+  //     },
+  //     directed: true,
+  //   });
+  // });
 
   // Unlocked
 

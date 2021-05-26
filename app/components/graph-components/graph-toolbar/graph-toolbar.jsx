@@ -170,11 +170,13 @@ const GraphToolbar = (props) => {
   // Navigate to the edit page
   const goToEditPage = () => {
     history.push(`/edit/${graphId}`);
+    location.reload();
   };
 
   // Navigate to the view page
   const goToViewPage = () => {
     history.push(`/view/${graphId}`);
+    location.reload();
   };
 
   useEffect(() => {
@@ -249,12 +251,11 @@ const GraphToolbar = (props) => {
             anchorEl={addAnchorEl}
             keepMounted
             open={Boolean(addAnchorEl)}
-            onClose={handleClose}
+            onClose={addHandleClose}
             color="primary"
           >
             <MenuItem onClick={() => addHandleClose(nodeType.STANDARD)}>Standard Node</MenuItem>
             <MenuItem onClick={() => addHandleClose(nodeType.ROOT)}>Start Node</MenuItem>
-            <MenuItem onClick={() => addHandleClose(nodeType.COLLECTION)}>Collection</MenuItem>
 
           </Menu>
           <Button

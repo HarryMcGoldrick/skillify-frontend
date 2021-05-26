@@ -22,3 +22,7 @@ export const uploadUserImage = async (username, image) => axios.post(`${baseUrl}
 export const getUserImage = async (username) => axios.get(`${baseUrl}/${username}/image`).then((res) => res.data);
 
 export const updateUserPrivacy = async (userId, privacy) => axios.post(`${baseUrl}/privacy`, { userId, privacy }).then((res) => res.data);
+
+export const addUserCompletedGraph = async (userId, graphId) => axios.post(`${baseUrl}/completed/add`, { userId, graphId }).then((res) => res.data);
+
+export const removeUserCompletedGraph = async (userId, graphId) => axios.post(`${baseUrl}/completed/remove`, { userId, graphId }).then((res) => res.data);

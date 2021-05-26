@@ -15,6 +15,7 @@ import {
 import viewOnlyStyle from './viewOnly-style';
 import { getConnectedNodes, getNodeWithId, updateProgressModeNodeClasses } from '../../utils/graph-utils';
 import { getNodesFromElementCollection, getStartNode } from '../../utils/node-utils';
+import { addUserCompletedGraph, removeUserCompletedGraph } from '../../services/user-service';
 
 /*
   Wraps the cytoscapeJS graph and recieves the api reference using a useRef hook,
@@ -112,6 +113,12 @@ function GraphContainer(props) {
         selectNode(getStartNode(cy).data());
       }
       updateProgressModeNodeClasses(cy, completedNodes, updateNode);
+      if (completedNodes.length >= cy.nodes().length) {
+        enqueueSnackbar('Map Complete!');
+        addUserCompletedGraph(getUserId(), graphId);
+      } else {
+        removeUserCompletedGraph(getUserId(), graphId);
+      }
     }
   }, [cy, completedNodes, progressMode]);
 
@@ -136,6 +143,7 @@ const mapStateToProps = (state) => ({
   progressMode: state.graph.present.progressMode,
   styleSheet: state.graph.present.styleSheet,
   completedNodes: state.graph.present.completedNodes,
+  completedGraphs: state.user.completedGraphs,
 });
 
 const mapDispatchToProps = (dispatch) => ({

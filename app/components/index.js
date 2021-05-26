@@ -24,6 +24,7 @@ export { default as UserProfileData } from './user-components/user-profile-detai
 export { default as UserGraphDetails } from './user-components/user-graph-details/user-graph-details';
 export { default as UserRewardsDetails } from './user-components/user-rewards-details/user-rewards-details';
 export { default as UserAchievements } from './user-components/user-achievements/user-achievements';
+export { default as AchievementShowcase } from './user-components/achievement-showcase/achievement-showcase';
 
 // Misc components
 export { default as LoginForm } from './login-form/login-form';

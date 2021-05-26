@@ -17,6 +17,7 @@ function* fetchUserData(action) {
         badges: data.badges,
         completedNodeCount: data.completedNodeCount,
         likedGraphs: data.likedGraphs,
+        completedGraphs: data.completedGraphs,
       },
     });
   } catch (e) {

@@ -35,6 +35,7 @@ function UserProfileDetails(props) {
   const { userInfo } = props;
   const {
     username, achievements, badges, graphs_created: graphsCreated, completedNodeCount, userId, private: privacy,
+    completedGraphs,
   } = userInfo;
 
   const [userImage, setUserImage] = useState();
@@ -163,7 +164,9 @@ function UserProfileDetails(props) {
           </Grid>
           <Grid item xs={12} className={classes.details}>
             <Typography component="h6" variant="h6">
-              Maps Completed: 0
+              Maps Completed:
+              {' '}
+              {completedGraphs.length}
             </Typography>
           </Grid>
           <Grid item xs={12} className={classes.details}>

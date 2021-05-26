@@ -14,6 +14,7 @@ const reducer = (state = initialState, action) => {
         badges: action.payload.badges,
         completedNodeCount: action.payload.completedNodeCount,
         likedGraphs: action.payload.likedGraphs,
+        completedGraphs: action.payload.completedGraphs,
       };
     }
 
