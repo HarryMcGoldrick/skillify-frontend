@@ -113,7 +113,7 @@ function GraphContainer(props) {
         selectNode(getStartNode(cy).data());
       }
       updateProgressModeNodeClasses(cy, completedNodes, updateNode);
-      if (completedNodes.length >= cy.nodes().length) {
+      if (cy.nodes().length > 0 && completedNodes.length === cy.nodes().length) {
         enqueueSnackbar('Map Complete!');
         addUserCompletedGraph(getUserId(), graphId);
       } else {
